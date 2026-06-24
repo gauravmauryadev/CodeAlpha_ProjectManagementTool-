@@ -403,7 +403,7 @@ export default function BoardPage() {
     <AppShell>
       <div className="h-screen flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="px-4 md:px-8 py-4 md:py-5 border-b border-slate-200 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 flex-shrink-0 bg-white/40 dark:bg-[#0E0A22]/40 backdrop-blur-xl">
+        <div className="px-4 md:px-8 pt-14 md:pt-5 pb-4 md:pb-5 border-b border-slate-200 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 flex-shrink-0 bg-white/40 dark:bg-[#0E0A22]/40 backdrop-blur-xl">
           <div className="flex items-center gap-3 md:gap-4 mt-2 md:mt-0">
             <Tooltip content="Back to dashboard" position="right">
               <button
