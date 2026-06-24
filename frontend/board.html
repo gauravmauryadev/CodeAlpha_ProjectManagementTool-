@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board - Project Planner</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Fixed Sidebar -->
+    <aside class="app-sidebar">
+        <div class="sidebar-logo">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard.html" class="sidebar-nav-item">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-nav-item active">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                <span class="nav-text">Board</span>
+            </a>
+            <a href="/profile.html" class="sidebar-nav-item">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span class="nav-text">Profile</span>
+            </a>
+        </nav>
+        <div class="sidebar-user" onclick="window.location.href='/profile.html'">?</div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="app-main">
+        <header class="app-header">
+            <div class="app-header-left" style="gap: 1rem;">
+                <button class="back-btn" onclick="window.location.href='/dashboard.html'">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Back
+                </button>
+                <div>
+                    <h1 id="projectNameDisplay" style="font-size: 1.15rem;">Loading...</h1>
+                </div>
+            </div>
+            <div class="app-header-right">
+                <div class="search-box" style="width: 240px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" placeholder="Search tasks..." oninput="filterTasks(this.value)">
+                </div>
+                <button id="addMemberBtn" class="btn btn-outline btn-sm" style="display: none;" onclick="openAddMemberModal()">+ Add Member</button>
+            </div>
+        </header>
+
+        <main class="app-content" style="padding-top: 1rem;">
+            <div class="board-container">
+                <!-- TO DO -->
+                <div class="board-column column-todo">
+                    <div class="column-header">
+                        <span>📋 To Do</span>
+                        <span class="task-count" id="count-todo">0</span>
+                    </div>
+                    <div class="task-list" id="list-todo" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <button class="add-task-btn" onclick="openTaskModal('todo')">+ Add Task</button>
+                </div>
+                <!-- IN PROGRESS -->
+                <div class="board-column column-inprogress">
+                    <div class="column-header">
+                        <span>🔄 In Progress</span>
+                        <span class="task-count" id="count-inprogress">0</span>
+                    </div>
+                    <div class="task-list" id="list-inprogress" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <button class="add-task-btn" onclick="openTaskModal('inprogress')">+ Add Task</button>
+                </div>
+                <!-- DONE -->
+                <div class="board-column column-done">
+                    <div class="column-header">
+                        <span>✅ Done</span>
+                        <span class="task-count" id="count-done">0</span>
+                    </div>
+                    <div class="task-list" id="list-done" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <button class="add-task-btn" onclick="openTaskModal('done')">+ Add Task</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="taskModalTitle">Create Task</h3>
+                <button class="close-btn" onclick="closeTaskModal()">&times;</button>
+            </div>
+            <form id="taskForm">
+                <input type="hidden" id="tStatus" value="todo">
+                <input type="hidden" id="tId" value="">
+                <div class="input-group">
+                    <label for="tTitle">Task Title</label>
+                    <input type="text" id="tTitle" required placeholder="What needs to be done?">
+                </div>
+                <div class="input-group">
+                    <label for="tDesc">Description</label>
+                    <textarea id="tDesc" rows="3" placeholder="Add more details..."></textarea>
+                </div>
+                <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+                    <div class="input-group" style="flex: 1; margin-bottom: 0;">
+                        <label for="tPriority">Priority</label>
+                        <select id="tPriority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="flex: 1; margin-bottom: 0;">
+                        <label for="tAssignee">Assign To</label>
+                        <select id="tAssignee">
+                            <option value="">Unassigned</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+                    <div class="input-group" style="flex: 1; margin-bottom: 0;">
+                        <label for="tDueDate">Due Date</label>
+                        <input type="date" id="tDueDate">
+                    </div>
+                    <div class="input-group" style="flex: 1; margin-bottom: 0;">
+                        <label for="tLabel">Label / Tag</label>
+                        <select id="tLabel">
+                            <option value="">None</option>
+                            <option value="Bug">🐛 Bug</option>
+                            <option value="Feature">✨ Feature</option>
+                            <option value="Enhancement">🚀 Enhancement</option>
+                            <option value="Design">🎨 Design</option>
+                            <option value="Urgent">🔥 Urgent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group" style="margin-top: 1rem;">
+                    <label for="tImage">Task Image / Attachment</label>
+                    <input type="file" id="tImage" accept="image/*" style="padding: 0.5rem; font-size: 0.9rem; border: 1px solid var(--border); border-radius: var(--radius-sm); width: 100%;">
+                    <div id="currentImagePreview" style="margin-top: 0.5rem; display: none;">
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem;">Current Image:</p>
+                        <img id="tImagePreview" src="" alt="Task Image" style="max-width: 100%; max-height: 150px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;" id="taskSubmitBtn">Save Task</button>
+                    <button type="button" class="btn btn-danger" style="display: none;" id="taskDeleteBtn" onclick="deleteTask()">Delete</button>
+                </div>
+            </form>
+
+            <div class="comments-section" id="commentsSection" style="display: none;">
+                <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem;">💬 Comments</h4>
+                <div id="commentsList" style="margin: 0.75rem 0; max-height: 200px; overflow-y: auto;"></div>
+                <div id="commentInputArea" style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="newComment" placeholder="Write a comment..." style="flex: 1; padding: 0.5rem 0.75rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.85rem; outline: none; font-family: inherit;">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="addComment()">Post</button>
+                </div>
+                <div id="commentRestrictedMsg" style="display: none; color: var(--text-muted); font-size: 0.8rem; text-align: center; margin-top: 0.75rem; padding: 0.5rem; background: var(--bg); border-radius: var(--radius-sm);">
+                    🔒 Only the project leader or task assignee can comment.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div class="modal" id="addMemberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Team Member</h3>
+                <button class="close-btn" onclick="closeAddMemberModal()">&times;</button>
+            </div>
+            <form id="addMemberForm">
+                <div class="input-group">
+                    <label for="mEmail">User Email Address</label>
+                    <input type="email" id="mEmail" required placeholder="user@example.com">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="inviteMemberBtn">Invite Member</button>
+            </form>
+        </div>
+    </div>
+    <!-- Discord-Style Project Chat Panel -->
+    <div id="chatToggleBtn" onclick="toggleChat()" style="position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 900; color: white; transition: transform 0.3s;">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    </div>
+
+    <div id="projectChatPanel" style="position: fixed; top: 0; right: -400px; width: 380px; height: 100vh; background: var(--surface); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-left: 1px solid var(--border); box-shadow: var(--shadow-lg); z-index: 1000; display: flex; flex-direction: column; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.4);">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700;">#</div>
+                <div>
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0;">Project Chat</h3>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Real-time team discussion</p>
+                </div>
+            </div>
+            <button onclick="toggleChat()" style="background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 0.5rem;"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
+        
+        <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem;">Loading messages...</p>
+        </div>
+        
+        <div style="padding: 1.5rem; background: rgba(255,255,255,0.4); border-top: 1px solid var(--border-light);">
+            <form id="chatForm" style="display: flex; gap: 0.5rem;">
+                <input type="text" id="chatInput" placeholder="Message #project-chat..." required style="flex: 1; padding: 0.75rem 1rem; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); font-family: inherit; font-size: 0.9rem; outline: none;">
+                <button type="submit" style="width: 45px; height: 45px; border-radius: 50%; background: var(--primary); border: none; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Video Call Toggle Button -->
+    <div id="callToggleBtn" onclick="startGroupCall()" style="position: fixed; bottom: 2rem; right: 6.5rem; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 900; color: white; transition: transform 0.3s;" title="Start Group Meeting">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+    </div>
+
+    <!-- Video Call Modal (Full Screen Overlay) -->
+    <div id="videoCallModal" style="display: none; position: fixed; inset: 0; z-index: 2000; background: #0f0f1a;">
+        <!-- Call Header -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite;"></div>
+                <h3 style="color: white; font-size: 1rem; font-weight: 600; margin: 0;" id="callTitle">Group Meeting</h3>
+                <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem;" id="callTimer">00:00</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span style="color: rgba(255,255,255,0.6); font-size: 0.85rem;" id="participantCount">1 participant</span>
+            </div>
+        </div>
+
+        <!-- Video Grid -->
+        <div id="videoGrid" style="display: grid; grid-template-columns: 1fr; gap: 0.5rem; padding: 4rem 1rem 6rem 1rem; height: 100vh; box-sizing: border-box; overflow: auto; align-content: center; justify-items: center;">
+            <!-- Local Video -->
+            <div id="localVideoWrapper" style="position: relative; width: 100%; max-width: 640px; aspect-ratio: 16/9; background: #1a1a2e; border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1);">
+                <video id="localVideo" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                <div style="position: absolute; bottom: 0.75rem; left: 0.75rem; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); padding: 0.3rem 0.75rem; border-radius: 8px; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: white; font-size: 0.8rem; font-weight: 600;" id="localVideoLabel">You</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Bar -->
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; display: flex; justify-content: center; align-items: center; gap: 1rem; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+            <button id="btnToggleMic" onclick="toggleMic()" style="width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Toggle Microphone">
+                <svg id="micIcon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            </button>
+            <button id="btnToggleCam" onclick="toggleCam()" style="width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Toggle Camera">
+                <svg id="camIcon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+            </button>
+            <button id="btnScreenShare" onclick="toggleScreenShare()" style="width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Share Screen">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </button>
+            <button onclick="endCall()" style="width: 64px; height: 52px; border-radius: 26px; background: #ef4444; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);" title="End Call">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"></path><line x1="23" y1="1" x2="1" y2="23"></line></svg>
+            </button>
+        </div>
+    </div>
+
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        #videoGrid.grid-2 { grid-template-columns: 1fr 1fr; }
+        #videoGrid.grid-3 { grid-template-columns: 1fr 1fr; }
+        #videoGrid.grid-4 { grid-template-columns: 1fr 1fr; }
+        .remote-video-wrapper {
+            position: relative; width: 100%; max-width: 640px; aspect-ratio: 16/9;
+            background: #1a1a2e; border-radius: 16px; overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .remote-video-wrapper video {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        .remote-video-label {
+            position: absolute; bottom: 0.75rem; left: 0.75rem;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            padding: 0.3rem 0.75rem; border-radius: 8px;
+            color: white; font-size: 0.8rem; font-weight: 600;
+        }
+        .btn-active { background: var(--primary) !important; border-color: var(--primary) !important; }
+        .btn-muted { background: #ef4444 !important; border-color: #ef4444 !important; }
+    </style>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/board.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: |
+          backend/package-lock.json
+          client/package-lock.json
+          
+    - name: Install Backend Dependencies
+      run: |
+        cd backend
+        npm ci
+        
+    - name: Install Frontend Dependencies
+      run: |
+        cd client
+        npm ci
+        
+    - name: Build Frontend
+      run: |
+        cd client
+        npm run build
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    # Deploy to DigitalOcean Droplet via SSH & Docker Compose
+    # Requires GitHub Secrets: DROPLET_IP, DROPLET_USERNAME, SSH_PRIVATE_KEY
+    - name: Deploy via Docker Compose
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: ${{ secrets.DROPLET_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /opt/CodeAlpha_ProjectManagementTool
+          git pull origin main
+          docker-compose -f docker-compose.yml up -d --build

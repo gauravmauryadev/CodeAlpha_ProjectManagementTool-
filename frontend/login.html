@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Project Planner</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-left">
+            <div class="floating-badge">
+                <div class="avatar-group">
+                    <img src="https://i.pravatar.cc/100?img=1" alt="User">
+                    <img src="https://i.pravatar.cc/100?img=2" alt="User">
+                    <img src="https://i.pravatar.cc/100?img=3" alt="User">
+                </div>
+                <span>Trusted by 10k+ teams</span>
+            </div>
+            <img src="images/auth-bg.png" alt="Project Management Collaboration" class="auth-illustration">
+            <div class="auth-left-text">
+                <h2>Manage your team's work, seamlessly.</h2>
+                <p>Plan, track, and deliver projects in one unified workspace with our smart Kanban board.</p>
+            </div>
+        </div>
+        <div class="auth-right">
+            <div class="auth-card card">
+                <a href="/" style="display:inline-flex; align-items:center; gap:0.5rem; color:var(--text-muted); text-decoration:none; font-size:0.9rem; margin-bottom: 1.5rem; font-weight:500; transition: var(--transition);" onmouseover="this.style.color='var(--text-main)'" onmouseout="this.style.color='var(--text-muted)'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> 
+                    Back to Home
+                </a>
+                <div style="text-align: center; margin-bottom: 2rem;" class="stagger-1">
+                    <div class="logo-box">
+                        <svg viewBox="0 0 24 24" width="32" height="32" stroke="white" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                    </div>
+                    <h2 style="font-size: 1.6rem; margin-bottom: 0.25rem;">Welcome back</h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Please enter your details to sign in.</p>
+                </div>
+                
+                <div class="social-login stagger-2" style="display: flex; justify-content: center;">
+                    <div id="g_id_onload"
+                         data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                         data-context="signin"
+                         data-ux_mode="popup"
+                         data-callback="handleCredentialResponse"
+                         data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-shape="rectangular"
+                         data-theme="outline"
+                         data-text="continue_with"
+                         data-size="large"
+                         data-logo_alignment="left">
+                    </div>
+                </div>
+                
+                <div class="divider stagger-3"><span>or sign in with email</span></div>
+                
+                <form id="loginForm">
+                    <div class="input-group stagger-4">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" required placeholder="name@company.com">
+                    </div>
+                    <div class="input-group stagger-5">
+                        <div style="display: flex; justify-content: space-between; width: 100%;">
+                            <label for="password">Password</label>
+                            <a href="#" style="font-size: 0.85rem; color: var(--primary); font-weight: 500;">Forgot password?</a>
+                        </div>
+                        <input type="password" id="password" required placeholder="••••••••">
+                    </div>
+                    
+                    <div class="form-check stagger-5" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" id="remember" style="width: auto;">
+                        <label for="remember" style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); cursor: pointer;">Remember for 30 days</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary stagger-6" style="width: 100%; padding: 0.8rem; font-size: 1rem; font-weight: 600;">Sign In</button>
+                </form>
+                <p style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: var(--text-muted);" class="stagger-7">
+                    Don't have an account? <a href="/register.html" style="font-weight: 600; color: var(--primary);">Sign up for free</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="js/api.js"></script>
+    <script>
+        const currentUser = api.getUser();
+        if(currentUser) window.location.href = currentUser.role === 'admin' ? '/admin.html' : '/dashboard.html';
+        
+        function showToast(msg, type = 'error') {
+            const toast = document.createElement('div');
+            toast.className = `toast-popup ${type}`;
+            const icon = type === 'error' 
+                ? '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>'
+                : '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+            toast.innerHTML = `<div class="toast-icon">${icon}</div><div>${msg}</div>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true; btn.textContent = 'Signing in...';
+            try {
+                const data = await api.login(
+                    document.getElementById('email').value,
+                    document.getElementById('password').value
+                );
+                api.setToken(data.token);
+                api.setUser(data.user);
+                showToast('Welcome back!', 'success');
+                setTimeout(() => window.location.href = data.user.role === 'admin' ? '/admin.html' : '/dashboard.html', 1000);
+            } catch(err) {
+                showToast(err.message, 'error');
+            } finally {
+                btn.disabled = false; btn.textContent = 'Sign In';
+            }
+        });
+
+        async function handleCredentialResponse(response) {
+            const token = response.credential;
+            try {
+                const res = await api.googleLogin(token);
+                api.setToken(res.token);
+                api.setUser(res.user);
+                window.location.href = res.user.role === 'admin' ? '/admin.html' : '/dashboard.html';
+            } catch (error) {
+                alert('Google Login Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
