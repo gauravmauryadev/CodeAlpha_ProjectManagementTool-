@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -9,11 +8,10 @@ import {
   Bell,
   Shield,
   LogOut,
-  Layers,
-  MessageSquare
+  X,
 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
-import { cn, getInitials, getAvatarColor } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -32,63 +30,106 @@ const navItems = [
   { href: "#", icon: Bell, label: "Notifications" },
 ];
 
-export default function AppSidebar() {
+interface AppSidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
 
   return (
-    <aside className="fixed left-0 top-0 w-[56px] md:w-[72px] h-screen bg-[#64748b] dark:bg-[#000000] border-r border-slate-500 dark:border-white/5 flex flex-col items-center justify-start py-3 md:py-5 shadow-2xl z-50 transition-colors">
-      {/* Logo */}
-      <Link
-        href="/dashboard"
-        className="flex w-9 h-9 md:w-12 md:h-12 rounded-xl bg-white/5 items-center justify-center hover:scale-105 transition-transform mb-4"
-      >
-        <img src="/logo.png" alt="OmniPlan" className="w-6 h-6 md:w-8 md:h-8 object-contain drop-shadow-md" />
-      </Link>
+    <>
+      {/* Dark overlay when sidebar is open on mobile */}
+      {isOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[55] transition-opacity"
+          onClick={onClose}
+        />
+      )}
 
-      {/* Nav Items */}
-      <nav className="flex-1 flex flex-col items-center justify-center gap-1.5 w-full">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          // Base styles - always a vertical left sidebar
+          "fixed left-0 top-0 h-screen bg-[#64748b] dark:bg-[#000000] border-r border-slate-500 dark:border-white/5 flex flex-col items-center justify-start py-5 shadow-2xl z-[60] transition-all duration-300",
+          // Desktop - always visible
+          "md:w-[72px] md:translate-x-0",
+          // Mobile - slide in/out
+          isOpen ? "w-[72px] translate-x-0" : "w-[72px] -translate-x-full md:translate-x-0"
+        )}
+      >
+        {/* Close button - mobile only */}
+        <button
+          onClick={onClose}
+          className="md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-all mb-2 cursor-pointer"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Logo */}
+        <Link
+          href="/dashboard"
+          onClick={onClose}
+          className="flex w-12 h-12 rounded-xl bg-white/5 items-center justify-center hover:scale-105 transition-transform mb-4"
+        >
+          <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-md" />
+        </Link>
+
+        {/* Nav Items */}
+        <nav className="flex-1 flex flex-col items-center justify-center gap-1.5 w-full">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onClose}
+                className={cn(
+                  "w-12 h-12 rounded-xl flex items-center justify-center transition-all group relative",
+                  isActive
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
+                    : "text-slate-300 dark:text-slate-400 hover:text-white hover:bg-indigo-500/20"
+                )}
+              >
+                <item.icon className="w-6 h-6" />
+                {/* Premium Tooltip */}
+                <span className="absolute left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+
+          {/* Admin Link (conditional) */}
+          {user?.role === "admin" && (
             <Link
-              key={item.href}
-              href={item.href}
+              href="/admin"
+              onClick={onClose}
               className={cn(
-                "w-9 h-9 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all group relative",
-                isActive
+                "w-12 h-12 rounded-xl flex items-center justify-center transition-all group relative",
+                pathname === "/admin"
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
                   : "text-slate-300 dark:text-slate-400 hover:text-white hover:bg-indigo-500/20"
               )}
             >
-              <item.icon className="w-4 h-4 md:w-6 md:h-6" />
-              {/* Premium Tooltip */}
-              <span className="absolute left-[48px] md:left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
-                {item.label}
+              <Shield className="w-6 h-6" />
+              <span className="absolute left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
+                Admin Panel
               </span>
             </Link>
-          );
-        })}
+          )}
+        </nav>
 
-        {/* Admin Link (conditional) */}
-        {user?.role === "admin" && (
-          <Link
-            href="/admin"
-            className={cn(
-              "w-9 h-9 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all group relative",
-              pathname === "/admin"
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
-                : "text-slate-300 dark:text-slate-400 hover:text-white hover:bg-indigo-500/20"
-            )}
-          >
-            <Shield className="w-4 h-4 md:w-6 md:h-6" />
-            <span className="absolute left-[48px] md:left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
-              Admin Panel
-            </span>
-          </Link>
-        )}
-      </nav>
-
-    </aside>
+        {/* Logout at bottom */}
+        <button
+          onClick={() => { logout(); onClose(); }}
+          className="w-12 h-12 rounded-xl flex items-center justify-center text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 transition-all cursor-pointer mb-2"
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
+      </aside>
+    </>
   );
 }

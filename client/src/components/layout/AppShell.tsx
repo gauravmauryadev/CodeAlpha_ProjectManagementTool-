@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import AppSidebar from "./AppSidebar";
 import FloatingIcons from "./FloatingIcons";
-import { User, LogOut, Sun, Moon } from "lucide-react";
+import { User, LogOut, Sun, Moon, Menu } from "lucide-react";
 import Link from "next/link";
 import { cn, getInitials, getAvatarColor } from "@/lib/utils";
 
@@ -14,6 +14,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const { user, token, syncProfile } = useAuthStore();
   const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -72,13 +73,49 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <FloatingIcons />
       
       <div className="relative z-10 flex flex-row w-full h-screen">
-        <AppSidebar />
+        <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         
-        <main className="flex-1 ml-[56px] md:ml-[72px] overflow-y-auto h-screen relative animate-fade-in-up">
+        <main className="flex-1 md:ml-[72px] overflow-y-auto h-screen relative animate-fade-in-up">
 
+          {/* Mobile Top Bar with Hamburger + Branding + Controls */}
+          <div className="flex md:hidden items-center justify-between px-4 py-3 sticky top-0 z-[50] bg-white/70 dark:bg-[#0E0A22]/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5">
+            {/* Left: Hamburger + Logo */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/50 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 transition-all cursor-pointer"
+              >
+                <Menu className="w-5 h-5 text-slate-700 dark:text-slate-200" />
+              </button>
+              <Link href="/dashboard" className="flex items-center gap-2">
+                <img src="/logo.png" alt="OmniPlan" className="w-7 h-7 object-contain drop-shadow-md" />
+                <span className="text-lg font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
+                  Omni<span className="text-indigo-600 dark:text-indigo-500">Plan</span>
+                </span>
+              </Link>
+            </div>
+            {/* Right: Theme + Avatar */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={toggleTheme}
+                className="w-9 h-9 rounded-full flex items-center justify-center bg-white/50 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:scale-105 transition-all text-slate-600 dark:text-slate-300 cursor-pointer"
+              >
+                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+              {user && (
+                <Link href="/profile" className={cn("w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ring-2 ring-white/10 shadow-md overflow-hidden", !user.avatar && getAvatarColor(user.name || "U"))}>
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(user.name || "U")
+                  )}
+                </Link>
+              )}
+            </div>
+          </div>
 
-          {/* Top Right Header Controls */}
-          <div className="absolute top-5 right-6 z-[100] flex items-center gap-4">
+          {/* Desktop Top Right Header Controls */}
+          <div className="hidden md:flex absolute top-5 right-6 z-[100] items-center gap-4">
             <button
               onClick={toggleTheme}
               className="w-10 h-10 rounded-full flex items-center justify-center bg-white/40 dark:bg-[#14112c]/40 border border-slate-200/50 dark:border-white/10 backdrop-blur-xl shadow-lg hover:scale-105 transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white cursor-pointer"
@@ -112,6 +149,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               </div>
             )}
           </div>
+
           {children}
         </main>
       </div>
