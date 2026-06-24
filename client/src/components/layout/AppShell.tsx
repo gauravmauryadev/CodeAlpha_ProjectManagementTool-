@@ -74,6 +74,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div className="relative z-10 flex flex-col md:flex-row w-full h-screen">
         <AppSidebar />
         
+        {/* Mobile Top Left Branding */}
+        <div className="fixed top-5 left-6 z-[100] flex md:hidden items-center gap-2">
+          <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-lg" />
+          <span className="text-xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
+            Omni<span className="text-indigo-600 dark:text-indigo-500">Plan</span>
+          </span>
+        </div>
+
         {/* Top Right Header Controls */}
         <div className="fixed top-5 right-6 z-[100] flex items-center gap-4">
           <button
