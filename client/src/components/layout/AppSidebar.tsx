@@ -47,7 +47,7 @@ export default function AppSidebar() {
       </Link>
 
       {/* Nav Items */}
-      <nav className="flex-1 flex flex-row md:flex-col items-center justify-center gap-2 md:gap-1.5 w-full md:w-auto">
+      <nav className="flex-1 flex flex-row md:flex-col items-center justify-around md:justify-center md:gap-1.5 w-full md:w-auto px-4 md:px-0">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -89,13 +89,7 @@ export default function AppSidebar() {
         )}
       </nav>
 
-      {/* Logout */}
-      <button
-        onClick={logout}
-        className="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center text-rose-500 hover:bg-rose-600 hover:text-white transition-all group cursor-pointer shadow-sm hover:shadow-rose-600/30 md:mt-auto"
-      >
-        <LogOut className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-0.5 transition-transform" />
-      </button>
+
 
     </aside>
   );
