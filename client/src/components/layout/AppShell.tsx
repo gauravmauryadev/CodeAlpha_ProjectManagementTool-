@@ -74,51 +74,50 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div className="relative z-10 flex flex-col md:flex-row w-full h-screen">
         <AppSidebar />
         
-        {/* Mobile Top Left Branding */}
-        <div className="absolute top-5 left-6 z-[100] flex md:hidden items-center gap-2">
-          <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-lg" />
-          <span className="text-xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-            Omni<span className="text-indigo-600 dark:text-indigo-500">Plan</span>
-          </span>
-        </div>
-
-        {/* Top Right Header Controls */}
-        <div className="absolute top-5 right-6 z-[100] flex items-center gap-4">
-          <button
-            onClick={toggleTheme}
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-white/40 dark:bg-[#14112c]/40 border border-slate-200/50 dark:border-white/10 backdrop-blur-xl shadow-lg hover:scale-105 transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white cursor-pointer"
-          >
-            {isDark ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
-          </button>
-          
-          {user && (
-            <div className="group perspective-1000 relative">
-              <Link href="/profile" className={cn("w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white ring-2 ring-white/10 hover-lift shadow-lg animate-glow-pulse overflow-hidden", !user.avatar && getAvatarColor(user.name || "U"))}>
-                {user.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                ) : (
-                  getInitials(user.name || "U")
-                )}
-              </Link>
-              
-              {/* Hover Popup */}
-              <div className="absolute top-full right-0 mt-3 w-64 bg-white/95 dark:bg-[#14112c]/95 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-2xl p-2 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] translate-y-[-20px] scale-90 origin-top-right group-hover:translate-y-0 group-hover:scale-100">
-                <div className="px-3 py-3 border-b border-slate-200/50 dark:border-white/5 mb-2">
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">{user.name}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email}</p>
-                </div>
-                <Link href="/profile" className="flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 hover:translate-x-1 text-sm font-medium text-slate-700 dark:text-slate-200 transition-all duration-200 cursor-pointer">
-                  <User className="w-4 h-4 text-indigo-400" /> My Profile
-                </Link>
-                <button onClick={() => useAuthStore.getState().logout()} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-rose-500/10 hover:translate-x-1 text-sm font-medium text-rose-400 transition-all duration-200 mt-1 cursor-pointer">
-                  <LogOut className="w-4 h-4 text-rose-400" /> Logout
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
         <main className="flex-1 md:ml-0 pb-[60px] md:pb-0 overflow-y-auto h-screen relative animate-fade-in-up">
+          {/* Mobile Top Left Branding */}
+          <div className="absolute top-5 left-6 z-[100] flex md:hidden items-center gap-2">
+            <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-lg" />
+            <span className="text-xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
+              Omni<span className="text-indigo-600 dark:text-indigo-500">Plan</span>
+            </span>
+          </div>
+
+          {/* Top Right Header Controls */}
+          <div className="absolute top-5 right-6 z-[100] flex items-center gap-4">
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 rounded-full flex items-center justify-center bg-white/40 dark:bg-[#14112c]/40 border border-slate-200/50 dark:border-white/10 backdrop-blur-xl shadow-lg hover:scale-105 transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white cursor-pointer"
+            >
+              {isDark ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
+            </button>
+            
+            {user && (
+              <div className="group perspective-1000 relative">
+                <Link href="/profile" className={cn("w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white ring-2 ring-white/10 hover-lift shadow-lg animate-glow-pulse overflow-hidden", !user.avatar && getAvatarColor(user.name || "U"))}>
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getInitials(user.name || "U")
+                  )}
+                </Link>
+                
+                {/* Hover Popup */}
+                <div className="absolute top-full right-0 mt-3 w-64 bg-white/95 dark:bg-[#14112c]/95 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-2xl p-2 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] translate-y-[-20px] scale-90 origin-top-right group-hover:translate-y-0 group-hover:scale-100">
+                  <div className="px-3 py-3 border-b border-slate-200/50 dark:border-white/5 mb-2">
+                    <p className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">{user.name}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email}</p>
+                  </div>
+                  <Link href="/profile" className="flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 hover:translate-x-1 text-sm font-medium text-slate-700 dark:text-slate-200 transition-all duration-200 cursor-pointer">
+                    <User className="w-4 h-4 text-indigo-400" /> My Profile
+                  </Link>
+                  <button onClick={() => useAuthStore.getState().logout()} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-rose-500/10 hover:translate-x-1 text-sm font-medium text-rose-400 transition-all duration-200 mt-1 cursor-pointer">
+                    <LogOut className="w-4 h-4 text-rose-400" /> Logout
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
           {children}
         </main>
       </div>
