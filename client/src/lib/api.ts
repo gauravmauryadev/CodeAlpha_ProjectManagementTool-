@@ -25,9 +25,13 @@ apiClient.interceptors.response.use(
   (res) => res,
   (error: AxiosError) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
+      // Don't redirect if the failed request was a login or register attempt
+      const url = error.config?.url || "";
+      if (!url.includes("/auth/login") && !url.includes("/auth/register")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }
