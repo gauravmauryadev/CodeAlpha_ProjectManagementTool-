@@ -71,17 +71,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Flying project management stickers background */}
       <FloatingIcons />
       
-      <div className="relative z-10 flex flex-col md:flex-row w-full h-screen">
+      <div className="relative z-10 flex flex-row w-full h-screen">
         <AppSidebar />
         
-        <main className="flex-1 md:ml-0 pb-[60px] md:pb-0 overflow-y-auto h-screen relative animate-fade-in-up">
-          {/* Mobile Top Left Branding */}
-          <div className="absolute top-5 left-6 z-[100] flex md:hidden items-center gap-2">
-            <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-lg" />
-            <span className="text-xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-              Omni<span className="text-indigo-600 dark:text-indigo-500">Plan</span>
-            </span>
-          </div>
+        <main className="flex-1 ml-[56px] md:ml-[72px] overflow-y-auto h-screen relative animate-fade-in-up">
+
 
           {/* Top Right Header Controls */}
           <div className="absolute top-5 right-6 z-[100] flex items-center gap-4">

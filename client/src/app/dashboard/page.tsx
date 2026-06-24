@@ -91,7 +91,7 @@ export default function DashboardPage() {
     <AppShell>
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8 relative">
         {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 md:mb-8 pr-0 md:pr-[130px] gap-4 md:gap-0 mt-12 md:mt-0">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 md:mb-8 pr-0 md:pr-[130px] gap-4 md:gap-0">
           <div>
             <h1 className="text-3xl font-black tracking-tight">
               <span className="bg-gradient-to-r from-red-600 via-rose-500 to-orange-500 bg-clip-text text-transparent animate-text-gradient">

@@ -37,17 +37,17 @@ export default function AppSidebar() {
   const { user, logout } = useAuthStore();
 
   return (
-    <aside className="fixed bottom-0 left-0 w-full h-[60px] md:relative md:w-[72px] md:h-screen bg-[#64748b] dark:bg-[#000000] border-t md:border-t-0 md:border-r border-slate-500 dark:border-white/5 flex flex-row md:flex-col items-center justify-between md:justify-start px-4 md:px-0 py-0 md:py-5 shadow-2xl z-50 transition-colors">
+    <aside className="fixed left-0 top-0 w-[56px] md:w-[72px] h-screen bg-[#64748b] dark:bg-[#000000] border-r border-slate-500 dark:border-white/5 flex flex-col items-center justify-start py-3 md:py-5 shadow-2xl z-50 transition-colors">
       {/* Logo */}
       <Link
         href="/dashboard"
-        className="hidden md:flex w-12 h-12 rounded-xl bg-white/5 items-center justify-center hover:scale-105 transition-transform mb-4"
+        className="flex w-9 h-9 md:w-12 md:h-12 rounded-xl bg-white/5 items-center justify-center hover:scale-105 transition-transform mb-4"
       >
-        <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-md" />
+        <img src="/logo.png" alt="OmniPlan" className="w-6 h-6 md:w-8 md:h-8 object-contain drop-shadow-md" />
       </Link>
 
       {/* Nav Items */}
-      <nav className="flex-1 flex flex-row md:flex-col items-center justify-around md:justify-center md:gap-1.5 w-full md:w-auto px-4 md:px-0">
+      <nav className="flex-1 flex flex-col items-center justify-center gap-1.5 w-full">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -55,15 +55,15 @@ export default function AppSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all group relative",
+                "w-9 h-9 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all group relative",
                 isActive
                   ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
                   : "text-slate-300 dark:text-slate-400 hover:text-white hover:bg-indigo-500/20"
               )}
             >
-              <item.icon className="w-5 h-5 md:w-6 md:h-6" />
+              <item.icon className="w-4 h-4 md:w-6 md:h-6" />
               {/* Premium Tooltip */}
-              <span className="absolute left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
+              <span className="absolute left-[48px] md:left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
                 {item.label}
               </span>
             </Link>
@@ -75,21 +75,19 @@ export default function AppSidebar() {
           <Link
             href="/admin"
             className={cn(
-              "w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all group relative",
+              "w-9 h-9 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all group relative",
               pathname === "/admin"
                 ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
                 : "text-slate-300 dark:text-slate-400 hover:text-white hover:bg-indigo-500/20"
             )}
           >
-            <Shield className="w-5 h-5 md:w-6 md:h-6" />
-            <span className="absolute left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
+            <Shield className="w-4 h-4 md:w-6 md:h-6" />
+            <span className="absolute left-[48px] md:left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
               Admin Panel
             </span>
           </Link>
         )}
       </nav>
-
-
 
     </aside>
   );
