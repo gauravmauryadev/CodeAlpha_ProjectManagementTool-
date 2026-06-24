@@ -9,8 +9,6 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
 
-  // Reduce JS bundle size by enabling SWC minification (default in Next 15, explicit for clarity)
-  swcMinify: true,
 
   // Experimental performance features
   experimental: {
