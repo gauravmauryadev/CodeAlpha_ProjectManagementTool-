@@ -73,10 +73,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Flying project management stickers background */}
       <FloatingIcons />
       
-      <div className="relative z-10 flex flex-row w-full h-screen">
+      <div className="relative z-10 flex flex-row w-full h-[100dvh]">
         <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         
-        <main className="flex-1 md:ml-[72px] overflow-y-auto h-screen relative animate-fade-in-up">
+        <main className="flex-1 md:ml-[72px] overflow-y-auto h-[100dvh] relative animate-fade-in-up">
 
           {/* Mobile Top Bar with Hamburger + Branding + Controls */}
           <div className="flex md:hidden items-center justify-between px-3 sm:px-4 py-3 sticky top-0 z-[50] bg-white/70 dark:bg-[#0E0A22]/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5">

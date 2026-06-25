@@ -109,7 +109,7 @@ export default function BoardClient() {
 
   return (
     <AppShell>
-      <div className="h-screen flex flex-col">
+      <div className="h-full flex flex-col">
         {/* Header */}
         <div className="px-8 py-5 border-b border-black/5 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-4">
