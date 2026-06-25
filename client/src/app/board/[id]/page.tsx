@@ -105,10 +105,7 @@ export default function BoardPage() {
   const isOwner = (user?.id || user?._id) === (typeof project?.owner === 'object' ? (project?.owner as any)?._id : project?.owner);
 
   const getCanEditTask = (task: Task | null) => {
-    if (!task) return false;
-    const userId = user?.id || user?._id;
-    const assigneeId = typeof task.assignee === 'object' ? (task.assignee as any)?._id : task.assignee;
-    return isOwner || userId === assigneeId;
+    return !!task; // Any project member can edit/delete any task in the board
   };
 
   const loadProject = useCallback(async () => {
