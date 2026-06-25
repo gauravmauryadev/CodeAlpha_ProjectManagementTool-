@@ -719,7 +719,7 @@ export default function BoardPage() {
       {selectedTask && (
         <div className="fixed inset-0 z-[100] flex">
           <div className="flex-1 bg-black/40 backdrop-blur-sm" onClick={() => { setSelectedTask(null); setIsEditingTask(false); }} />
-          <div className="w-[420px] bg-[#13102d]/95 backdrop-blur-2xl border-l border-white/10 flex flex-col h-full shadow-2xl text-slate-200 animate-in slide-in-from-right duration-250">
+          <div className="w-full sm:w-[420px] bg-[#13102d]/95 backdrop-blur-2xl border-l border-white/10 flex flex-col h-full shadow-2xl text-slate-200 animate-in slide-in-from-right duration-250">
             <div className="p-5 border-b border-white/5 flex items-center justify-between">
               {isEditingTask ? (
                 <input
@@ -758,7 +758,7 @@ export default function BoardPage() {
                     rows={3}
                     className="w-full px-3 py-2 rounded-lg bg-[#13102c] border border-white/10 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 resize-none"
                   />
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <select
                       value={editTaskData.priority}
                       onChange={(e) => setEditTaskData({ ...editTaskData, priority: e.target.value as any })}

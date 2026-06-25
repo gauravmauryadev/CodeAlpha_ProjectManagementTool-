@@ -981,7 +981,7 @@ export default function DiscordHub() {
       {/* Leave Server Modal */}
       {showLeaveModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[440px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[440px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
             <div className="p-4">
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-4">Leave '{activeServer?.name}'</h2>
               <p className="text-slate-700 dark:text-[#dbdee1] text-sm">Are you sure you want to leave <strong>{activeServer?.name}</strong>? You won't be able to rejoin this server unless you are re-invited.</p>
@@ -997,7 +997,7 @@ export default function DiscordHub() {
       {/* Delete Server Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[440px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[440px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
             <div className="p-4">
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-4">Delete '{activeServer?.name}'</h2>
               <p className="text-slate-700 dark:text-[#dbdee1] text-sm bg-[#eda145]/10 p-3 rounded border border-[#eda145]/30">Are you sure you want to delete <strong>{activeServer?.name}</strong>? This action cannot be undone.</p>
@@ -1028,7 +1028,7 @@ export default function DiscordHub() {
       {/* Boost Modal */}
       {showBoostModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[440px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[440px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
             <div className="p-6 text-center">
               <div className="w-16 h-16 mx-auto bg-gradient-to-tr from-pink-500 to-indigo-500 rounded-full flex items-center justify-center text-3xl mb-4">🚀</div>
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-2">Unlock Perks with Server Boost</h2>
@@ -1043,7 +1043,7 @@ export default function DiscordHub() {
       {/* Add Category Modal */}
       {showAddCategory && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[460px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[460px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
             <div className="p-4">
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-2">Create Category</h2>
               <p className="text-slate-500 dark:text-[#b5bac1] text-sm mb-4">Categories help you organize your channels.</p>
@@ -1067,7 +1067,7 @@ export default function DiscordHub() {
       {/* Event Modal */}
       {showEventModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[500px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[500px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
             <div className="p-4 border-b border-slate-200/50 dark:border-[#1e1f22]">
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5]">Create Event</h2>
             </div>
@@ -1098,7 +1098,7 @@ export default function DiscordHub() {
                 <h3 className="text-3xl font-extrabold text-slate-800 dark:text-[#f2f3f5] mb-2">Discover Apps</h3>
                 <p className="text-slate-500 dark:text-[#b5bac1]">Level up your server with integrations, games, and moderation bots.</p>
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[1,2,3,4,5,6].map((i) => (
                   <div key={i} className="bg-white dark:bg-[#313338] p-4 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-[#3f4147] transition-colors border border-slate-200/50 dark:border-[#1e1f22]" onClick={() => { showToast(`App ${i} added!`); setShowAppDirectoryModal(false); }}>
                     <div className="w-12 h-12 bg-indigo-500 rounded-lg mb-3 flex items-center justify-center text-white font-bold">Bot {i}</div>
@@ -1115,7 +1115,7 @@ export default function DiscordHub() {
       {/* Download Modal */}
       {showDownloadModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[460px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[460px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
             <div className="p-6 text-center">
               <div className="w-16 h-16 mx-auto bg-indigo-600 dark:bg-[#5865F2] rounded-2xl flex items-center justify-center text-3xl mb-4 text-white"><Monitor className="w-8 h-8"/></div>
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-2">Get the Desktop App</h2>

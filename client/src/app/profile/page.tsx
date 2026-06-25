@@ -148,7 +148,7 @@ function ProfileContent() {
 
   return (
     <AppShell>
-      <div className="max-w-3xl mx-auto px-8 py-10">
+      <div className="w-full max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10">
         {/* Profile Header */}
         <div className="relative mb-10">
           {/* Banner */}
@@ -167,12 +167,12 @@ function ProfileContent() {
           </div>
           
           {/* Avatar */}
-          <div className="absolute -bottom-10 left-8 flex items-end gap-5 z-10">
+          <div className="absolute -bottom-10 md:-bottom-10 left-4 md:left-8 flex flex-col md:flex-row items-start md:items-end gap-2 md:gap-5 z-10">
             <div className="relative group">
               {avatar ? (
-                <img src={avatar} alt={user?.name || "Avatar"} className="w-24 h-24 rounded-2xl ring-4 ring-white dark:ring-[#0E0A22] object-cover shadow-xl bg-slate-100 dark:bg-[#14112c]" />
+                <img src={avatar} alt={user?.name || "Avatar"} className="w-20 h-20 md:w-24 md:h-24 rounded-2xl ring-4 ring-white dark:ring-[#0E0A22] object-cover shadow-xl bg-slate-100 dark:bg-[#14112c]" />
               ) : (
-                <div className={cn("w-24 h-24 rounded-2xl ring-4 ring-white dark:ring-[#0E0A22] flex items-center justify-center text-3xl font-bold text-white shadow-xl", getAvatarColor(user?.name || "U"))}>
+                <div className={cn("w-20 h-20 md:w-24 md:h-24 rounded-2xl ring-4 ring-white dark:ring-[#0E0A22] flex items-center justify-center text-2xl md:text-3xl font-bold text-white shadow-xl", getAvatarColor(user?.name || "U"))}>
                   {getInitials(user?.name || "User")}
                 </div>
               )}
@@ -182,15 +182,15 @@ function ProfileContent() {
                 <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
               </label>
             </div>
-            <div className="mb-2">
-              <h1 className="text-3xl font-black bg-gradient-to-r from-red-600 via-rose-500 to-orange-500 bg-clip-text text-transparent animate-text-gradient tracking-tight">{user?.name}</h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400">{user?.email}</p>
+            <div className="mb-0 md:mb-2 bg-white/80 dark:bg-[#0E0A22]/80 md:bg-transparent md:dark:bg-transparent backdrop-blur-sm md:backdrop-blur-none px-2 py-1 md:p-0 rounded-xl md:rounded-none">
+              <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-red-600 via-rose-500 to-orange-500 bg-clip-text text-transparent animate-text-gradient tracking-tight leading-none">{user?.name}</h1>
+              <p className="text-xs md:text-sm text-slate-600 dark:text-slate-300 md:text-slate-500 md:dark:text-slate-400 mt-0.5">{user?.email}</p>
             </div>
           </div>
         </div>
 
         {/* Info Cards */}
-        <div className="grid grid-cols-3 gap-4 mt-14 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mt-20 md:mt-14 mb-8">
           <div className="p-4 rounded-xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
             <div className="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 mb-1">
               <Mail className="w-4 h-4" />
@@ -215,8 +215,8 @@ function ProfileContent() {
         </div>
 
         {/* GitHub Integration Card */}
-        <div className="p-6 rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse mb-8">
-          <div className="flex items-center justify-between mb-4">
+        <div className="p-4 md:p-6 rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-white/10 flex items-center justify-center">
                 <GithubIcon className="w-5 h-5 text-white" />
@@ -272,7 +272,7 @@ function ProfileContent() {
         </div>
 
         {/* Edit Form */}
-        <div className="p-6 rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
+        <div className="p-4 md:p-6 rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
           <h2 className="text-lg font-bold mb-6 text-slate-800 dark:text-slate-100">Edit Profile</h2>
 
           {message && (
@@ -299,7 +299,7 @@ function ProfileContent() {
 
             <div className="border-t border-slate-200 dark:border-white/5 pt-5 mt-5">
               <h3 className="text-sm font-semibold mb-4 text-slate-700 dark:text-slate-350">Change Password</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Current Password</label>
                   <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" className="w-full px-4 py-2.5 rounded-xl bg-slate-100/50 dark:bg-[#13102c]/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500" />

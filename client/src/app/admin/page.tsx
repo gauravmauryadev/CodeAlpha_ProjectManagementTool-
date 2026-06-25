@@ -80,7 +80,7 @@ export default function AdminPage() {
 
   return (
     <AppShell>
-      <div className="max-w-7xl mx-auto px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/20">
@@ -100,22 +100,22 @@ export default function AdminPage() {
         </div>
 
         {/* Tabs + Search */}
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex gap-1 bg-slate-200/50 dark:bg-[#14112c]/60 border border-slate-300/20 dark:border-white/5 rounded-xl p-1">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 gap-4 sm:gap-0">
+          <div className="flex gap-1 bg-slate-200/50 dark:bg-[#14112c]/60 border border-slate-300/20 dark:border-white/5 rounded-xl p-1 w-full sm:w-auto">
             {(["users", "projects"] as const).map((t) => (
-              <button key={t} onClick={() => { setTab(t); setSearch(""); }} className={cn("px-5 py-2 rounded-lg text-sm font-medium capitalize transition-all", tab === t ? "bg-indigo-600 text-white shadow-md" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200")}>
+              <button key={t} onClick={() => { setTab(t); setSearch(""); }} className={cn("flex-1 sm:flex-none px-5 py-2 rounded-lg text-sm font-medium capitalize transition-all", tab === t ? "bg-indigo-600 text-white shadow-md" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200")}>
                 {t}
               </button>
             ))}
           </div>
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={`Search ${tab}...`} className="pl-10 pr-4 py-2 rounded-xl bg-white/40 dark:bg-[#13102c]/50 border-2 border-transparent text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 w-64 animate-border-pulse" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={`Search ${tab}...`} className="pl-10 pr-4 py-2 rounded-xl bg-white/40 dark:bg-[#13102c]/50 border-2 border-transparent text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 w-full sm:w-64 animate-border-pulse" />
           </div>
         </div>
 
         {/* Table */}
-        <div className="rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm overflow-hidden animate-border-pulse">
+        <div className="rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm overflow-hidden animate-border-pulse overflow-x-auto">
           {tab === "users" ? (
             <table className="w-full">
               <thead>
@@ -228,7 +228,7 @@ export default function AdminPage() {
                 </div>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">{selectedUser.email}</p>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
                     <p className="text-[10px] uppercase font-bold text-slate-400 mb-1">Joined Date</p>
                     <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{formatDate(selectedUser.createdAt || "")}</p>
