@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import AppSidebar from "./AppSidebar";
 import FloatingIcons from "./FloatingIcons";
-import { User, LogOut, Sun, Moon, Menu } from "lucide-react";
+import { User, LogOut, Sun, Moon, Menu, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { cn, getInitials, getAvatarColor } from "@/lib/utils";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, token, syncProfile } = useAuthStore();
   const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
@@ -79,7 +80,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
           {/* Mobile Top Bar with Hamburger + Branding + Controls */}
           <div className="flex md:hidden items-center justify-between px-3 sm:px-4 py-3 sticky top-0 z-[50] bg-white/70 dark:bg-[#0E0A22]/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5">
-            {/* Left: Hamburger + Logo */}
+            {/* Left: Hamburger + Back + Logo */}
             <div className="flex items-center gap-2 sm:gap-3">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -87,6 +88,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               >
                 <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700 dark:text-slate-200" />
               </button>
+              
+              {pathname !== "/dashboard" && pathname !== "/" && (
+                <button
+                  onClick={() => router.back()}
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center bg-white/50 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 transition-all cursor-pointer flex-shrink-0 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white"
+                >
+                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              )}
+
               <Link href="/dashboard" className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                 <img src="/logo.png" alt="OmniPlan" className="w-6 h-6 sm:w-7 sm:h-7 object-contain drop-shadow-md flex-shrink-0" />
                 <span className="text-base sm:text-lg font-extrabold text-slate-800 dark:text-slate-100 tracking-tight hidden xs:block truncate">
@@ -121,6 +132,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               )}
             </div>
           </div>
+
+          {/* Desktop Top Left Back Button */}
+          {pathname !== "/dashboard" && pathname !== "/" && (
+            <div className="hidden md:flex absolute top-5 left-8 z-[100] items-center">
+              <button
+                onClick={() => router.back()}
+                className="px-4 h-10 rounded-full flex items-center justify-center gap-2 bg-white/40 dark:bg-[#14112c]/40 border border-slate-200/50 dark:border-white/10 backdrop-blur-xl shadow-lg hover:scale-105 transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white cursor-pointer font-bold text-sm"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </button>
+            </div>
+          )}
 
           {/* Desktop Top Right Header Controls */}
           <div className="hidden md:flex absolute top-5 right-6 z-[100] items-center gap-4">
