@@ -3,6 +3,7 @@ const Task = require('../models/Task');
 const Project = require('../models/Project');
 const auth = require('../middleware/auth');
 const { sendDiscordNotification } = require('./discord');
+const sendEmail = require('../utils/sendEmail');
 const router = express.Router();
 
 const { uploadCloud } = require('../config/cloudinary');
@@ -114,6 +115,38 @@ router.post('/', uploadCloud.single('image'), async (req, res) => {
     const io = req.app.get('io');
     if (io) io.to(task.project.toString()).emit('taskCreated', task);
 
+    if (task.assignee && task.assignee._id.toString() !== req.user._id.toString()) {
+      try {
+        const assigneeUser = await require('../models/User').findById(task.assignee._id);
+        if (assigneeUser && assigneeUser.email) {
+          const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+          await sendEmail({
+            email: assigneeUser.email,
+            subject: `New Task Assigned: ${task.title}`,
+            html: `
+              <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <h2 style="color: #4f46e5;">New Task Assigned</h2>
+                <p>Hello <strong>${assigneeUser.name}</strong>,</p>
+                <p><strong>${req.user.name}</strong> has assigned a new task to you in <strong>${projectDoc.name}</strong>.</p>
+                <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                  <h3 style="margin-top: 0; color: #1e293b;">${task.title}</h3>
+                  <p style="color: #475569; font-size: 14px;">Priority: <span style="text-transform: uppercase; font-weight: bold;">${task.priority}</span></p>
+                  <p style="color: #475569; font-size: 14px;">${task.description || 'No description provided.'}</p>
+                </div>
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${FRONTEND_URL}/board/${projectDoc._id}" style="background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                    View Board
+                  </a>
+                </div>
+              </div>
+            `
+          });
+        }
+      } catch (err) {
+        console.error('Task assignee email error:', err);
+      }
+    }
+
     // Discord Notification
     sendDiscordNotification(project, {
       title: `✨ New Task: ${task.title}`,
@@ -147,6 +180,8 @@ router.put('/:id', uploadCloud.single('image'), async (req, res) => {
       return res.status(403).json({ message: 'Access denied' });
     }
 
+    const originalAssignee = task.assignee ? task.assignee.toString() : null;
+
     const { title, description, status, priority, assignee, dueDate, labels, position } = req.body;
     
     if (title !== undefined) task.title = title;
@@ -171,6 +206,38 @@ router.put('/:id', uploadCloud.single('image'), async (req, res) => {
 
     const io = req.app.get('io');
     if (io) io.to(task.project.toString()).emit('taskUpdated', task);
+
+    const newAssignee = assignee !== undefined ? (assignee ? assignee.toString() : null) : originalAssignee;
+    if (newAssignee && newAssignee !== originalAssignee && newAssignee !== req.user._id.toString()) {
+      try {
+        const assigneeUser = await require('../models/User').findById(newAssignee);
+        if (assigneeUser && assigneeUser.email) {
+          const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+          await sendEmail({
+            email: assigneeUser.email,
+            subject: `Task Assigned to You: ${task.title}`,
+            html: `
+              <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <h2 style="color: #4f46e5;">Task Assigned</h2>
+                <p>Hello <strong>${assigneeUser.name}</strong>,</p>
+                <p><strong>${req.user.name}</strong> has assigned an existing task to you in <strong>${project.name}</strong>.</p>
+                <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                  <h3 style="margin-top: 0; color: #1e293b;">${task.title}</h3>
+                  <p style="color: #475569; font-size: 14px;">Priority: <span style="text-transform: uppercase; font-weight: bold;">${task.priority}</span></p>
+                </div>
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${FRONTEND_URL}/board/${project._id}" style="background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                    View Board
+                  </a>
+                </div>
+              </div>
+            `
+          });
+        }
+      } catch (err) {
+        console.error('Task assignee email error:', err);
+      }
+    }
 
     // Discord Notification for Status Change
     if (status !== undefined) {
