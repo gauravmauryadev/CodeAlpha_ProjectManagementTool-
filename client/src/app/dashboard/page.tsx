@@ -91,15 +91,15 @@ export default function DashboardPage() {
     <AppShell>
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8 relative">
         {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 md:mb-8 pr-0 md:pr-[130px] gap-4 md:gap-0">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 md:mb-8 pr-0 md:pr-[130px] gap-3 md:gap-0">
           <div>
-            <h1 className="text-3xl font-black tracking-tight">
+            <h1 className="text-xl md:text-3xl font-black tracking-tight">
               <span className="bg-gradient-to-r from-red-600 via-rose-500 to-orange-500 bg-clip-text text-transparent animate-text-gradient">
                 Welcome back, {user?.name?.split(" ")[0]}!
               </span>{" "}
               <span className="inline-block hover:animate-[wave_1s_ease-in-out_infinite] origin-bottom-right">👋</span>
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+            <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm mt-1">
               Here&apos;s your workspace overview.
             </p>
           </div>
@@ -142,26 +142,32 @@ export default function DashboardPage() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-          <StatCard
-            icon={FolderKanban}
-            label="Total Projects"
-            value={projects.length}
-            gradient="from-indigo-500 to-purple-600"
-          />
-          <StatCard
-            icon={ListChecks}
-            label="Active"
-            value={projects.length}
-            gradient="from-amber-500 to-orange-600"
-          />
-          <StatCard
-            icon={CheckCircle2}
-            label="Team Role"
-            value={user?.role === "admin" ? "Admin" : "Member"}
-            gradient="from-emerald-500 to-teal-600"
-            isText
-          />
+        <div className="grid grid-cols-3 gap-2 md:gap-5 mb-5 md:mb-8">
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <StatCard
+              icon={FolderKanban}
+              label="Total Projects"
+              value={projects.length}
+              gradient="from-indigo-500 to-purple-600"
+            />
+          </div>
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <StatCard
+              icon={ListChecks}
+              label="Active"
+              value={projects.length}
+              gradient="from-amber-500 to-orange-600"
+            />
+          </div>
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <StatCard
+              icon={CheckCircle2}
+              label="Team Role"
+              value={user?.role === "admin" ? "Admin" : "Member"}
+              gradient="from-emerald-500 to-teal-600"
+              isText
+            />
+          </div>
         </div>
 
         {/* Search */}
@@ -322,19 +328,19 @@ function StatCard({
   isText?: boolean;
 }) {
   return (
-    <div className="p-5 rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 hover:bg-slate-50 dark:hover:bg-slate-50/10 shadow-sm hover-lift transition-all animate-fade-in-up group animate-border-pulse">
-      <div className="flex items-center gap-4">
+    <div className="p-3 md:p-5 rounded-xl md:rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 hover:bg-slate-50 dark:hover:bg-slate-50/10 shadow-sm hover-lift transition-all group animate-border-pulse h-full">
+      <div className="flex flex-col md:flex-row items-center md:items-center gap-2 md:gap-4 text-center md:text-left">
         <div
           className={cn(
-            "w-11 h-11 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300",
+            "w-8 h-8 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300",
             gradient
           )}
         >
-          <Icon className="w-5 h-5 text-white" />
+          <Icon className="w-4 h-4 md:w-5 md:h-5 text-white" />
         </div>
         <div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{label}</p>
-          <p className={cn("font-bold text-slate-800 dark:text-slate-100", isText ? "text-base" : "text-2xl")}>
+          <p className="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 font-medium">{label}</p>
+          <p className={cn("font-bold text-slate-800 dark:text-slate-100", isText ? "text-xs md:text-base" : "text-lg md:text-2xl")}>
             {value}
           </p>
         </div>
