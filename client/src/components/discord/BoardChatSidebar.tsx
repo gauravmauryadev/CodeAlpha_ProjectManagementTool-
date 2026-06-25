@@ -340,21 +340,21 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-white dark:bg-slate-950 p-1 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex p-2 gap-1 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex-shrink-0 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setActiveTab("chat")}
           className={cn(
-            "flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer",
+            "flex-1 shrink-0 whitespace-nowrap min-w-[90px] py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer",
             activeTab === "chat" ? "bg-indigo-600 text-white shadow" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
           )}
         >
-          <Hash className="w-3.5 h-3.5" /> Text Chat
+          <MessageSquare className="w-3.5 h-3.5" /> Text Chat
         </button>
         <button
           onClick={() => setActiveTab("voice")}
           className={cn(
-            "flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer relative",
-            activeTab === "voice" ? "bg-indigo-600 text-white shadow" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
+            "flex-1 shrink-0 whitespace-nowrap min-w-[80px] py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer relative",
+            activeTab === "voice" ? "bg-emerald-500 text-white shadow" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
           )}
         >
           <Volume2 className="w-3.5 h-3.5" /> Call
@@ -365,7 +365,7 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
         <button
           onClick={() => setActiveTab("attendance")}
           className={cn(
-            "flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer relative",
+            "flex-1 shrink-0 whitespace-nowrap min-w-[90px] py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer relative",
             activeTab === "attendance" ? "bg-indigo-600 text-white shadow" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
           )}
         >
@@ -388,7 +388,7 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
               }
             }}
             className={cn(
-              "flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer relative",
+              "flex-1 shrink-0 whitespace-nowrap min-w-[90px] py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer relative",
               activeTab === "discord" ? "bg-[#5865F2] text-white shadow" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
             )}
           >
