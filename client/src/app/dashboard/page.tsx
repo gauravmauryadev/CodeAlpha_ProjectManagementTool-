@@ -10,6 +10,7 @@ import {
   ArrowRight,
   Camera,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import AppShell from "@/components/layout/AppShell";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProjectStore } from "@/store/useProjectStore";
@@ -188,7 +189,11 @@ export default function DashboardPage() {
             <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-20">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-20"
+          >
             <FolderKanban className="w-12 h-12 text-slate-500 dark:text-slate-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-300 mb-2">
               No projects yet
@@ -202,13 +207,9 @@ export default function DashboardPage() {
             >
               Create Project
             </button>
-          </div>
+          </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((project) => (
-              <ProjectCard key={project._id} project={project} />
-            ))}
-          </div>
+          <ProjectGrid projects={filtered} />
         )}
       </div>
 
@@ -328,8 +329,12 @@ function StatCard({
   isText?: boolean;
 }) {
   return (
-    <div className="p-3 md:p-5 rounded-xl md:rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 hover:bg-slate-50 dark:hover:bg-slate-50/10 shadow-sm hover-lift transition-all group animate-border-pulse h-full">
-      <div className="flex flex-col md:flex-row items-center md:items-center gap-2 md:gap-4 text-center md:text-left">
+    <motion.div 
+      whileHover={{ y: -5 }}
+      className="p-3 md:p-5 rounded-xl md:rounded-2xl border-2 border-transparent bg-white/70 dark:bg-[#14112c]/45 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all group h-full relative overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent dark:from-white/5 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="relative z-10 flex flex-col md:flex-row items-center md:items-center gap-2 md:gap-4 text-center md:text-left">
         <div
           className={cn(
             "w-8 h-8 md:w-11 md:h-11 rounded-lg md:rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300",
@@ -345,6 +350,41 @@ function StatCard({
           </p>
         </div>
       </div>
+    </motion.div>
+  );
+}
+
+function ProjectGrid({ projects }: { projects: Project[] }) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {projects.map((project, idx) => (
+        <motion.div
+          key={project._id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: idx * 0.05 }}
+          className="relative group block h-full w-full"
+          onMouseEnter={() => setHoveredIndex(idx)}
+          onMouseLeave={() => setHoveredIndex(null)}
+        >
+          <AnimatePresence>
+            {hoveredIndex === idx && (
+              <motion.span
+                className="absolute inset-0 h-full w-full bg-slate-200/50 dark:bg-white/[0.04] block rounded-[24px]"
+                layoutId="hoverBackground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, transition: { duration: 0.15 } }}
+                exit={{ opacity: 0, transition: { duration: 0.15, delay: 0.2 } }}
+              />
+            )}
+          </AnimatePresence>
+          <div className="relative z-10 p-1.5 h-full w-full">
+            <ProjectCard project={project} />
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 }
@@ -360,8 +400,11 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <a
       href={`/board/${project._id}`}
-      className="group block p-5 rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 hover:bg-slate-50 dark:hover:bg-slate-50/10 hover-lift shadow-sm animate-fade-in-up animate-border-pulse"
+      className="group block p-5 rounded-[20px] bg-white/80 dark:bg-[#14112c]/60 border border-slate-200/60 dark:border-white/[0.05] backdrop-blur-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 h-full relative overflow-hidden"
     >
+      {/* Decorative gradient orb on hover */}
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/20 dark:bg-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
       <div className="flex items-start justify-between mb-3">
         {project.image ? (
           <img 
