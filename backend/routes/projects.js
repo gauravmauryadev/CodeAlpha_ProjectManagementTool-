@@ -182,18 +182,20 @@ router.post('/:id/members', async (req, res) => {
     }
 
     const User = require('../models/User');
+    const Invite = require('../models/Invite');
+    const sendEmail = require('../utils/sendEmail');
+    
     const userToAdd = await User.findOne({ email });
     
-    if (!userToAdd) {
-      return res.status(404).json({ message: 'User with this email not found. Ask them to sign up first!' });
-    }
-
-    if (project.members.includes(userToAdd._id)) {
+    if (userToAdd && project.members.includes(userToAdd._id)) {
       return res.status(400).json({ message: 'User is already a member' });
     }
 
-    const Invite = require('../models/Invite');
-    const existingInvite = await Invite.findOne({ project: project._id, user: userToAdd._id, status: 'pending' });
+    const inviteQuery = userToAdd 
+      ? { project: project._id, user: userToAdd._id, status: 'pending' }
+      : { project: project._id, email: email, status: 'pending' };
+
+    const existingInvite = await Invite.findOne(inviteQuery);
     
     if (existingInvite) {
       return res.status(400).json({ message: 'User has already been invited' });
@@ -201,12 +203,39 @@ router.post('/:id/members', async (req, res) => {
 
     await Invite.create({
       project: project._id,
-      user: userToAdd._id,
+      user: userToAdd ? userToAdd._id : undefined,
+      email: email,
       invitedBy: req.user._id
     });
 
-    res.json({ message: 'Invite sent! The user will see it in their dashboard notifications.' });
+    const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const inviteLink = userToAdd ? `${FRONTEND_URL}/dashboard` : `${FRONTEND_URL}/register?email=${encodeURIComponent(email)}`;
+    
+    try {
+      await sendEmail({
+        email: email,
+        subject: `You have been invited to join ${project.name} on OmniPlan`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+            <h2 style="color: #4f46e5;">Project Invitation</h2>
+            <p>Hello!</p>
+            <p><strong>${req.user.name}</strong> has invited you to collaborate on the project <strong>${project.name}</strong> on OmniPlan.</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${inviteLink}" style="background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                ${userToAdd ? 'View Invite in Dashboard' : 'Sign Up to Join'}
+              </a>
+            </div>
+            <p style="color: #64748b; font-size: 14px;">If you ignore this email, you will not be added to the project.</p>
+          </div>
+        `
+      });
+    } catch (err) {
+      console.error('Error sending email:', err);
+    }
+
+    res.json({ message: 'Invite sent! An email has been dispatched to the user.' });
   } catch (error) {
+    console.error('Invite Error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

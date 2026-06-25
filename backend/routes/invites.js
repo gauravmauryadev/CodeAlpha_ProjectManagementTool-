@@ -9,7 +9,9 @@ router.use(auth);
 // Get pending invites for the current user
 router.get('/', async (req, res) => {
   try {
-    const invites = await Invite.find({ user: req.user._id })
+    const invites = await Invite.find({
+      $or: [{ user: req.user._id }, { email: req.user.email }]
+    })
       .populate('project', 'name description')
       .populate('invitedBy', 'name email')
       .sort({ createdAt: -1 });
@@ -22,7 +24,11 @@ router.get('/', async (req, res) => {
 // Accept an invite
 router.post('/:id/accept', async (req, res) => {
   try {
-    const invite = await Invite.findOne({ _id: req.params.id, user: req.user._id, status: 'pending' });
+    const invite = await Invite.findOne({ 
+      _id: req.params.id, 
+      $or: [{ user: req.user._id }, { email: req.user.email }],
+      status: 'pending' 
+    });
     if (!invite) return res.status(404).json({ message: 'Invite not found or already processed' });
 
     const project = await Project.findById(invite.project);
@@ -45,7 +51,11 @@ router.post('/:id/accept', async (req, res) => {
 // Reject an invite
 router.post('/:id/reject', async (req, res) => {
   try {
-    const invite = await Invite.findOne({ _id: req.params.id, user: req.user._id, status: 'pending' });
+    const invite = await Invite.findOne({ 
+      _id: req.params.id, 
+      $or: [{ user: req.user._id }, { email: req.user.email }],
+      status: 'pending' 
+    });
     if (!invite) return res.status(404).json({ message: 'Invite not found or already processed' });
 
     invite.status = 'rejected';

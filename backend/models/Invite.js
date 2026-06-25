@@ -8,8 +8,10 @@ const inviteSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: 'User'
+  },
+  email: {
+    type: String
   },
   invitedBy: {
     type: mongoose.Schema.Types.ObjectId,
