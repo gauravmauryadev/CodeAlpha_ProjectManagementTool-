@@ -94,7 +94,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </span>
               </Link>
             </div>
-            {/* Right: Theme + Avatar */}
+            {/* Right: Theme + Logout + Avatar */}
             <div className="flex items-center gap-3">
               <button
                 onClick={toggleTheme}
@@ -103,13 +103,21 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
               {user && (
-                <Link href="/profile" className={cn("w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ring-2 ring-white/10 shadow-md overflow-hidden", !user.avatar && getAvatarColor(user.name || "U"))}>
-                  {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                  ) : (
-                    getInitials(user.name || "U")
-                  )}
-                </Link>
+                <>
+                  <button
+                    onClick={() => useAuthStore.getState().logout()}
+                    className="w-9 h-9 rounded-full flex items-center justify-center bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500/20 transition-all cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                  <Link href="/profile" className={cn("w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ring-2 ring-white/10 shadow-md overflow-hidden", !user.avatar && getAvatarColor(user.name || "U"))}>
+                    {user.avatar ? (
+                      <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      getInitials(user.name || "U")
+                    )}
+                  </Link>
+                </>
               )}
             </div>
           </div>
