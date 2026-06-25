@@ -123,7 +123,7 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const attendanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -198,7 +198,9 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
 
   // Scroll to bottom of chat
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   };
 
   useEffect(() => {
@@ -399,40 +401,39 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
       {activeTab === "chat" && (
         <div className="flex-1 flex flex-col min-h-0 bg-slate-50/60 dark:bg-slate-900/60">
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.length === 0 && (
-              <div className="text-center py-8">
-                <div className="w-12 h-12 rounded-full bg-indigo-600/20 border border-indigo-500/25 mx-auto mb-2 flex items-center justify-center">
-                  <Hash className="w-6 h-6 text-indigo-400" />
-                </div>
-                <h4 className="text-slate-800 dark:text-slate-200 font-bold text-sm">Welcome to Team Chat</h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Send a message to start communicating with your team.</p>
-              </div>
-            )}
-            {messages.map((msg) => {
-              const senderName = typeof msg.sender === "object" ? msg.sender.name : "User";
-              const color = getHexColor(senderName);
-              const time = new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-              return (
-                <div key={msg._id} className="flex gap-2.5 py-0.5 px-1 rounded hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style={{ background: color }}>
-                    {senderName.charAt(0).toUpperCase()}
+            <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 scroll-smooth">
+              {messages.length === 0 && (
+                <div className="text-center py-8">
+                  <div className="w-12 h-12 rounded-full bg-indigo-600/20 border border-indigo-500/25 mx-auto mb-2 flex items-center justify-center">
+                    <Hash className="w-6 h-6 text-indigo-400" />
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold truncate" style={{ color }}>{senderName}</span>
-                      <span className="text-[9px] text-slate-500 dark:text-slate-400">{time}</span>
+                  <h4 className="text-slate-800 dark:text-slate-200 font-bold text-sm">Welcome to Team Chat</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Send a message to start communicating with your team.</p>
+                </div>
+              )}
+              {messages.map((msg) => {
+                const senderName = typeof msg.sender === "object" ? msg.sender.name : "User";
+                const color = getHexColor(senderName);
+                const time = new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                return (
+                  <div key={msg._id} className="flex gap-2.5 py-0.5 px-1 rounded hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style={{ background: color }}>
+                      {senderName.charAt(0).toUpperCase()}
                     </div>
-                    <p className="text-xs text-slate-700 dark:text-slate-300 leading-normal break-words mt-0.5">{msg.text}</p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold truncate" style={{ color }}>{senderName}</span>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-400">{time}</span>
+                      </div>
+                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-normal break-words mt-0.5">{msg.text}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-            <div ref={messagesEndRef} />
-          </div>
+                );
+              })}
+            </div>
 
           {/* Typing indicator & Input */}
-          <div className="p-3 bg-white/40 dark:bg-slate-950/30 border-t border-slate-200 dark:border-slate-800 relative">
+          <div className="p-3 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 relative z-10">
             {typing && (
               <p className="absolute -top-4 left-4 text-[9px] text-indigo-400 font-medium animate-pulse">{typing}</p>
             )}
