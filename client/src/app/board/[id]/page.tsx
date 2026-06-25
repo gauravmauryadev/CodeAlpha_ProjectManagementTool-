@@ -983,7 +983,7 @@ export default function BoardPage() {
       {/* Project Settings Modal */}
       {showSettings && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-2xl bg-[#13102d]/95 backdrop-blur-2xl border-2 border-transparent rounded-2xl p-8 shadow-2xl text-slate-200 animate-in fade-in zoom-in-95 duration-200 animate-border-pulse">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#13102d]/95 backdrop-blur-2xl border-2 border-transparent rounded-2xl p-4 md:p-8 shadow-2xl text-slate-200 animate-in fade-in zoom-in-95 duration-200 animate-border-pulse custom-scrollbar">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="text-xl font-bold text-slate-100">Project Settings</h3>
@@ -1016,9 +1016,9 @@ export default function BoardPage() {
                   </div>
                 ) : githubRepo ? (
                   <div className="flex items-center justify-between p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5">
-                    <div>
+                    <div className="min-w-0 pr-3">
                       <p className="text-xs text-emerald-400/70 font-semibold mb-0.5">LINKED REPOSITORY</p>
-                      <p className="text-sm font-bold text-emerald-400">{githubRepo}</p>
+                      <p className="text-sm font-bold text-emerald-400 truncate">{githubRepo}</p>
                     </div>
                     <button onClick={handleUnlinkRepo} disabled={isLinking} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-semibold transition-all cursor-pointer disabled:opacity-50">
                       {isLinking ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Unlink className="w-3.5 h-3.5" />}
@@ -1077,7 +1077,7 @@ export default function BoardPage() {
                       className="w-full px-3 py-2 rounded-lg bg-[#13102c]/50 border border-white/10 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#5865F2]" 
                     />
                   </div>
-                  <div className="flex gap-4">
+                  <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1">
                       <label className="block text-xs font-semibold text-slate-400 mb-1">SERVER ID (WIDGETBOT)</label>
                       <input 
