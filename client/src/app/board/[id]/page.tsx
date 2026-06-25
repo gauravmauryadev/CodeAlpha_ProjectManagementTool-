@@ -531,6 +531,42 @@ export default function BoardPage() {
 
                         {/* Tasks */}
                         <div className="flex-1 space-y-2.5 overflow-y-auto pr-1">
+                          {/* Add Task Form */}
+                          {showAddTask === col.id && (
+                            <div className="p-3 rounded-xl border border-indigo-500/10 bg-indigo-500/5 space-y-2 mb-2">
+                              <input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Task title..." autoFocus onKeyDown={(e) => e.key === "Enter" && handleAddTask(col.id)} className="w-full px-3 py-2 rounded-lg bg-[#13102c]/50 border border-white/10 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+                              
+                              <div className="flex flex-wrap items-center gap-2">
+                                <select value={newPriority} onChange={(e) => setNewPriority(e.target.value as "low" | "medium" | "high")} className="px-2 py-1.5 rounded-lg bg-[#13102c] border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                                  <option value="low">Low</option>
+                                  <option value="medium">Medium</option>
+                                  <option value="high">High</option>
+                                </select>
+
+                                <select value={newLabel} onChange={(e) => setNewLabel(e.target.value)} className="px-2 py-1.5 rounded-lg bg-[#13102c] border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                                  <option value="">Type...</option>
+                                  <option value="bug">Bug</option>
+                                  <option value="feature">Feature</option>
+                                  <option value="enhancement">Enhancement</option>
+                                </select>
+
+                                <select value={newAssignee} onChange={(e) => setNewAssignee(e.target.value)} className="px-2 py-1.5 max-w-[100px] truncate rounded-lg bg-[#13102c] border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                                  <option value="">Assignee...</option>
+                                  {project?.members?.map(m => {
+                                      const member = typeof m === "object" ? m : null;
+                                      return member ? <option key={member._id} value={member._id}>{member.name}</option> : null;
+                                  })}
+                                </select>
+
+                                <input type="date" value={newDueDate} onChange={(e) => setNewDueDate(e.target.value)} className="px-2 py-1.5 rounded-lg bg-[#13102c] border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 [color-scheme:dark] cursor-pointer" />
+
+                                <div className="flex-1" />
+                                <button onClick={() => setShowAddTask(null)} className="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 active:scale-95 transition-all cursor-pointer">Cancel</button>
+                                <button onClick={() => handleAddTask(col.id)} className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition-all text-xs font-semibold text-white cursor-pointer shadow-sm">Add</button>
+                              </div>
+                            </div>
+                          )}
+
                           {colTasks.map((task) => (
                             <DraggableTask
                               key={task._id}
@@ -589,44 +625,6 @@ export default function BoardPage() {
                               </div>
                             </DraggableTask>
                           ))}
-
-                          {/* Add Task Form */}
-                          {showAddTask === col.id && (
-                            <div className="p-3 rounded-xl border border-indigo-500/10 bg-indigo-500/5 space-y-2">
-                              <input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Task title..." autoFocus onKeyDown={(e) => e.key === "Enter" && handleAddTask(col.id)} className="w-full px-3 py-2 rounded-lg bg-[#13102c]/50 border border-white/10 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
-                              
-                              <div className="flex flex-wrap items-center gap-2">
-                                <select value={newPriority} onChange={(e) => setNewPriority(e.target.value as "low" | "medium" | "high")} className="px-2 py-1.5 rounded-lg bg-[#13102c] border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer">
-                                  <option value="low">Low</option>
-                                  <option value="medium">Medium</option>
-                                  <option value="high">High</option>
-                                </select>
-
-                                <select value={newLabel} onChange={(e) => setNewLabel(e.target.value)} className="px-2 py-1.5 rounded-lg bg-[#13102c] border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer">
-                                  <option value="">Type...</option>
-                                  <option value="bug">Bug</option>
-                                  <option value="feature">Feature</option>
-                                  <option value="enhancement">Enhancement</option>
-                                </select>
-
-                                <select value={newAssignee} onChange={(e) => setNewAssignee(e.target.value)} className="px-2 py-1.5 max-w-[100px] truncate rounded-lg bg-[#13102c] border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer">
-                                  <option value="">Assignee...</option>
-                                  {project?.members?.map(m => {
-                                      const member = typeof m === "object" ? m : null;
-                                      return member ? <option key={member._id} value={member._id}>{member.name}</option> : null;
-                                  })}
-                                </select>
-
-                                <input type="date" value={newDueDate} onChange={(e) => setNewDueDate(e.target.value)} className="px-2 py-1.5 rounded-lg bg-[#13102c] border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 [color-scheme:dark] cursor-pointer" />
-                              </div>
-
-                              <div className="flex items-center gap-2 pt-1 border-t border-white/5">
-                                <div className="flex-1" />
-                                <button onClick={() => setShowAddTask(null)} className="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200 active:scale-95 transition-all cursor-pointer">Cancel</button>
-                                <button onClick={() => handleAddTask(col.id)} className="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-550 active:scale-95 transition-all text-xs font-semibold text-white cursor-pointer">Add</button>
-                              </div>
-                            </div>
-                          )}
                         </div>
                       </DroppableColumn>
                     );

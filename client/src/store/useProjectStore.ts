@@ -83,7 +83,7 @@ export const useProjectStore = create<ProjectState>()((set) => ({
     const newTask = res.data.task || res.data;
     set((state) => {
       if (state.tasks.some(t => t._id === newTask._id)) return state;
-      return { tasks: [...state.tasks, newTask] };
+      return { tasks: [newTask, ...state.tasks] };
     });
   },
 
