@@ -127,6 +127,16 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const attendanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Clear timeout if they leave discord tab without being in a call
+  useEffect(() => {
+    if (activeTab !== "discord" && !livekitToken) {
+      if (attendanceTimeoutRef.current) {
+        clearTimeout(attendanceTimeoutRef.current);
+        attendanceTimeoutRef.current = null;
+      }
+    }
+  }, [activeTab, livekitToken]);
+
   // LiveKit States
   const [livekitToken, setLivekitToken] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -363,9 +373,17 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
           <button
             onClick={() => {
               setActiveTab("discord");
-              meetingApi.markAttendance(projectId).then(() => {
-                meetingApi.getAttendance(projectId).then(res => setMeetings(res.data.meetings));
-              }).catch(console.error);
+              if (!livekitToken) {
+                if (attendanceTimeoutRef.current) clearTimeout(attendanceTimeoutRef.current);
+                attendanceTimeoutRef.current = setTimeout(async () => {
+                  try {
+                    await meetingApi.markAttendance(projectId);
+                    meetingApi.getAttendance(projectId).then(res => setMeetings(res.data.meetings));
+                  } catch (err) {
+                    console.error("Failed to mark attendance", err);
+                  }
+                }, 10 * 60 * 1000); // 10 minutes
+              }
             }}
             className={cn(
               "flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer relative",
@@ -500,9 +518,18 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => {
-                meetingApi.markAttendance(projectId).then(() => {
-                  meetingApi.getAttendance(projectId).then(res => setMeetings(res.data.meetings));
-                }).catch(console.error);
+                // Keep web app timer running if they open in app
+                if (!livekitToken) {
+                  if (attendanceTimeoutRef.current) clearTimeout(attendanceTimeoutRef.current);
+                  attendanceTimeoutRef.current = setTimeout(async () => {
+                    try {
+                      await meetingApi.markAttendance(projectId);
+                      meetingApi.getAttendance(projectId).then(res => setMeetings(res.data.meetings));
+                    } catch (err) {
+                      console.error("Failed to mark attendance", err);
+                    }
+                  }, 10 * 60 * 1000); // 10 mins
+                }
               }}
               className="px-3 py-1.5 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] active:scale-95 text-[10px] font-bold text-white transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
             >
