@@ -361,7 +361,12 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
         </button>
         {project?.discordServerId && project?.discordChannelId && (
           <button
-            onClick={() => setActiveTab("discord")}
+            onClick={() => {
+              setActiveTab("discord");
+              meetingApi.markAttendance(projectId).then(() => {
+                meetingApi.getAttendance(projectId).then(res => setMeetings(res.data.meetings));
+              }).catch(console.error);
+            }}
             className={cn(
               "flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer relative",
               activeTab === "discord" ? "bg-[#5865F2] text-white shadow" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
@@ -494,7 +499,12 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
               href={`https://discord.com/channels/${project.discordServerId}/${project.discordChannelId}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] active:scale-95 text-[10px] font-bold text-white transition-all shadow-sm flex items-center gap-1.5"
+              onClick={() => {
+                meetingApi.markAttendance(projectId).then(() => {
+                  meetingApi.getAttendance(projectId).then(res => setMeetings(res.data.meetings));
+                }).catch(console.error);
+              }}
+              className="px-3 py-1.5 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] active:scale-95 text-[10px] font-bold text-white transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
             >
               Open in App
               <ExternalLink className="w-3 h-3" />
