@@ -78,39 +78,39 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <main className="flex-1 md:ml-[72px] overflow-y-auto h-screen relative animate-fade-in-up">
 
           {/* Mobile Top Bar with Hamburger + Branding + Controls */}
-          <div className="flex md:hidden items-center justify-between px-4 py-3 sticky top-0 z-[50] bg-white/70 dark:bg-[#0E0A22]/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5">
+          <div className="flex md:hidden items-center justify-between px-3 sm:px-4 py-3 sticky top-0 z-[50] bg-white/70 dark:bg-[#0E0A22]/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5">
             {/* Left: Hamburger + Logo */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/50 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 transition-all cursor-pointer"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center bg-white/50 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 transition-all cursor-pointer flex-shrink-0"
               >
-                <Menu className="w-5 h-5 text-slate-700 dark:text-slate-200" />
+                <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700 dark:text-slate-200" />
               </button>
-              <Link href="/dashboard" className="flex items-center gap-2">
-                <img src="/logo.png" alt="OmniPlan" className="w-7 h-7 object-contain drop-shadow-md" />
-                <span className="text-lg font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
+              <Link href="/dashboard" className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                <img src="/logo.png" alt="OmniPlan" className="w-6 h-6 sm:w-7 sm:h-7 object-contain drop-shadow-md flex-shrink-0" />
+                <span className="text-base sm:text-lg font-extrabold text-slate-800 dark:text-slate-100 tracking-tight hidden xs:block truncate">
                   Omni<span className="text-indigo-600 dark:text-indigo-500">Plan</span>
                 </span>
               </Link>
             </div>
             {/* Right: Theme + Logout + Avatar */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <button
                 onClick={toggleTheme}
-                className="w-9 h-9 rounded-full flex items-center justify-center bg-white/50 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:scale-105 transition-all text-slate-600 dark:text-slate-300 cursor-pointer"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center bg-white/50 dark:bg-white/5 border border-slate-200/50 dark:border-white/10 hover:scale-105 transition-all text-slate-600 dark:text-slate-300 cursor-pointer"
               >
-                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {isDark ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
               </button>
               {user && (
                 <>
                   <button
                     onClick={() => useAuthStore.getState().logout()}
-                    className="w-9 h-9 rounded-full flex items-center justify-center bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500/20 transition-all cursor-pointer"
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500/20 transition-all cursor-pointer"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </button>
-                  <Link href="/profile" className={cn("w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ring-2 ring-white/10 shadow-md overflow-hidden", !user.avatar && getAvatarColor(user.name || "U"))}>
+                  <Link href="/profile" className={cn("w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold text-white ring-2 ring-white/10 shadow-md overflow-hidden", !user.avatar && getAvatarColor(user.name || "U"))}>
                     {user.avatar ? (
                       <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
