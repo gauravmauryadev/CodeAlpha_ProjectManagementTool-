@@ -71,7 +71,20 @@ const itemVariants = {
   }
 };
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
+
 export default function LandingPage() {
+  const router = useRouter();
+  const token = useAuthStore((state) => state.token);
+
+  useEffect(() => {
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [token, router]);
+
   return (
     <LazyMotion features={domAnimation}>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-violet-50 to-purple-50 text-slate-800 relative overflow-hidden font-sans selection:bg-indigo-500/30">
