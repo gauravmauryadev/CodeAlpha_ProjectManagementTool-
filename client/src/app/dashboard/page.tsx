@@ -391,7 +391,7 @@ function ProjectGrid({ projects }: { projects: Project[] }) {
 
 function ProjectCard({ project }: { project: Project }) {
   const ownerName =
-    typeof project.owner === "object" ? project.owner.name : "Unknown";
+    project.owner && typeof project.owner === "object" ? (project.owner as any).name || "Unknown" : "Unknown";
 
   const done = project.taskCounts?.done || 0;
   const total = project.taskCounts?.total || 0;
@@ -409,7 +409,7 @@ function ProjectCard({ project }: { project: Project }) {
         {project.image ? (
           <img 
             src={project.image} 
-            alt={project.name} 
+            alt={project.name || "Project"} 
             className="w-10 h-10 rounded-xl object-cover shadow-md shadow-indigo-500/10 group-hover:scale-110 transition-transform duration-300" 
           />
         ) : (
@@ -419,14 +419,14 @@ function ProjectCard({ project }: { project: Project }) {
               background: project.color || "#6366f1",
             }}
           >
-            {project.name.charAt(0).toUpperCase()}
+            {(project.name || "P").charAt(0).toUpperCase()}
           </div>
         )}
         <ArrowRight className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all duration-300" />
       </div>
 
       <h3 className="font-bold text-slate-700 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-white transition-colors duration-200">
-        {project.name}
+        {project.name || "Untitled Project"}
       </h3>
       {project.description && (
         <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 mb-4 leading-relaxed">
@@ -450,17 +450,22 @@ function ProjectCard({ project }: { project: Project }) {
 
       <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-200 dark:border-white/10">
         <div className="flex -space-x-2">
-          {project.members?.slice(0, 4).map((m) => (
-            <div
-              key={typeof m === "object" ? m._id : m}
-              className={cn(
-                "w-6.5 h-6.5 rounded-full ring-2 ring-[#110e28] flex items-center justify-center text-[9px] font-bold text-white shadow-sm hover:scale-110 transition-transform duration-200",
-                getAvatarColor(typeof m === "object" ? m.name : "U")
-              )}
-            >
-              {getInitials(typeof m === "object" ? m.name : "U")}
-            </div>
-          ))}
+          {project.members?.slice(0, 4).map((m) => {
+            if (!m) return null;
+            const mId = typeof m === "object" ? (m as any)._id : m;
+            const mName = typeof m === "object" ? (m as any).name || "Unknown" : "U";
+            return (
+              <div
+                key={mId || Math.random().toString()}
+                className={cn(
+                  "w-6.5 h-6.5 rounded-full ring-2 ring-[#110e28] flex items-center justify-center text-[9px] font-bold text-white shadow-sm hover:scale-110 transition-transform duration-200",
+                  getAvatarColor(mName)
+                )}
+              >
+                {getInitials(mName)}
+              </div>
+            );
+          })}
           {(project.members?.length || 0) > 4 && (
             <div className="w-6.5 h-6.5 rounded-full ring-2 ring-[#110e28] bg-slate-800 flex items-center justify-center text-[9px] font-bold text-slate-350 hover:scale-110 transition-transform duration-200">
               +{project.members.length - 4}
@@ -468,7 +473,7 @@ function ProjectCard({ project }: { project: Project }) {
           )}
         </div>
         <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
-          {timeAgo(project.createdAt)}
+          {project.createdAt ? timeAgo(project.createdAt) : ""}
         </span>
       </div>
     </a>
