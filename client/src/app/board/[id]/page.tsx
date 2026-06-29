@@ -296,14 +296,19 @@ export default function BoardPage() {
     if (newDueDate) taskPayload.dueDate = newDueDate;
     if (newLabel) taskPayload.labels = [newLabel];
 
-    await createTask(taskPayload);
-    
+    // Close immediately for better UX
+    setShowAddTask(null);
     setNewTitle("");
     setNewPriority("medium");
     setNewAssignee("");
     setNewDueDate("");
     setNewLabel("");
-    setShowAddTask(null);
+
+    try {
+      await createTask(taskPayload);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleDrop = async (status: string) => {
@@ -534,7 +539,7 @@ export default function BoardPage() {
                           {/* Add Task Form */}
                           {showAddTask === col.id && (
                             <div className="p-3 rounded-xl border border-indigo-500/10 bg-indigo-500/5 space-y-2 mb-2">
-                              <input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Task title..." autoFocus onKeyDown={(e) => e.key === "Enter" && handleAddTask(col.id)} className="w-full px-3 py-2 rounded-lg bg-[#13102c]/50 border border-white/10 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+                              <input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Task title..." autoFocus onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAddTask(col.id); } }} className="w-full px-3 py-2 rounded-lg bg-[#13102c]/50 border border-white/10 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
                               
                               <div className="flex flex-wrap items-center gap-2">
                                 <select value={newPriority} onChange={(e) => setNewPriority(e.target.value as "low" | "medium" | "high")} className="px-2 py-1.5 rounded-lg bg-[#13102c] border border-white/10 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer">
