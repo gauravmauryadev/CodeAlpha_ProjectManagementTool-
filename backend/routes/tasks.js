@@ -88,10 +88,10 @@ router.post('/', uploadCloud.single('image'), async (req, res) => {
       return res.status(404).json({ message: 'Project not found or access denied' });
     }
 
-    // Get the position for new task (last in its column)
-    const lastTask = await Task.findOne({ project, status: status || 'todo' })
-      .sort({ position: -1 });
-    const position = lastTask ? lastTask.position + 1 : 0;
+    // Get the position for new task (first in its column)
+    const firstTask = await Task.findOne({ project, status: status || 'todo' })
+      .sort({ position: 1 });
+    const position = firstTask ? firstTask.position - 1 : 0;
 
     const parsedLabels = labels ? (typeof labels === 'string' ? JSON.parse(labels) : labels) : [];
 
