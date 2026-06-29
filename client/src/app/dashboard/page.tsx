@@ -331,7 +331,7 @@ function StatCard({
   return (
     <motion.div 
       whileHover={{ y: -5 }}
-      className="p-3 md:p-5 rounded-xl md:rounded-2xl border-2 border-transparent bg-white/70 dark:bg-[#14112c]/45 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all group h-full relative overflow-hidden"
+      className="p-3 md:p-5 rounded-xl md:rounded-2xl border-2 border-transparent bg-white/70 dark:bg-[#14112c]/45 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all group h-full relative overflow-hidden animate-border-pulse"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent dark:from-white/5 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <div className="relative z-10 flex flex-col md:flex-row items-center md:items-center gap-2 md:gap-4 text-center md:text-left">
