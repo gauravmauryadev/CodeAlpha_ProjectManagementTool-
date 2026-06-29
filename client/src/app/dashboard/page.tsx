@@ -400,7 +400,7 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <a
       href={`/board/${project._id}`}
-      className="group block p-5 rounded-[20px] bg-white/80 dark:bg-[#14112c]/60 border border-slate-200/60 dark:border-white/[0.05] backdrop-blur-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 h-full relative overflow-hidden"
+      className="group block p-5 rounded-[20px] bg-white/80 dark:bg-[#14112c]/45 border-2 border-transparent backdrop-blur-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 h-full relative overflow-hidden animate-border-pulse"
     >
       {/* Decorative gradient orb on hover */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/20 dark:bg-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
