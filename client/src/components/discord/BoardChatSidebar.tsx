@@ -127,6 +127,11 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const attendanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // LiveKit States
+  const [livekitToken, setLivekitToken] = useState<string | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [callError, setCallError] = useState<string | null>(null);
+
   // Clear timeout if they leave discord tab without being in a call
   useEffect(() => {
     if (activeTab !== "discord" && !livekitToken) {
@@ -136,11 +141,6 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
       }
     }
   }, [activeTab, livekitToken]);
-
-  // LiveKit States
-  const [livekitToken, setLivekitToken] = useState<string | null>(null);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [callError, setCallError] = useState<string | null>(null);
 
   // Resize State
   const [sidebarWidth, setSidebarWidth] = useState(360);
