@@ -134,7 +134,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Desktop Top Left Back Button */}
-          {pathname !== "/dashboard" && pathname !== "/" && (
+          {pathname !== "/dashboard" && pathname !== "/" && !pathname.startsWith("/board") && (
             <div className="hidden md:flex absolute top-5 left-8 z-[100] items-center">
               <button
                 onClick={() => router.back()}
