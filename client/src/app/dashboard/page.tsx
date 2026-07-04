@@ -9,6 +9,7 @@ import {
   Search,
   ArrowRight,
   Camera,
+  Trash2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AppShell from "@/components/layout/AppShell";
@@ -390,12 +391,26 @@ function ProjectGrid({ projects }: { projects: Project[] }) {
 }
 
 function ProjectCard({ project }: { project: Project }) {
+  const { user } = useAuthStore();
+  const { deleteProject } = useProjectStore();
+  
   const ownerName =
     project.owner && typeof project.owner === "object" ? (project.owner as any).name || "Unknown" : "Unknown";
+
+  const ownerId = project.owner && typeof project.owner === "object" ? (project.owner as any)._id : project.owner;
+  const isOwner = user && (user as any).id === ownerId || (user as any)._id === ownerId;
 
   const done = project.taskCounts?.done || 0;
   const total = project.taskCounts?.total || 0;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
+      deleteProject(project._id);
+    }
+  };
 
   return (
     <a
@@ -406,23 +421,37 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/20 dark:bg-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
       <div className="flex items-start justify-between mb-3">
-        {project.image ? (
-          <img 
-            src={project.image} 
-            alt={project.name || "Project"} 
-            className="w-10 h-10 rounded-xl object-cover shadow-md shadow-indigo-500/10 group-hover:scale-110 transition-transform duration-300" 
-          />
-        ) : (
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-md shadow-indigo-500/10 group-hover:scale-110 transition-transform duration-300"
-            style={{
-              background: project.color || "#6366f1",
-            }}
-          >
-            {(project.name || "P").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <ArrowRight className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all duration-300" />
+        <div className="flex items-center gap-3">
+          {project.image ? (
+            <img 
+              src={project.image} 
+              alt={project.name || "Project"} 
+              className="w-10 h-10 rounded-xl object-cover shadow-md shadow-indigo-500/10 group-hover:scale-110 transition-transform duration-300" 
+            />
+          ) : (
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold shadow-md shadow-indigo-500/10 group-hover:scale-110 transition-transform duration-300"
+              style={{
+                background: project.color || "#6366f1",
+              }}
+            >
+              {(project.name || "P").charAt(0).toUpperCase()}
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {isOwner && (
+            <Tooltip content="Delete Project" position="top">
+              <button
+                onClick={handleDelete}
+                className="w-7 h-7 flex items-center justify-center rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-200 shadow-sm opacity-0 group-hover:opacity-100 z-20 cursor-pointer"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </Tooltip>
+          )}
+          <ArrowRight className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all duration-300 z-10" />
+        </div>
       </div>
 
       <h3 className="font-bold text-slate-700 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-white transition-colors duration-200">
