@@ -317,16 +317,11 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
   };
 
   return (
+    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
     <div 
       ref={sidebarRef}
-      style={{ '--sidebar-width': `${sidebarWidth}px` } as React.CSSProperties}
-      className="fixed inset-0 z-[150] w-full md:relative md:z-0 md:w-[var(--sidebar-width)] bg-slate-50 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col h-full shadow-2xl flex-shrink-0"
+      className="w-[95vw] max-w-[480px] h-[85vh] max-h-[700px] bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col shadow-2xl rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
     >
-      {/* Resizer Handle */}
-      <div
-        onMouseDown={startResizing}
-        className="hidden md:block absolute left-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-indigo-500/50 active:bg-indigo-500 z-50 transition-colors"
-      />
 
       {/* Sidebar Header */}
       <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white/60 dark:bg-slate-950/40">
@@ -604,6 +599,7 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

@@ -704,7 +704,7 @@ export default function BoardPage() {
             ) : null}
           </div>
 
-          {/* Right Collaboration Sidebar (Chat & Calling) */}
+          {/* Team Collaboration Modal (Chat & Calling) */}
           {showChat && (
             <BoardChatSidebar
               projectId={projectId}
