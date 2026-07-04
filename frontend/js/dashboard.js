@@ -205,6 +205,13 @@ function renderProjects(projects) {
             // Randomly pick some aesthetic tags for the UI based on project name hash or just mock them
             const mockTags = ['#Design', '#Development', '#Urgent', '#Planning', '#Marketing'].sort(() => 0.5 - Math.random()).slice(0, 2);
             
+            const isOwner = p.owner && (p.owner._id === user.id || p.owner === user.id);
+            const deleteBtnHtml = isOwner ? `
+                <button onclick="deleteProject(event, '${p._id}')" class="btn btn-sm" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border: none; padding: 0.35rem; border-radius: 6px; cursor: pointer; transition: all 0.2s;" title="Delete Project" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                </button>
+            ` : '';
+
             return `
             <div class="project-card" onclick="window.location.href='/board.html?id=${p._id}'">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; position: relative; z-index: 1;">
@@ -212,8 +219,9 @@ function renderProjects(projects) {
                         <div style="width: 32px; height: 32px; border-radius: 8px; background: ${p.color}; opacity: 0.8; display: flex; align-items: center; justify-content: center;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                         </div>
-                        <h3 style="margin: 0; font-size: 1.1rem;">${p.name}</h3>
+                        <h3 style="margin: 0; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${p.name}</h3>
                     </div>
+                    ${deleteBtnHtml}
                 </div>
                 
                 <p style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.85rem; position: relative; z-index: 1;">
@@ -238,7 +246,9 @@ function renderProjects(projects) {
         }).join('');
     } else {
         grid.className = 'task-list-view';
-        grid.innerHTML = projects.map(p => `
+        grid.innerHTML = projects.map(p => {
+            const isOwner = p.owner && (p.owner._id === user.id || p.owner === user.id);
+            return `
             <div class="task-card-item" onclick="window.location.href='/board.html?id=${p._id}'" style="cursor: pointer; align-items: flex-start;">
                 <div style="width: 6px; height: 100%; border-radius: 3px; background: ${p.color}; flex-shrink: 0; min-height: 40px;"></div>
                 <div class="task-card-body" style="width: 100%;">
@@ -260,9 +270,17 @@ function renderProjects(projects) {
                     </div>
                     ` : ''}
                 </div>
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top: 10px;"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <div style="display: flex; align-items: center; margin-top: 10px;">
+                    ${isOwner ? `
+                        <button onclick="deleteProject(event, '${p._id}')" class="btn btn-sm" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border: none; padding: 0.35rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; margin-right: 10px;" title="Delete Project" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        </button>
+                    ` : ''}
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 }
 
@@ -321,6 +339,19 @@ document.getElementById('createProjectForm').addEventListener('submit', async (e
         btn.textContent = 'Create Project';
     }
 });
+
+// Delete Project
+async function deleteProject(event, projectId) {
+    event.stopPropagation();
+    if (!confirm('Are you sure you want to delete this project? This action cannot be undone and will delete all tasks inside it.')) return;
+    
+    try {
+        await api.deleteProject(projectId);
+        loadProjects(); // refresh list
+    } catch (error) {
+        alert(error.message);
+    }
+}
 
 // Initial load
 loadInvites();
