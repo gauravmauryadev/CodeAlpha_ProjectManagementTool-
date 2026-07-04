@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Plus,
   FolderKanban,
@@ -393,6 +394,7 @@ function ProjectGrid({ projects }: { projects: Project[] }) {
 function ProjectCard({ project }: { project: Project }) {
   const { user } = useAuthStore();
   const { deleteProject } = useProjectStore();
+  const router = useRouter();
   
   const ownerName =
     project.owner && typeof project.owner === "object" ? (project.owner as any).name || "Unknown" : "Unknown";
@@ -405,18 +407,22 @@ function ProjectCard({ project }: { project: Project }) {
   const total = project.taskCounts?.total || 0;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
-      deleteProject(project._id);
+      try {
+        await deleteProject(project._id);
+      } catch (error: any) {
+        alert("Failed to delete project: " + (error.response?.data?.message || error.message));
+      }
     }
   };
 
   return (
-    <a
-      href={`/board/${project._id}`}
-      className="group block p-5 rounded-[20px] bg-white/80 dark:bg-[#14112c]/45 border-2 border-transparent backdrop-blur-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 h-full relative animate-border-pulse"
+    <div
+      onClick={() => router.push(`/board/${project._id}`)}
+      className="group block p-5 rounded-[20px] bg-white/80 dark:bg-[#14112c]/45 border-2 border-transparent backdrop-blur-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 h-full relative animate-border-pulse cursor-pointer"
     >
       {/* Decorative gradient orb on hover */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/20 dark:bg-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -506,6 +512,6 @@ function ProjectCard({ project }: { project: Project }) {
           {project.createdAt ? timeAgo(project.createdAt) : ""}
         </span>
       </div>
-    </a>
+    </div>
   );
 }
