@@ -397,8 +397,9 @@ function ProjectCard({ project }: { project: Project }) {
   const ownerName =
     project.owner && typeof project.owner === "object" ? (project.owner as any).name || "Unknown" : "Unknown";
 
-  const ownerId = project.owner && typeof project.owner === "object" ? (project.owner as any)._id : project.owner;
-  const isOwner = user && (user as any).id === ownerId || (user as any)._id === ownerId;
+  const userIdStr = user ? String((user as any).id || (user as any)._id) : "";
+  const ownerIdStr = project.owner ? String(typeof project.owner === "object" ? (project.owner as any)._id : project.owner) : "";
+  const isOwner = Boolean(userIdStr && ownerIdStr && userIdStr === ownerIdStr);
 
   const done = project.taskCounts?.done || 0;
   const total = project.taskCounts?.total || 0;
