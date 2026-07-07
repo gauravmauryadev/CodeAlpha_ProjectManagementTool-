@@ -112,7 +112,7 @@ export default function BoardPage() {
   const [isSavingDiscord, setIsSavingDiscord] = useState(false);
 
   // Collaboration state
-  const [activeTab, setActiveTab] = useState<"summary" | "list" | "board" | "calendar" | "timeline" | "docs">("board");
+  const [activeTab, setActiveTab] = useState<"summary" | "list" | "board" | "calendar" | "timeline" | "docs" | "wiki" | "activity">("board");
   const [showChat, setShowChat] = useState(false);
   const [socket, setSocket] = useState<Socket | null>(null);
 
