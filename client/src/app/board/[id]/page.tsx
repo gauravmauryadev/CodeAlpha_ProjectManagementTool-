@@ -677,6 +677,16 @@ export default function BoardPage() {
                     );
                   })}
                 </div>
+              </div>
+            </DndContext>
+            ) : activeTab === "wiki" ? (
+              <div className="flex-1 p-6 overflow-hidden">
+                <WikiTab projectId={projectId} socket={socket} />
+              </div>
+            ) : activeTab === "activity" ? (
+              <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-10">
+                <div className="max-w-3xl mx-auto">
+                  <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-md bg-slate-900 dark:bg-white/10 flex items-center justify-center">
                       <GithubIcon className="w-5 h-5 text-white" />
                     </div>
