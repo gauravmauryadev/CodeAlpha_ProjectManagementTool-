@@ -60,21 +60,25 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchAllTasks = async () => {
       if (projects.length === 0) return;
-      let combined: any[] = [];
-      for (const p of projects) {
-         try {
-           const res = await taskApi.getByProject(p._id);
-           let tasks = res.data.tasks;
-           if (tasks && !Array.isArray(tasks) && typeof tasks === "object") {
-             tasks = [...(tasks.todo||[]), ...(tasks.inprogress||[]), ...(tasks.done||[])];
-           }
-           if (Array.isArray(tasks)) {
-             combined.push(...tasks);
-           }
-         } catch (e) { /* ignore */ }
-      }
-      combined.sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      setAllTasks(combined);
+      try {
+        const promises = projects.map(p => taskApi.getByProject(p._id).catch(() => null));
+        const results = await Promise.all(promises);
+        
+        let combined: any[] = [];
+        results.forEach(res => {
+          if (!res || !res.data || !res.data.tasks) return;
+          let tasks = res.data.tasks;
+          if (tasks && !Array.isArray(tasks) && typeof tasks === "object") {
+            tasks = [...(tasks.todo||[]), ...(tasks.inprogress||[]), ...(tasks.done||[])];
+          }
+          if (Array.isArray(tasks)) {
+            combined.push(...tasks);
+          }
+        });
+        
+        combined.sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setAllTasks(combined);
+      } catch (e) { /* ignore */ }
     };
     fetchAllTasks();
   }, [projects]);
@@ -156,7 +160,7 @@ export default function DashboardPage() {
         dueDate.setDate(dueDate.getDate() + Math.floor(Math.random() * 14) + 1); // 1-14 days from now
         
         await taskApi.create({
-          projectId: newProjectId,
+          project: newProjectId,
           title: t.title,
           description: `AI generated sub-task for the goal: ${aiPrompt}`,
           status: t.status,
