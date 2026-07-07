@@ -657,6 +657,7 @@ function ProjectCard({ project }: { project: Project }) {
   };
 
   return (
+    <div
       onClick={() => router.push(`/board/${project._id}`)}
       className="group flex flex-col p-5 rounded-md bg-white dark:bg-[#14112c]/45 border border-slate-200 dark:border-white/10 hover:shadow-sm hover:shadow-indigo-500/10 transition-all duration-300 h-full relative cursor-pointer"
     >
