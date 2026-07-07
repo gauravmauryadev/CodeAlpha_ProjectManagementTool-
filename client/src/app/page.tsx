@@ -105,7 +105,7 @@ export default function LandingPage() {
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" />
+            <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300" />
             <span className="text-lg font-bold tracking-tight text-slate-900">
               Omni<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Plan</span>
             </span>
@@ -119,7 +119,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/register"
-              className="px-5 py-2 text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white rounded-full transition-colors shadow-lg shadow-indigo-500/20"
+              className="px-5 py-2 text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white rounded-full transition-colors shadow-sm shadow-indigo-500/20"
             >
               Get Started
             </Link>
@@ -157,14 +157,14 @@ export default function LandingPage() {
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 md:gap-4 px-4 sm:px-0">
             <Link
               href="/register"
-              className="group relative inline-flex h-12 sm:h-14 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 sm:px-8 font-semibold text-white shadow-xl shadow-indigo-500/25 transition-all hover:scale-105 hover:shadow-indigo-500/40"
+              className="group relative inline-flex h-12 sm:h-14 items-center justify-center overflow-hidden rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 px-6 sm:px-8 font-semibold text-white shadow-sm shadow-indigo-500/25 transition-all hover:scale-105 hover:shadow-indigo-500/40"
             >
               <span className="mr-2">Start for Free</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/login"
-              className="inline-flex h-12 sm:h-14 items-center justify-center rounded-xl border border-slate-300 bg-white/60 px-6 sm:px-8 font-semibold text-slate-700 backdrop-blur-md transition-all hover:bg-white/90 hover:scale-105 shadow-sm"
+              className="inline-flex h-12 sm:h-14 items-center justify-center rounded-md border border-slate-300 bg-white/60 px-6 sm:px-8 font-semibold text-slate-700 backdrop-blur-md transition-all hover:bg-white/90 hover:scale-105 shadow-sm"
             >
               View Dashboard
             </Link>
@@ -182,14 +182,14 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5, type: "spring", bounce: 0.3 }}
-          className="mt-24 w-full max-w-6xl mx-auto rounded-2xl border border-white/80 bg-white/40 p-2 backdrop-blur-xl shadow-2xl shadow-indigo-500/15"
+          className="mt-24 w-full max-w-6xl mx-auto rounded-md border border-white/80 bg-white/40 p-2 backdrop-blur-xl shadow-sm shadow-indigo-500/15"
         >
-          <div className="rounded-xl overflow-hidden bg-slate-50 aspect-[16/9] relative border border-slate-200 flex items-center justify-center shadow-inner">
+          <div className="rounded-md overflow-hidden bg-slate-50 aspect-[16/9] relative border border-slate-200 flex items-center justify-center shadow-inner">
             {/* Fake App UI Mockup via CSS (Light Mode) */}
             <div className="absolute inset-0 bg-slate-50 flex">
                {/* Left Sidebar */}
                <div className="w-16 border-r border-slate-200 bg-white flex flex-col items-center py-4 gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-600 shadow-md shadow-indigo-200" />
+                  <div className="w-10 h-10 rounded-md bg-indigo-600 shadow-sm shadow-indigo-200" />
                   <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200" />
                   <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200" />
                </div>
@@ -202,16 +202,16 @@ export default function LandingPage() {
                   </div>
                   {/* Kanban Columns */}
                   <div className="flex-1 p-6 flex gap-4 bg-slate-50/50">
-                     <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col p-4 gap-3">
+                     <div className="flex-1 bg-white rounded-md border border-slate-200 shadow-sm flex flex-col p-4 gap-3">
                         <div className="w-20 h-3 rounded bg-slate-200" />
                         <div className="h-24 rounded-lg bg-indigo-50 border border-indigo-100" />
                         <div className="h-24 rounded-lg bg-slate-50 border border-slate-100" />
                      </div>
-                     <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col p-4 gap-3">
+                     <div className="flex-1 bg-white rounded-md border border-slate-200 shadow-sm flex flex-col p-4 gap-3">
                         <div className="w-24 h-3 rounded bg-slate-200" />
                         <div className="h-24 rounded-lg bg-orange-50 border border-orange-100" />
                      </div>
-                     <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col p-4 gap-3">
+                     <div className="flex-1 bg-white rounded-md border border-slate-200 shadow-sm flex flex-col p-4 gap-3">
                         <div className="w-16 h-3 rounded bg-slate-200" />
                         <div className="h-24 rounded-lg bg-emerald-50 border border-emerald-100" />
                         <div className="h-24 rounded-lg bg-slate-50 border border-slate-100" />
@@ -222,13 +222,13 @@ export default function LandingPage() {
                {/* Right Sidebar (Discord) */}
                <div className="w-72 border-l border-slate-200 bg-white p-4 flex flex-col">
                   {/* Video Call Active Box */}
-                  <div className="h-40 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-200 mb-4 flex items-center justify-center">
+                  <div className="h-40 rounded-md bg-gradient-to-br from-indigo-500 to-purple-600 shadow-sm shadow-indigo-200 mb-4 flex items-center justify-center">
                     <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
                       <Video className="w-6 h-6 text-white" />
                     </div>
                   </div>
                   {/* Chat Area */}
-                  <div className="flex-1 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-end p-3">
+                  <div className="flex-1 rounded-md bg-slate-50 border border-slate-200 flex flex-col justify-end p-3">
                      <div className="h-8 rounded-lg bg-slate-200 w-full" />
                   </div>
                </div>
@@ -267,10 +267,10 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="group relative p-8 rounded-3xl bg-white/70 backdrop-blur-sm border border-slate-200 shadow-xl shadow-slate-200/50 hover:bg-white hover:shadow-2xl hover:shadow-indigo-500/10 transition-all overflow-hidden"
+                className="group relative p-8 rounded-md bg-white/70 backdrop-blur-sm border border-slate-200 shadow-sm shadow-slate-200/50 hover:bg-white hover:shadow-sm hover:shadow-indigo-500/10 transition-all overflow-hidden"
               >
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 bg-gradient-to-br ${f.gradient} transition-opacity duration-500`} />
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${f.gradient} flex items-center justify-center mb-6 shadow-lg relative z-10`}>
+                <div className={`w-14 h-14 rounded-md bg-gradient-to-br ${f.gradient} flex items-center justify-center mb-6 shadow-sm relative z-10`}>
                   <f.icon className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3 text-slate-900 relative z-10">{f.title}</h3>
@@ -315,7 +315,7 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group relative p-6 rounded-2xl bg-white/70 backdrop-blur-sm shadow-lg shadow-indigo-500/5 hover:bg-white hover:shadow-xl transition-all duration-300"
+                className="group relative p-6 rounded-md bg-white/70 backdrop-blur-sm shadow-sm shadow-indigo-500/5 hover:bg-white hover:shadow-sm transition-all duration-300"
               >
                 <span className="text-4xl font-black mb-4 block tracking-tight bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent group-hover:scale-105 origin-left transition-transform duration-300">
                   {step.num}
@@ -367,9 +367,9 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white shadow-lg shadow-slate-200/50 border border-slate-100 hover:-translate-y-1 hover:shadow-xl transition-all"
+                className="flex flex-col items-center justify-center p-6 rounded-md bg-white shadow-sm shadow-slate-200/50 border border-slate-100 hover:-translate-y-1 hover:shadow-sm transition-all"
               >
-                <div className={`w-12 h-12 rounded-xl ${tech.bg} flex items-center justify-center mb-4`}>
+                <div className={`w-12 h-12 rounded-md ${tech.bg} flex items-center justify-center mb-4`}>
                   <tech.icon className={`w-6 h-6 ${tech.color}`} />
                 </div>
                 <h4 className="font-bold text-slate-800 mb-1">{tech.name}</h4>
@@ -386,7 +386,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-5xl mx-auto rounded-[3rem] overflow-hidden relative shadow-2xl shadow-indigo-500/20"
+          className="max-w-5xl mx-auto rounded-[3rem] overflow-hidden relative shadow-sm shadow-indigo-500/20"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600" />
           <div className="relative p-8 sm:p-12 md:p-24 text-center">
@@ -398,7 +398,7 @@ export default function LandingPage() {
             </p>
             <Link
               href="/register"
-              className="inline-flex h-12 sm:h-14 items-center justify-center rounded-2xl bg-white px-8 sm:px-10 font-bold text-indigo-600 transition-all hover:scale-105 hover:shadow-xl hover:shadow-white/20 w-full sm:w-auto"
+              className="inline-flex h-12 sm:h-14 items-center justify-center rounded-md bg-white px-8 sm:px-10 font-bold text-indigo-600 transition-all hover:scale-105 hover:shadow-sm hover:shadow-white/20 w-full sm:w-auto"
             >
               Create Free Workspace
             </Link>

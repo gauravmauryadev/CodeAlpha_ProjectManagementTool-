@@ -59,7 +59,7 @@ export default function InvitePage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-violet-50 to-purple-50 dark:from-[#0E0A22] dark:via-[#050212] dark:to-[#0A051B] p-4 relative">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.05),transparent_60%)]" />
       
-      <div className="bg-white dark:bg-[#313338] p-8 rounded-2xl shadow-2xl max-w-[440px] w-full text-center relative z-10 border border-slate-200 dark:border-[#1e1f22]">
+      <div className="bg-white dark:bg-[#313338] p-8 rounded-md shadow-sm max-w-[440px] w-full text-center relative z-10 border border-slate-200 dark:border-[#1e1f22]">
         {loading ? (
           <div className="py-12">
             <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mx-auto mb-6" />
@@ -74,14 +74,14 @@ export default function InvitePage() {
             <p className="text-slate-500 dark:text-[#b5bac1] text-[15px] mb-8 leading-relaxed">This invite may have expired, or you might not have permission to join.</p>
             <button 
               onClick={() => router.push("/discord")}
-              className="w-full bg-indigo-600 dark:bg-[#5865F2] hover:bg-indigo-700 dark:hover:bg-[#4752C4] text-white py-3.5 rounded-xl text-[15px] font-semibold transition-colors shadow-lg shadow-indigo-500/20"
+              className="w-full bg-indigo-600 dark:bg-[#5865F2] hover:bg-indigo-700 dark:hover:bg-[#4752C4] text-white py-3.5 rounded-md text-[15px] font-semibold transition-colors shadow-sm shadow-indigo-500/20"
             >
               Continue to Discord
             </button>
           </div>
         ) : serverDetails && (
           <div className="py-6">
-            <div className="w-24 h-24 bg-indigo-600 dark:bg-[#5865F2] rounded-3xl mx-auto flex items-center justify-center mb-6 text-4xl font-extrabold text-white shadow-xl shadow-indigo-500/20 transform hover:scale-105 transition-transform">
+            <div className="w-24 h-24 bg-indigo-600 dark:bg-[#5865F2] rounded-md mx-auto flex items-center justify-center mb-6 text-4xl font-extrabold text-white shadow-sm shadow-indigo-500/20 transform hover:scale-105 transition-transform">
               {getInitials(serverDetails.name)}
             </div>
             <p className="text-slate-500 dark:text-[#b5bac1] text-[13px] font-bold uppercase tracking-widest mb-2">
@@ -104,7 +104,7 @@ export default function InvitePage() {
             <button 
               onClick={handleAcceptInvite}
               disabled={joining}
-              className="w-full bg-indigo-600 dark:bg-[#5865F2] hover:bg-indigo-700 dark:hover:bg-[#4752C4] text-white py-4 rounded-xl text-[16px] font-bold transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-xl shadow-indigo-500/20 cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full bg-indigo-600 dark:bg-[#5865F2] hover:bg-indigo-700 dark:hover:bg-[#4752C4] text-white py-4 rounded-md text-[16px] font-bold transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-sm shadow-indigo-500/20 cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
             >
               {joining ? (
                 <>

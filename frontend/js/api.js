@@ -21,6 +21,34 @@ const api = {
     window.location.href = '/login.html';
   },
 
+  timeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000); // seconds
+    const isFuture = diff < 0;
+    const absDiff = Math.abs(diff);
+
+    if (absDiff < 60) return isFuture ? 'in a few seconds' : 'just now';
+    if (absDiff < 3600) {
+      const mins = Math.floor(absDiff / 60);
+      return isFuture ? `in ${mins}m` : `${mins}m ago`;
+    }
+    if (absDiff < 86400) {
+      const hrs = Math.floor(absDiff / 3600);
+      return isFuture ? `in ${hrs}h` : `${hrs}h ago`;
+    }
+    if (absDiff < 2592000) {
+      const days = Math.floor(absDiff / 86400);
+      return isFuture ? `in ${days}d` : `${days}d ago`;
+    }
+    if (absDiff < 31536000) {
+      const months = Math.floor(absDiff / 2592000);
+      return isFuture ? `in ${months}mo` : `${months}mo ago`;
+    }
+    const years = Math.floor(absDiff / 31536000);
+    return isFuture ? `in ${years}y` : `${years}y ago`;
+  },
+
   async request(endpoint, options = {}) {
     const token = this.getToken();
     const config = {
@@ -71,5 +99,7 @@ const api = {
   acceptInvite(id) { return this.request(`/invites/${id}/accept`, { method: 'POST' }); },
   rejectInvite(id) { return this.request(`/invites/${id}/reject`, { method: 'POST' }); },
   getStats() { return this.request('/auth/stats'); },
-  updateProfile(data) { return this.request('/auth/profile', { method: 'PUT', body: data }); }
+  updateProfile(data) { return this.request('/auth/profile', { method: 'PUT', body: data }); },
+  getDueTodayTasks() { return this.request('/tasks/due-today'); },
+  aiBreakdown(taskId) { return this.request(`/tasks/${taskId}/ai-breakdown`, { method: 'POST' }); }
 };

@@ -4,12 +4,43 @@ const Project = require('../models/Project');
 const auth = require('../middleware/auth');
 const { sendDiscordNotification } = require('./discord');
 const sendEmail = require('../utils/sendEmail');
+const { getTasksDueTodayForUser, sendDueDateReminders } = require('../utils/dueDateReminder');
+const { generateSubTasks } = require('../utils/aiBreakdown');
 const router = express.Router();
 
 const { uploadCloud } = require('../config/cloudinary');
 
 // All routes require authentication
 router.use(auth);
+
+// @route   GET /api/tasks/due-today
+// @desc    Get all tasks due today for the logged-in user
+// @access  Private
+router.get('/due-today', async (req, res) => {
+  try {
+    const tasks = await getTasksDueTodayForUser(req.user._id);
+    res.json({ tasks, count: tasks.length });
+  } catch (error) {
+    console.error('Get due-today tasks error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   POST /api/tasks/send-reminders
+// @desc    Manually trigger due date reminder emails
+// @access  Private (admin only)
+router.post('/send-reminders', async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+    const result = await sendDueDateReminders();
+    res.json({ message: 'Reminders processed', ...result });
+  } catch (error) {
+    console.error('Send reminders error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 // @route   GET /api/tasks?project=projectId
 // @desc    Get all tasks for a project
@@ -69,7 +100,7 @@ router.get('/', async (req, res) => {
 // @access  Private
 router.post('/', uploadCloud.single('image'), async (req, res) => {
   try {
-    const { title, description, status, priority, project, assignee, dueDate, labels } = req.body;
+    const { title, description, status, priority, project, assignee, startDate, dueDate, dependencies, labels } = req.body;
     let imageUrl = null;
 
     if (req.file) {
@@ -103,7 +134,9 @@ router.post('/', uploadCloud.single('image'), async (req, res) => {
       project,
       assignee: assignee || null,
       createdBy: req.user._id,
+      startDate: startDate || null,
       dueDate: dueDate || null,
+      dependencies: dependencies || '',
       labels: parsedLabels,
       position,
       imageUrl
@@ -182,14 +215,16 @@ router.put('/:id', uploadCloud.single('image'), async (req, res) => {
 
     const originalAssignee = task.assignee ? task.assignee.toString() : null;
 
-    const { title, description, status, priority, assignee, dueDate, labels, position } = req.body;
+    const { title, description, status, priority, assignee, startDate, dueDate, dependencies, labels, position } = req.body;
     
     if (title !== undefined) task.title = title;
     if (description !== undefined) task.description = description;
     if (status !== undefined) task.status = status;
     if (priority !== undefined) task.priority = priority;
     if (assignee !== undefined) task.assignee = assignee;
+    if (startDate !== undefined) task.startDate = startDate;
     if (dueDate !== undefined) task.dueDate = dueDate;
+    if (dependencies !== undefined) task.dependencies = dependencies;
     
     if (labels !== undefined) {
       task.labels = typeof labels === 'string' ? JSON.parse(labels) : labels;
@@ -249,6 +284,48 @@ router.put('/:id', uploadCloud.single('image'), async (req, res) => {
       });
     }
 
+    // Gamification Logic: Reward user for completing a task
+    if (status === 'done') {
+      const User = require('../models/User');
+      const userToReward = await User.findById(req.user._id);
+      
+      if (userToReward) {
+        // Increase score
+        userToReward.productivityScore = (userToReward.productivityScore || 0) + 10;
+        
+        // Handle Streak
+        const today = new Date().toISOString().split('T')[0];
+        
+        if (userToReward.lastCompletedDate !== today) {
+          if (userToReward.lastCompletedDate) {
+            const lastDate = new Date(userToReward.lastCompletedDate);
+            const currentDate = new Date(today);
+            const diffTime = Math.abs(currentDate - lastDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            
+            if (diffDays === 1) {
+              // Consecutive day
+              userToReward.streakDays = (userToReward.streakDays || 0) + 1;
+            } else if (diffDays > 1) {
+              // Streak broken
+              userToReward.streakDays = 1;
+            }
+          } else {
+            // First time completing a task
+            userToReward.streakDays = 1;
+          }
+          userToReward.lastCompletedDate = today;
+          
+          // Badge Logic
+          if (userToReward.streakDays >= 3 && !userToReward.badges.includes('Productivity Master 🔥')) {
+            userToReward.badges.push('Productivity Master 🔥');
+          }
+        }
+        
+        await userToReward.save();
+      }
+    }
+
     res.json({ message: 'Task updated', task });
   } catch (error) {
     console.error('Update task error:', error);
@@ -285,6 +362,92 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'Task deleted' });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route   POST /api/tasks/:id/ai-breakdown
+// @desc    Use AI (Gemini) to break a task into 5 sub-tasks
+// @access  Private
+router.post('/:id/ai-breakdown', async (req, res) => {
+  try {
+    const parentTask = await Task.findById(req.params.id)
+      .populate('project', 'name members');
+
+    if (!parentTask) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+
+    // Verify user is a member of the project
+    const query = req.user.role === 'admin'
+      ? { _id: parentTask.project._id }
+      : { _id: parentTask.project._id, members: req.user._id };
+    const projectDoc = await Project.findOne(query);
+
+    if (!projectDoc) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    // Generate sub-tasks using Gemini AI
+    const aiSubTasks = await generateSubTasks(
+      parentTask.title,
+      parentTask.description,
+      projectDoc.name
+    );
+
+    // Create sub-tasks in database
+    const createdTasks = [];
+    for (let i = 0; i < aiSubTasks.length; i++) {
+      const st = aiSubTasks[i];
+
+      // Get position (add to top of todo column)
+      const firstTask = await Task.findOne({ project: parentTask.project._id, status: 'todo' })
+        .sort({ position: 1 });
+      const position = firstTask ? firstTask.position - 1 - i : -i;
+
+      const task = await Task.create({
+        title: st.title,
+        description: st.description,
+        status: 'todo',
+        priority: st.priority,
+        project: parentTask.project._id,
+        assignee: parentTask.assignee || null,
+        createdBy: req.user._id,
+        dueDate: parentTask.dueDate || null,
+        labels: parentTask.labels || [],
+        position
+      });
+
+      await task.populate('assignee', 'name email avatar');
+      await task.populate('createdBy', 'name email avatar');
+      createdTasks.push(task);
+    }
+
+    // Emit socket event for real-time update
+    const io = req.app.get('io');
+    if (io) {
+      createdTasks.forEach(task => {
+        io.to(parentTask.project._id.toString()).emit('taskCreated', task);
+      });
+    }
+
+    // Discord Notification
+    sendDiscordNotification(parentTask.project._id, {
+      title: `🤖 AI Task Breakdown: ${parentTask.title}`,
+      description: `**${req.user.name}** used AI to break down a task into ${createdTasks.length} sub-tasks:\n${createdTasks.map((t, i) => `${i + 1}. ${t.title}`).join('\n')}`,
+      color: 10181046 // Purple
+    });
+
+    console.log(`🤖 AI breakdown created ${createdTasks.length} sub-tasks for: "${parentTask.title}"`);
+
+    res.status(201).json({
+      message: `AI generated ${createdTasks.length} sub-tasks successfully!`,
+      subTasks: createdTasks,
+      parentTask: parentTask.title
+    });
+  } catch (error) {
+    console.error('AI Breakdown error:', error);
+    res.status(error.message.includes('API') || error.message.includes('configured') ? 400 : 500)
+      .json({ message: error.message || 'Failed to generate AI breakdown' });
   }
 });
 

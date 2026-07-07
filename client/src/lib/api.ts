@@ -76,6 +76,7 @@ export const taskApi = {
   update: (id: string, data: Record<string, unknown>) =>
     apiClient.put(`/tasks/${id}`, data),
   delete: (id: string) => apiClient.delete(`/tasks/${id}`),
+  aiBreakdown: (id: string) => apiClient.post(`/tasks/${id}/ai-breakdown`),
 };
 
 // ==================== COMMENTS ====================

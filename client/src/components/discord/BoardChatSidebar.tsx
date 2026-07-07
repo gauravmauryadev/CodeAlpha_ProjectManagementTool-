@@ -61,7 +61,7 @@ function LiveKitCallView({ onLeave }: { onLeave: () => void }) {
   return (
     <div className="flex-1 flex flex-col min-h-0">
       {/* Connection Status */}
-      <div className="px-4 py-2 flex items-center justify-between bg-white dark:bg-slate-950 rounded-xl mb-3 border border-slate-200 dark:border-slate-800">
+      <div className="px-4 py-2 flex items-center justify-between bg-white dark:bg-slate-950 rounded-md mb-3 border border-slate-200 dark:border-slate-800">
         <div className="flex flex-col">
           <span className="text-[10px] font-bold text-emerald-400 flex items-center gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> LiveKit Connected
@@ -81,7 +81,7 @@ function LiveKitCallView({ onLeave }: { onLeave: () => void }) {
       </div>
 
       {/* Video Grid */}
-      <div className="flex-1 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-black/20">
+      <div className="flex-1 overflow-hidden rounded-md border border-slate-200 dark:border-slate-800 bg-black/20">
         <GridLayout
           tracks={tracks}
           style={{ height: "100%" }}
@@ -320,7 +320,7 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
     <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
     <div 
       ref={sidebarRef}
-      className="w-[95vw] max-w-[480px] h-[85vh] max-h-[700px] bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col shadow-2xl rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+      className="w-[95vw] max-w-[480px] h-[85vh] max-h-[700px] bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col shadow-sm rounded-md overflow-hidden animate-in fade-in zoom-in-95 duration-200"
     >
 
       {/* Sidebar Header */}
@@ -396,10 +396,10 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
       {activeTab === "chat" && (
         <div className="flex-1 flex flex-col min-h-0 bg-slate-50/60 dark:bg-slate-900/60">
           {/* Chat Messages */}
-            <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 scroll-smooth">
+            <div ref={chatContainerRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-4 scroll-smooth">
               {messages.length === 0 && (
                 <div className="text-center py-8">
-                  <div className="w-12 h-12 rounded-full bg-indigo-600/20 border border-indigo-500/25 mx-auto mb-2 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-md bg-indigo-600/20 border border-indigo-500/25 mx-auto mb-2 flex items-center justify-center">
                     <Hash className="w-6 h-6 text-indigo-400" />
                   </div>
                   <h4 className="text-slate-800 dark:text-slate-200 font-bold text-sm">Welcome to Team Chat</h4>
@@ -411,16 +411,18 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
                 const color = getHexColor(senderName);
                 const time = new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
                 return (
-                  <div key={msg._id} className="flex gap-2.5 py-0.5 px-1 rounded hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style={{ background: color }}>
+                  <div key={msg._id} className="flex gap-3 py-1 group">
+                    <div className="w-8 h-8 rounded-md flex items-center justify-center text-xs font-bold text-white flex-shrink-0 mt-0.5 shadow-sm" style={{ background: color }}>
                       {senderName.charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 mb-1">
                         <span className="text-xs font-bold truncate" style={{ color }}>{senderName}</span>
                         <span className="text-[9px] text-slate-500 dark:text-slate-400">{time}</span>
                       </div>
-                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-normal break-words mt-0.5">{msg.text}</p>
+                      <div className="inline-block bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-md rounded-tl-none p-2.5 shadow-sm max-w-[95%]">
+                        <p className="text-xs text-slate-800 dark:text-slate-200 leading-relaxed break-words">{msg.text}</p>
+                      </div>
                     </div>
                   </div>
                 );
@@ -428,19 +430,19 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
             </div>
 
           {/* Typing indicator & Input */}
-          <div className="p-3 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 relative z-10">
+          <div className="p-4 bg-transparent relative z-10 pb-6">
             {typing && (
-              <p className="absolute -top-4 left-4 text-[9px] text-indigo-400 font-medium animate-pulse">{typing}</p>
+              <p className="absolute -top-1 left-5 text-[10px] text-indigo-400 font-medium animate-pulse">{typing}</p>
             )}
-            <form onSubmit={handleSend} className="flex items-center bg-white dark:bg-slate-950 rounded-xl px-3 border border-slate-200 dark:border-slate-800">
+            <form onSubmit={handleSend} className="flex items-center bg-white dark:bg-[#1a163a] rounded-md px-4 border border-slate-200 dark:border-white/10 shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => { setInput(e.target.value); handleTyping(); }}
                 placeholder="Message team..."
-                className="flex-1 bg-transparent text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 py-2.5 outline-none"
+                className="flex-1 bg-transparent text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 py-3 outline-none"
               />
-              <button type="submit" className="p-1 text-indigo-400 hover:text-indigo-300 active:scale-90 transition-all cursor-pointer">
+              <button type="submit" className="p-1.5 ml-2 text-indigo-500 hover:text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 rounded-md active:scale-90 transition-all cursor-pointer">
                 <Send className="w-3.5 h-3.5" />
               </button>
             </form>
@@ -453,8 +455,8 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
         <div className="flex-1 flex flex-col min-h-0 bg-slate-50/60 dark:bg-slate-900/60 p-4">
           {!livekitToken ? (
             /* Join Call Screen */
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-white/40 dark:bg-slate-950/30 border border-slate-200 dark:border-slate-800 rounded-2xl">
-              <div className="w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-500/25 flex items-center justify-center mb-4">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-white/40 dark:bg-slate-950/30 border border-slate-200 dark:border-slate-800 rounded-md">
+              <div className="w-16 h-16 rounded-md bg-indigo-600/20 border border-indigo-500/25 flex items-center justify-center mb-4">
                 <Volume2 className="w-8 h-8 text-indigo-400" />
               </div>
               <h4 className="text-slate-800 dark:text-slate-200 font-bold text-base">Join Voice & Video</h4>
@@ -469,7 +471,7 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
               <button
                 onClick={joinLiveKitCall}
                 disabled={isConnecting}
-                className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-sm font-bold text-white transition-all shadow-lg shadow-indigo-600/30 cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2.5 rounded-md bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-sm font-bold text-white transition-all shadow-sm shadow-indigo-600/30 cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isConnecting ? (
                   <>
@@ -559,12 +561,12 @@ export default function BoardChatSidebar({ projectId, socket, onClose }: BoardCh
             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Recent Meetings (Last 7 Days)</h4>
             
             {meetings.length === 0 ? (
-              <div className="text-center py-4 bg-white dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/10 text-xs text-slate-500">
+              <div className="text-center py-4 bg-white dark:bg-white/5 rounded-md border border-slate-200 dark:border-white/10 text-xs text-slate-500">
                 No meetings recorded yet.
               </div>
             ) : (
               meetings.map((meeting) => (
-                <div key={meeting._id} className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm">
+                <div key={meeting._id} className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-md p-3 shadow-sm">
                   <div className="flex justify-between items-center mb-2 pb-2 border-b border-slate-100 dark:border-slate-800">
                     <span className="font-bold text-sm text-slate-700 dark:text-slate-300">
                       {new Date(meeting.dateString).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}

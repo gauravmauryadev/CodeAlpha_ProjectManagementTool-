@@ -237,9 +237,20 @@ function renderProjects(projects) {
                     <span style="font-size: 0.7rem; padding: 0.2rem 0.6rem; background: var(--info-light); color: var(--info); border-radius: 20px; font-weight: 600;">${mockTags[1]}</span>
                 </div>
                 
-                <div class="project-meta" style="position: relative; z-index: 1; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.4);">
-                    <span style="display: flex; align-items: center; gap: 0.4rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> ${p.members.length}</span>
-                    <span style="display: flex; align-items: center; gap: 0.4rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> ${total} tasks</span>
+                <div class="project-meta" style="position: relative; z-index: 1; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.4); display: flex; justify-content: space-between; align-items: center;">
+                    <div class="avatar-group" style="display: flex; align-items: center;">
+                        ${p.members.slice(0, 3).map((m, i) => `
+                            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--surface); margin-left: ${i > 0 ? '-10px' : '0'}; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: white;">
+                                ${(m.name || 'U').charAt(0).toUpperCase()}
+                            </div>
+                        `).join('')}
+                        ${p.members.length > 3 ? `
+                            <div style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--surface); margin-left: -10px; background: var(--bg-dark); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--text-muted); z-index: 1;">
+                                +${p.members.length - 3}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <span style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-muted);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> ${total} tasks</span>
                 </div>
             </div>
             `;
@@ -353,6 +364,373 @@ async function deleteProject(event, projectId) {
     }
 }
 
+// ========================
+// DUE DATE REMINDERS
+// ========================
+
+let dueTodayTasks = [];
+
+// Calculate time remaining string
+function getTimeRemaining(dueDate) {
+    const now = new Date();
+    const due = new Date(dueDate);
+    const diff = due - now;
+
+    if (diff <= 0) {
+        const overdueMins = Math.abs(Math.floor(diff / (1000 * 60)));
+        if (overdueMins < 60) return { text: `${overdueMins}m overdue`, cls: 'overdue' };
+        const overdueHrs = Math.floor(overdueMins / 60);
+        if (overdueHrs < 24) return { text: `${overdueHrs}h overdue`, cls: 'overdue' };
+        const overdueDays = Math.floor(overdueHrs / 24);
+        return { text: `${overdueDays}d overdue`, cls: 'overdue' };
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    // Less than 1 day = urgent (orange pulsing)
+    if (days === 0) {
+        if (hours === 0) return { text: `${mins}m left`, cls: 'urgent' };
+        return { text: `${hours}h ${mins}m left`, cls: 'urgent' };
+    }
+    // 1 day remaining
+    if (days === 1) return { text: `1d ${hours}h left`, cls: 'urgent' };
+    // More than 1 day = remaining (green)
+    return { text: `${days}d ${hours}h left`, cls: 'remaining' };
+}
+
+// Format due time
+function formatDueTime(dueDate) {
+    return new Date(dueDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+}
+
+// Load due-today tasks
+async function loadDueTodayTasks() {
+    try {
+        const data = await api.getDueTodayTasks();
+        dueTodayTasks = data.tasks || [];
+        renderDueDatePanel();
+        updateNotificationDropdownWithDueTasks();
+    } catch (error) {
+        console.error('Failed to load due-today tasks:', error);
+    }
+}
+
+// Render the main due-date panel
+function renderDueDatePanel() {
+    const section = document.getElementById('dueDateSection');
+    const grid = document.getElementById('dueDateGrid');
+    const countEl = document.getElementById('dueDateCount');
+    const badge = document.getElementById('notificationBadge');
+
+    if (!dueTodayTasks || dueTodayTasks.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    // Check if dismissed for today
+    const dismissed = sessionStorage.getItem('dueDateDismissed');
+    if (dismissed === new Date().toDateString()) {
+        section.style.display = 'none';
+        // Still update badge
+        updateDueBadge();
+        return;
+    }
+
+    section.style.display = 'block';
+    countEl.textContent = `${dueTodayTasks.length} task${dueTodayTasks.length > 1 ? 's' : ''} need your attention today`;
+
+    // Update notification badge to include due tasks count
+    updateDueBadge();
+
+    grid.innerHTML = dueTodayTasks.map(task => {
+        const timeInfo = task.dueDate ? getTimeRemaining(task.dueDate) : { text: 'End of day', cls: 'urgent' };
+        const dueTime = task.dueDate ? formatDueTime(task.dueDate) : 'EOD';
+        const projectName = task.project ? task.project.name : 'Unknown';
+        const projectId = task.project ? (task.project._id || task.project) : '';
+        const assigneeName = task.assignee ? task.assignee.name : 'Unassigned';
+        const statusLabel = task.status === 'todo' ? 'To Do' : task.status === 'inprogress' ? 'In Progress' : 'Done';
+
+        return `
+            <div class="due-task-card" data-priority="${task.priority}" onclick="window.location.href='/board.html?id=${projectId}'">
+                <div class="due-task-info">
+                    <div class="due-task-name">${task.title}</div>
+                    <div class="due-task-meta">
+                        <span>📁 ${projectName}</span>
+                        <span>👤 ${assigneeName}</span>
+                        <span class="due-priority-badge ${task.priority}">${task.priority}</span>
+                        <span style="color: var(--text-muted);">📌 ${statusLabel}</span>
+                    </div>
+                </div>
+                <div class="due-task-time ${timeInfo.cls}">
+                    ⏰ ${timeInfo.text}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Update badge count
+function updateDueBadge() {
+    const badge = document.getElementById('notificationBadge');
+    if (!badge) return;
+
+    // Combine invite count + due tasks count
+    const existingInviteCount = parseInt(badge.textContent) || 0;
+    const totalCount = dueTodayTasks.length;
+
+    if (totalCount > 0 || existingInviteCount > 0) {
+        badge.style.display = 'flex';
+        // Keep the larger count if invites were already shown
+        const inviteOnlyCount = badge.dataset.inviteCount ? parseInt(badge.dataset.inviteCount) : existingInviteCount;
+        badge.textContent = inviteOnlyCount + totalCount;
+    }
+}
+
+// Update notification dropdown to include due-today items
+function updateNotificationDropdownWithDueTasks() {
+    const list = document.getElementById('notificationList');
+    if (!list || dueTodayTasks.length === 0) return;
+
+    // Build due-date notification section
+    const dueHtml = `
+        <div style="margin-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border-light);">
+                <span style="font-size: 0.85rem;">⏰</span>
+                <span style="font-size: 0.8rem; font-weight: 700; color: #ef4444;">Due Today (${dueTodayTasks.length})</span>
+            </div>
+            ${dueTodayTasks.map(task => {
+                const timeInfo = task.dueDate ? getTimeRemaining(task.dueDate) : { text: 'Today', cls: 'urgent' };
+                const projectId = task.project ? (task.project._id || task.project) : '';
+                const priorityColors = { high: '#ef4444', medium: '#f59e0b', low: '#22c55e' };
+                return `
+                    <div class="notif-due-item" onclick="window.location.href='/board.html?id=${projectId}'">
+                        <div class="notif-due-dot" style="background: ${priorityColors[task.priority] || '#6b7280'};"></div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${task.title}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-muted);">${task.project ? task.project.name : ''} • ${timeInfo.text}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+
+    // Prepend due tasks before existing notifications
+    const existingContent = list.innerHTML;
+    list.innerHTML = dueHtml + existingContent;
+}
+
+// Dismiss due date panel for the current session
+function dismissDueDatePanel() {
+    sessionStorage.setItem('dueDateDismissed', new Date().toDateString());
+    document.getElementById('dueDateSection').style.display = 'none';
+}
+
+// Load Gamification & Analytics Stats
+async function loadStats() {
+    try {
+        const res = await api.getStats();
+        if (res && res.stats) {
+            const { productivityScore = 0, streakDays = 0, badges = [] } = res.stats;
+            
+            // Render Score
+            document.getElementById('productivityScore').textContent = productivityScore;
+            
+            // Score progress circle (Progress to next level, every 100 points)
+            const scoreProgress = document.getElementById('scoreProgress');
+            if (scoreProgress) {
+                const levelProgress = productivityScore % 100;
+                const circumference = 282.7; // 2 * pi * 45
+                const offset = circumference - (levelProgress / 100) * circumference;
+                scoreProgress.style.strokeDashoffset = offset;
+            }
+
+            // Render Streak (Show only if 3 or more days)
+            const streakBadge = document.getElementById('streakBadge');
+            const streakCount = document.getElementById('streakCount');
+            if (streakBadge && streakCount) {
+                if (streakDays >= 3) {
+                    streakBadge.style.display = 'flex';
+                    streakCount.textContent = streakDays;
+                } else {
+                    streakBadge.style.display = 'none';
+                }
+            }
+
+            // Render Badges
+            const badgesContainer = document.getElementById('badgesContainer');
+            if (badgesContainer) {
+                if (badges.length > 0) {
+                    badgesContainer.innerHTML = badges.map(b => `<div class="gamification-badge-item">${b}</div>`).join('');
+                } else {
+                    badgesContainer.innerHTML = '<span style="font-size: 0.8rem; color: rgba(255,255,255,0.6); font-style: italic;">Complete tasks to earn badges!</span>';
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Failed to load gamification stats:', error);
+    }
+}
+
+// Auto-refresh due-date timers every minute
+setInterval(() => {
+    if (dueTodayTasks.length > 0) {
+        renderDueDatePanel();
+    }
+}, 60000);
+
 // Initial load
 loadInvites();
 loadProjects();
+loadDueTodayTasks();
+loadStats();
+
+
+// ========================
+// POMODORO TIMER LOGIC
+// ========================
+
+let pomodoroInterval;
+let pomodoroTimeLeft = 25 * 60; // 25 minutes default
+let pomodoroTotalTime = 25 * 60;
+let pomodoroMode = 'work'; // 'work' or 'break'
+let isPomodoroRunning = false;
+let inFocusMode = false;
+
+// DOM Elements
+const pomodoroTimeDisplay = document.getElementById('pomodoroTimeDisplay');
+const pomodoroProgress = document.getElementById('pomodoroProgress');
+const pomodoroStartBtn = document.getElementById('pomodoroStartBtn');
+const pomodoroBtnWork = document.getElementById('pomodoroBtnWork');
+const pomodoroBtnBreak = document.getElementById('pomodoroBtnBreak');
+const focusModeOverlay = document.getElementById('focusModeOverlay');
+const focusTimeDisplay = document.getElementById('focusTimeDisplay');
+const focusPauseBtn = document.getElementById('focusPauseBtn');
+
+// Calculate stroke dashoffset for the SVG circle (circumference is ~339)
+const CIRCUMFERENCE = 339.292;
+
+function formatTime(seconds) {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+}
+
+function updatePomodoroUI() {
+    const formatted = formatTime(pomodoroTimeLeft);
+    pomodoroTimeDisplay.textContent = formatted;
+    if (inFocusMode) {
+        focusTimeDisplay.textContent = formatted;
+        document.title = `(${formatted}) Focus Mode - OmniPlan`;
+    } else {
+        document.title = isPomodoroRunning ? `(${formatted}) Pomodoro` : 'Dashboard - OmniPlan';
+    }
+
+    // Update Circle Progress
+    const progress = pomodoroTimeLeft / pomodoroTotalTime;
+    const dashoffset = CIRCUMFERENCE - (progress * CIRCUMFERENCE);
+    pomodoroProgress.style.strokeDashoffset = dashoffset;
+}
+
+function setPomodoroMode(mode) {
+    if (isPomodoroRunning) {
+        if (!confirm('Timer is running. Are you sure you want to switch modes?')) return;
+        togglePomodoro(); // Pause
+    }
+    
+    pomodoroMode = mode;
+    if (mode === 'work') {
+        pomodoroTotalTime = 25 * 60;
+        pomodoroBtnWork.classList.add('active');
+        pomodoroBtnBreak.classList.remove('active');
+        pomodoroProgress.style.stroke = '#ef4444'; // Red
+    } else {
+        pomodoroTotalTime = 5 * 60;
+        pomodoroBtnBreak.classList.add('active');
+        pomodoroBtnWork.classList.remove('active');
+        pomodoroProgress.style.stroke = '#22c55e'; // Green
+    }
+    
+    pomodoroTimeLeft = pomodoroTotalTime;
+    updatePomodoroUI();
+}
+
+function togglePomodoro() {
+    isPomodoroRunning = !isPomodoroRunning;
+    
+    if (isPomodoroRunning) {
+        // Start
+        pomodoroStartBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> Pause';
+        focusPauseBtn.textContent = 'Pause';
+        
+        // Enter focus mode automatically if working
+        if (pomodoroMode === 'work' && !inFocusMode) {
+            enterFocusMode();
+        }
+        
+        pomodoroInterval = setInterval(() => {
+            pomodoroTimeLeft--;
+            updatePomodoroUI();
+            
+            if (pomodoroTimeLeft <= 0) {
+                clearInterval(pomodoroInterval);
+                isPomodoroRunning = false;
+                playAlertSound();
+                if (inFocusMode) exitFocusMode();
+                
+                alert(pomodoroMode === 'work' ? 'Focus time complete! Take a break.' : 'Break is over. Back to work!');
+                setPomodoroMode(pomodoroMode === 'work' ? 'break' : 'work');
+            }
+        }, 1000);
+    } else {
+        // Pause
+        clearInterval(pomodoroInterval);
+        pomodoroStartBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Resume';
+        focusPauseBtn.textContent = 'Resume';
+    }
+}
+
+function resetPomodoro() {
+    if (isPomodoroRunning) {
+        clearInterval(pomodoroInterval);
+        isPomodoroRunning = false;
+    }
+    pomodoroStartBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Start Focus';
+    pomodoroTimeLeft = pomodoroTotalTime;
+    updatePomodoroUI();
+}
+
+function enterFocusMode() {
+    inFocusMode = true;
+    focusModeOverlay.classList.add('active');
+}
+
+function exitFocusMode() {
+    inFocusMode = false;
+    focusModeOverlay.classList.remove('active');
+    updatePomodoroUI(); // Reset document title
+}
+
+function playAlertSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime); // A5
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 1);
+    } catch (e) {
+        console.log('Audio not supported or blocked');
+    }
+}
+
+// Init Pomodoro UI
+updatePomodoroUI();

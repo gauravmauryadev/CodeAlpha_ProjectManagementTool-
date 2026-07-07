@@ -38,9 +38,17 @@ const taskSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  startDate: {
+    type: Date,
+    default: null
+  },
   dueDate: {
     type: Date,
     default: null
+  },
+  dependencies: {
+    type: String, // Comma separated task IDs for Frappe Gantt
+    default: ''
   },
   labels: [{
     type: String,
@@ -69,5 +77,6 @@ const taskSchema = new mongoose.Schema({
 // Index for efficient queries
 taskSchema.index({ project: 1, status: 1 });
 taskSchema.index({ assignee: 1 });
+taskSchema.index({ dueDate: 1, status: 1 }); // For due-date reminder queries
 
 module.exports = mongoose.model('Task', taskSchema);

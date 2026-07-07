@@ -87,7 +87,7 @@ function renderUsers(users) {
     const colors = ['#6366f1', '#ec4899', '#14b8a6', '#f59e0b', '#ef4444', '#8b5cf6'];
     tbody.innerHTML = users.map(u => {
         const color = colors[u.name.charCodeAt(0) % colors.length];
-        const date = new Date(u.createdAt).toLocaleDateString();
+        const date = api.timeAgo(u.createdAt);
         const isCurrentUser = user.id === u._id;
         return `<tr>
             <td><div class="user-cell"><div class="avatar" style="background: ${color};">${u.name.charAt(0).toUpperCase()}</div><span style="font-weight: 600; color: #e2e8f0;">${u.name}</span></div></td>
@@ -110,7 +110,7 @@ function renderProjects(projects) {
     tbody.innerHTML = projects.map(p => {
         const owner = p.owner ? p.owner.name : 'Unknown';
         const memberCount = p.members ? p.members.length : 0;
-        const date = new Date(p.createdAt).toLocaleDateString();
+        const date = api.timeAgo(p.createdAt);
         return `<tr>
             <td style="font-weight: 600; color: #e2e8f0;">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -152,7 +152,7 @@ function renderMessages(messages) {
     const colors = ['#6366f1', '#ec4899', '#14b8a6', '#f59e0b', '#ef4444', '#8b5cf6'];
     container.innerHTML = messages.map(m => {
         const color = colors[(m.sender?.name || 'U').charCodeAt(0) % colors.length];
-        const time = new Date(m.createdAt).toLocaleString();
+        const time = api.timeAgo(m.createdAt);
         const senderName = m.sender ? m.sender.name : 'Unknown';
         return `<div class="admin-msg">
             <div class="msg-avatar" style="background: ${color};">${senderName.charAt(0).toUpperCase()}</div>

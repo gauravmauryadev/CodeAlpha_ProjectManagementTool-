@@ -116,7 +116,7 @@ export default function BoardClient() {
             <Tooltip content="Back to dashboard" position="right">
               <button
                 onClick={() => router.push("/dashboard")}
-                className="w-9 h-9 rounded-xl bg-white/45 border border-white/60 hover:bg-white/70 hover:scale-105 active:scale-95 flex items-center justify-center transition-all duration-200 shadow-sm cursor-pointer"
+                className="w-9 h-9 rounded-md bg-white/45 border border-white/60 hover:bg-white/70 hover:scale-105 active:scale-95 flex items-center justify-center transition-all duration-200 shadow-sm cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4 text-slate-800" />
               </button>
@@ -138,7 +138,7 @@ export default function BoardClient() {
             <Tooltip content="Manage members" position="left">
               <button
                 onClick={() => setShowMembers(true)}
-                className="px-4 py-2 rounded-xl bg-white/45 border border-white/60 hover:bg-white/70 hover:-translate-y-0.5 active:scale-97 text-sm font-medium text-slate-800 flex items-center gap-2 transition-all duration-200 shadow-sm cursor-pointer"
+                className="px-4 py-2 rounded-md bg-white/45 border border-white/60 hover:bg-white/70 hover:-translate-y-0.5 active:scale-97 text-sm font-medium text-slate-800 flex items-center gap-2 transition-all duration-200 shadow-sm cursor-pointer"
               >
                 <Users className="w-4 h-4" /> Members
               </button>
@@ -159,7 +159,7 @@ export default function BoardClient() {
                   onDrop={() => handleDrop(col.id)}
                 >
                   {/* Column Header */}
-                  <div className={cn("flex items-center justify-between px-4 py-3 rounded-xl mb-3 border", col.color, col.bg)}>
+                  <div className={cn("flex items-center justify-between px-4 py-3 rounded-md mb-3 border", col.color, col.bg)}>
                     <div className="flex items-center gap-2">
                       <span>{col.icon}</span>
                       <span className="font-semibold text-sm text-slate-800">{col.label}</span>
@@ -183,7 +183,7 @@ export default function BoardClient() {
                         draggable
                         onDragStart={() => setDraggedTask(task._id)}
                         onClick={() => { setSelectedTask(task); loadComments(task._id); }}
-                        className="group p-4 rounded-xl border border-white/60 bg-white/45 hover:bg-white/70 hover:border-indigo-500/30 cursor-pointer transition-all shadow-sm"
+                        className="group p-4 rounded-md border border-white/60 bg-white/45 hover:bg-white/70 hover:border-indigo-500/30 cursor-pointer transition-all shadow-sm"
                       >
                         <div className="flex items-start justify-between gap-2 mb-2">
                           <GripVertical className="w-3.5 h-3.5 text-slate-400 mt-0.5 opacity-0 group-hover:opacity-100 cursor-grab flex-shrink-0" />
@@ -208,7 +208,7 @@ export default function BoardClient() {
 
                     {/* Add Task Form */}
                     {showAddTask === col.id && (
-                      <div className="p-3 rounded-xl border border-indigo-500/20 bg-indigo-50/30">
+                      <div className="p-3 rounded-md border border-indigo-500/20 bg-indigo-50/30">
                         <input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Task title..." autoFocus onKeyDown={(e) => e.key === "Enter" && handleAddTask(col.id)} className="w-full px-3 py-2 rounded-lg bg-white/40 border border-black/10 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 mb-2" />
                         <div className="flex items-center gap-2">
                           <select value={newPriority} onChange={(e) => setNewPriority(e.target.value as "low" | "medium" | "high")} className="px-2 py-1 rounded-lg bg-white border border-black/10 text-xs text-slate-700 focus:outline-none">
@@ -234,7 +234,7 @@ export default function BoardClient() {
       {selectedTask && (
         <div className="fixed inset-0 z-[100] flex">
           <div className="flex-1 bg-black/40 backdrop-blur-sm" onClick={() => setSelectedTask(null)} />
-          <div className="w-[420px] bg-white/95 backdrop-blur-xl border-l border-white/80 flex flex-col h-full shadow-2xl text-slate-800 animate-in slide-in-from-right duration-250">
+          <div className="w-[420px] bg-white/95 backdrop-blur-xl border-l border-white/80 flex flex-col h-full shadow-sm text-slate-800 animate-in slide-in-from-right duration-250">
             <div className="p-5 border-b border-black/5 flex items-center justify-between">
               <h3 className="font-bold text-lg text-slate-800">{selectedTask.title}</h3>
               <Tooltip content="Close details" position="left">
@@ -295,7 +295,7 @@ export default function BoardClient() {
       {/* Members Modal */}
       {showMembers && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/45 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-white/95 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-2xl text-slate-800 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full max-w-md bg-white/95 backdrop-blur-xl border border-white/80 rounded-md p-6 shadow-sm text-slate-800 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-lg font-bold text-slate-800">Team Members</h3>
               <Tooltip content="Close panel" position="left">
@@ -313,7 +313,7 @@ export default function BoardClient() {
                 const name = typeof m === "object" ? m.name : "User";
                 const email = typeof m === "object" ? m.email : "";
                 return (
-                  <div key={typeof m === "object" ? m._id : m} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-black/5">
+                  <div key={typeof m === "object" ? m._id : m} className="flex items-center gap-3 p-2.5 rounded-md hover:bg-black/5">
                     <div className={cn("w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white", getAvatarColor(name))}>{getInitials(name)}</div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate text-slate-800">{name}</p>

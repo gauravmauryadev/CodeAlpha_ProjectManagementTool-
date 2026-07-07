@@ -59,6 +59,22 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  // Gamification & Analytics Fields
+  productivityScore: {
+    type: Number,
+    default: 0
+  },
+  streakDays: {
+    type: Number,
+    default: 0
+  },
+  lastCompletedDate: {
+    type: String,
+    default: null // Format: 'YYYY-MM-DD'
+  },
+  badges: [{
+    type: String
+  }],
   // Email Verification & Password Reset
   isVerified: {
     type: Boolean,

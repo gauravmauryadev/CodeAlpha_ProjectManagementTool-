@@ -421,6 +421,10 @@ const PORT = process.env.PORT || 5000;
 const { initDiscordBot } = require('./discordBot');
 initDiscordBot();
 
+// Initialize Due Date Reminder Scheduler
+const { startDueDateScheduler } = require('./utils/dueDateReminder');
+startDueDateScheduler();
+
 server.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📋 Frontend: http://localhost:${PORT}`);

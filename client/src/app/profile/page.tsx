@@ -152,14 +152,14 @@ function ProfileContent() {
         {/* Profile Header */}
         <div className="relative mb-10">
           {/* Banner */}
-          <div className="group relative h-36 rounded-2xl border-2 border-transparent shadow-sm overflow-hidden bg-white dark:bg-[#14112c] animate-border-pulse">
+          <div className="group relative h-48 md:h-56 rounded-md border-2 border-transparent shadow-sm overflow-hidden bg-white dark:bg-[#14112c] animate-border-pulse">
             {banner ? (
-              <img src={banner} alt="Banner" className="w-full h-full object-cover" />
+              <img src={banner} alt="Banner" className="w-full h-full object-cover object-center" />
             ) : (
               <div className="w-full h-full bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20" />
             )}
             
-            <label className="absolute top-4 right-4 p-2 rounded-xl bg-black/50 hover:bg-black/70 backdrop-blur-md opacity-0 group-hover:opacity-100 cursor-pointer transition-all duration-200 text-white flex items-center gap-2 shadow-lg">
+            <label className="absolute top-4 right-4 p-2 rounded-md bg-black/50 hover:bg-black/70 backdrop-blur-md opacity-0 group-hover:opacity-100 cursor-pointer transition-all duration-200 text-white flex items-center gap-2 shadow-sm">
               <Camera className="w-4 h-4" />
               <span className="text-xs font-semibold">Change Cover</span>
               <input type="file" accept="image/*" className="hidden" onChange={handleBannerChange} />
@@ -167,23 +167,23 @@ function ProfileContent() {
           </div>
           
           {/* Avatar and Info */}
-          <div className="absolute -bottom-16 md:-bottom-10 left-4 md:left-8 flex flex-row items-end gap-3 md:gap-5 z-10 w-[calc(100%-2rem)] md:w-auto pointer-events-none">
+          <div className="absolute -bottom-16 md:-bottom-12 left-6 md:left-10 flex flex-row items-end gap-3 md:gap-5 z-10 w-[calc(100%-3rem)] md:w-auto pointer-events-none">
             <div className="relative group pointer-events-auto shrink-0">
               {avatar ? (
-                <img src={avatar} alt={user?.name || "Avatar"} className="w-20 h-20 md:w-24 md:h-24 rounded-2xl ring-4 ring-white dark:ring-[#0E0A22] object-cover shadow-xl bg-slate-100 dark:bg-[#14112c]" />
+                <img src={avatar} alt={user?.name || "Avatar"} className="w-20 h-20 md:w-24 md:h-24 rounded-md ring-4 ring-white dark:ring-[#0E0A22] object-cover shadow-sm bg-slate-100 dark:bg-[#14112c]" />
               ) : (
-                <div className={cn("w-20 h-20 md:w-24 md:h-24 rounded-2xl ring-4 ring-white dark:ring-[#0E0A22] flex items-center justify-center text-2xl md:text-3xl font-bold text-white shadow-xl", getAvatarColor(user?.name || "U"))}>
+                <div className={cn("w-20 h-20 md:w-24 md:h-24 rounded-md ring-4 ring-white dark:ring-[#0E0A22] flex items-center justify-center text-2xl md:text-3xl font-bold text-white shadow-sm", getAvatarColor(user?.name || "U"))}>
                   {getInitials(user?.name || "User")}
                 </div>
               )}
-              <label className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 rounded-2xl cursor-pointer transition-all duration-200">
+              <label className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 rounded-md cursor-pointer transition-all duration-200">
                 <Camera className="w-6 h-6 text-white mb-1" />
                 <span className="text-[9px] font-bold text-white uppercase tracking-wider">Change DP</span>
                 <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
               </label>
             </div>
-            <div className="mb-0 md:mb-2 bg-white/95 dark:bg-[#14112c]/95 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none px-3 py-2 md:p-0 rounded-xl md:rounded-none shadow-sm md:shadow-none min-w-0 max-w-[calc(100%-5.5rem)] pointer-events-auto">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-red-600 via-rose-500 to-orange-500 bg-clip-text text-transparent tracking-tight leading-none truncate pb-0.5">{user?.name}</h1>
+            <div className="mb-0 md:mb-2 bg-white/95 dark:bg-[#14112c]/95 md:bg-transparent md:dark:bg-transparent backdrop-blur-md md:backdrop-blur-none px-3 py-2 md:p-0 rounded-md md:rounded-none shadow-sm md:shadow-none min-w-0 max-w-[calc(100%-5.5rem)] pointer-events-auto">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black capitalize bg-gradient-to-r from-red-600 via-rose-500 to-orange-500 bg-clip-text text-transparent tracking-tight leading-none truncate pb-0.5">{user?.name}</h1>
               <p className="text-[11px] sm:text-xs md:text-sm text-slate-600 dark:text-slate-300 md:text-slate-500 md:dark:text-slate-400 mt-0.5 truncate">{user?.email}</p>
             </div>
           </div>
@@ -191,34 +191,36 @@ function ProfileContent() {
 
         {/* Info Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 mt-24 md:mt-14 mb-8">
-          <div className="p-4 rounded-xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
+          <div className="p-4 rounded-md border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
             <div className="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 mb-1">
               <Mail className="w-4 h-4" />
               <span className="text-xs font-medium">Email</span>
             </div>
             <p className="text-sm font-semibold truncate text-slate-800 dark:text-slate-200">{user?.email}</p>
           </div>
-          <div className="p-4 rounded-xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
+          <div className="p-4 rounded-md border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
             <div className="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 mb-1">
               <Shield className="w-4 h-4" />
               <span className="text-xs font-medium">Role</span>
             </div>
             <p className="text-sm font-semibold capitalize text-slate-800 dark:text-slate-200">{user?.role || "Member"}</p>
           </div>
-          <div className="p-4 rounded-xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
+          <div className="p-4 rounded-md border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
             <div className="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 mb-1">
               <Calendar className="w-4 h-4" />
               <span className="text-xs font-medium">Joined</span>
             </div>
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-250">{user?.createdAt ? formatDate(user.createdAt) : "N/A"}</p>
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-250">
+              {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            </p>
           </div>
         </div>
 
         {/* GitHub Integration Card */}
-        <div className="p-4 md:p-6 rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse mb-8">
+        <div className="p-4 md:p-6 rounded-md border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-900 dark:bg-white/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-md bg-slate-900 dark:bg-white/10 flex items-center justify-center">
                 <GithubIcon className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -236,7 +238,7 @@ function ProfileContent() {
           </div>
 
           {githubMsg && (
-            <div className={cn("mb-4 p-3 rounded-xl border text-sm font-medium", githubMsg.type === "success" ? "border-emerald-500/10 bg-emerald-500/5 text-emerald-400" : "border-red-500/10 bg-red-500/5 text-red-400")}>
+            <div className={cn("mb-4 p-3 rounded-md border text-sm font-medium", githubMsg.type === "success" ? "border-emerald-500/10 bg-emerald-500/5 text-emerald-400" : "border-red-500/10 bg-red-500/5 text-red-400")}>
               {githubMsg.text}
             </div>
           )}
@@ -246,7 +248,7 @@ function ProfileContent() {
               <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
             </div>
           ) : githubStatus.connected ? (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 gap-3 sm:gap-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-md bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 gap-3 sm:gap-0">
               <div className="flex items-center gap-3 w-full sm:w-auto min-w-0">
                 <div className="w-9 h-9 flex-shrink-0 rounded-lg bg-slate-900 dark:bg-white/10 flex items-center justify-center">
                   <GithubIcon className="w-4.5 h-4.5 text-white" />
@@ -264,7 +266,7 @@ function ProfileContent() {
               </button>
             </div>
           ) : (
-            <button onClick={handleGithubConnect} className="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white/10 dark:hover:bg-white/15 text-white text-sm font-semibold shadow-lg flex items-center justify-center gap-2.5 transition-all cursor-pointer">
+            <button onClick={handleGithubConnect} className="w-full py-3.5 rounded-md bg-slate-900 hover:bg-slate-800 dark:bg-white/10 dark:hover:bg-white/15 text-white text-sm font-semibold shadow-sm flex items-center justify-center gap-2.5 transition-all cursor-pointer">
               <GithubIcon className="w-5 h-5" />
               Connect GitHub Account
             </button>
@@ -272,11 +274,11 @@ function ProfileContent() {
         </div>
 
         {/* Edit Form */}
-        <div className="p-4 md:p-6 rounded-2xl border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
+        <div className="p-4 md:p-6 rounded-md border-2 border-transparent bg-white dark:bg-[#14112c]/45 shadow-sm animate-border-pulse">
           <h2 className="text-lg font-bold mb-6 text-slate-800 dark:text-slate-100">Edit Profile</h2>
 
           {message && (
-            <div className={cn("mb-5 p-3.5 rounded-xl border text-sm font-medium", message.type === "success" ? "border-emerald-500/10 bg-emerald-500/5 text-emerald-400" : "border-red-500/10 bg-red-500/5 text-red-400")}>
+            <div className={cn("mb-5 p-3.5 rounded-md border text-sm font-medium", message.type === "success" ? "border-emerald-500/10 bg-emerald-500/5 text-emerald-400" : "border-red-500/10 bg-red-500/5 text-red-400")}>
               {message.text}
             </div>
           )}
@@ -284,16 +286,16 @@ function ProfileContent() {
           <form onSubmit={handleSave} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Full Name</label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-100/50 dark:bg-[#13102c]/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3 rounded-md bg-slate-100/50 dark:bg-[#13102c]/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Email</label>
-              <input type="email" value={email} disabled className="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-[#13102c]/35 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-450 text-sm cursor-not-allowed" />
+              <input type="email" value={email} disabled className="w-full px-4 py-3 rounded-md bg-slate-100 dark:bg-[#13102c]/35 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-450 text-sm cursor-not-allowed" />
               <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Email cannot be changed.</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Discord User ID</label>
-              <input type="text" value={discordId} onChange={(e) => setDiscordId(e.target.value)} placeholder="e.g. 123456789012345678" className="w-full px-4 py-3 rounded-xl bg-slate-100/50 dark:bg-[#13102c]/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
+              <input type="text" value={discordId} onChange={(e) => setDiscordId(e.target.value)} placeholder="e.g. 123456789012345678" className="w-full px-4 py-3 rounded-md bg-slate-100/50 dark:bg-[#13102c]/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
               <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Right click your Discord profile and select "Copy User ID".</p>
             </div>
 
@@ -302,16 +304,16 @@ function ProfileContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Current Password</label>
-                  <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" className="w-full px-4 py-2.5 rounded-xl bg-slate-100/50 dark:bg-[#13102c]/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+                  <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" className="w-full px-4 py-2.5 rounded-md bg-slate-100/50 dark:bg-[#13102c]/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">New Password</label>
-                  <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="••••••••" className="w-full px-4 py-2.5 rounded-xl bg-slate-100/50 dark:bg-[#13102c]/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+                  <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="••••••••" className="w-full px-4 py-2.5 rounded-md bg-slate-100/50 dark:bg-[#13102c]/50 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 text-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
                 </div>
               </div>
             </div>
 
-            <button type="submit" disabled={isSaving} className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-550 text-sm font-semibold text-white shadow-lg shadow-indigo-600/15 disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2 cursor-pointer">
+            <button type="submit" disabled={isSaving} className="w-full py-3 rounded-md bg-indigo-600 hover:bg-indigo-550 text-sm font-semibold text-white shadow-sm shadow-indigo-600/15 disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2 cursor-pointer">
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4" /> Save Changes</>}
             </button>
           </form>

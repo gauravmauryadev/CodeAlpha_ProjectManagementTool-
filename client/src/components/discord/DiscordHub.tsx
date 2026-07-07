@@ -421,12 +421,12 @@ export default function DiscordHub() {
   }, [activeServer]);
 
   return (
-    <div className="mt-8 mb-8 flex h-[650px] rounded-2xl bg-slate-50/80 dark:bg-[#1e1f22] overflow-hidden shadow-2xl border border-slate-200/50 dark:border-[#1e1f22]">
+    <div className="mt-8 mb-8 flex h-[650px] rounded-md bg-slate-50/80 dark:bg-[#1e1f22] overflow-hidden shadow-sm border border-slate-200/50 dark:border-[#1e1f22]">
       
       {/* 1. Extreme Left Sidebar (Servers List) */}
       <div className="w-[72px] bg-slate-50/80 dark:bg-[#1e1f22] border-r border-slate-200/50 dark:border-[#1e1f22] flex flex-col items-center py-3 flex-shrink-0 gap-2 overflow-y-auto hide-scrollbar">
         <Tooltip content="Direct Messages" position="right">
-          <div className="w-12 h-12 rounded-full bg-white dark:bg-[#313338] flex items-center justify-center text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all cursor-pointer hover:rounded-2xl relative">
+          <div className="w-12 h-12 rounded-full bg-white dark:bg-[#313338] flex items-center justify-center text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all cursor-pointer hover:rounded-md relative">
             <Compass className="w-6 h-6" />
             <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-2 h-0 bg-white dark:bg-[#313338] rounded-r-full transition-all duration-200" />
           </div>
@@ -442,7 +442,7 @@ export default function DiscordHub() {
                 onClick={() => setActiveServer(server._id)}
                 className={cn(
                   "w-12 h-12 flex items-center justify-center text-white font-bold text-lg cursor-pointer transition-all duration-200 relative group",
-                  isActive ? "bg-indigo-500 rounded-2xl" : "bg-white dark:bg-[#313338] rounded-full hover:bg-indigo-500 hover:rounded-2xl"
+                  isActive ? "bg-indigo-500 rounded-md" : "bg-white dark:bg-[#313338] rounded-full hover:bg-indigo-500 hover:rounded-md"
                 )}
               >
                 {getInitials(server.name)}
@@ -462,7 +462,7 @@ export default function DiscordHub() {
               setAddServerStep(1); 
               setServerNameInput(`${user?.name || "My"}'s server`);
             }}
-            className="w-12 h-12 rounded-full bg-white dark:bg-[#313338] flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all cursor-pointer hover:rounded-2xl group relative"
+            className="w-12 h-12 rounded-full bg-white dark:bg-[#313338] flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all cursor-pointer hover:rounded-md group relative"
           >
             <Plus className="w-6 h-6" />
           </div>
@@ -482,7 +482,7 @@ export default function DiscordHub() {
               {showServerDropdown && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowServerDropdown(false)}></div>
-                  <div className="absolute top-14 left-2 w-[220px] bg-[#111214] rounded-lg shadow-xl z-50 p-2 border border-slate-200/50 dark:border-[#1e1f22]">
+                  <div className="absolute top-14 left-2 w-[220px] bg-[#111214] rounded-lg shadow-sm z-50 p-2 border border-slate-200/50 dark:border-[#1e1f22]">
                     <button onClick={() => { setShowBoostModal(true); setShowServerDropdown(false); }} className="w-full text-left px-2 py-1.5 rounded-sm text-sm font-medium text-slate-700 dark:text-[#dbdee1] hover:bg-indigo-600 hover:text-white flex justify-between items-center group transition-colors cursor-pointer">Server Boost <span className="text-pink-400 group-hover:text-white">🚀</span></button>
                     <div className="my-1 border-b border-[#2b2d31]" />
                     <button onClick={() => { setShowInviteModal(true); setShowServerDropdown(false); }} className="w-full text-left px-2 py-1.5 rounded-sm text-sm font-medium text-[#5865F2] hover:bg-indigo-600 hover:text-white flex justify-between items-center transition-colors cursor-pointer">Invite to Server <UserPlus className="w-4 h-4"/></button>
@@ -713,7 +713,7 @@ export default function DiscordHub() {
       {/* Modals */}
       {showAddServer && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white dark:bg-[#313338] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+          <div className="bg-white dark:bg-[#313338] w-full max-w-md rounded-md shadow-sm overflow-hidden flex flex-col">
             
             {addServerStep === 1 && (
               <>
@@ -852,7 +852,7 @@ export default function DiscordHub() {
 
       {showInviteModal && activeServer && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white dark:bg-[#313338] w-full max-w-sm rounded-xl shadow-2xl p-6">
+          <div className="bg-white dark:bg-[#313338] w-full max-w-sm rounded-md shadow-sm p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-slate-800 dark:text-[#f2f3f5] font-bold uppercase text-xs">Invite friends to {activeServer.name}</h2>
             </div>
@@ -871,7 +871,7 @@ export default function DiscordHub() {
 
       {showAddChannel && activeServer && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white dark:bg-[#313338] w-full max-w-sm rounded-xl shadow-2xl p-6">
+          <div className="bg-white dark:bg-[#313338] w-full max-w-sm rounded-md shadow-sm p-6">
             <h2 className="text-slate-800 dark:text-[#f2f3f5] font-bold mb-4">Create Channel</h2>
             <form onSubmit={handleCreateChannel}>
               <label className="block text-[11px] font-bold text-slate-500 dark:text-[#b5bac1] uppercase mb-2">Channel Name</label>
@@ -890,7 +890,7 @@ export default function DiscordHub() {
 
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-[100] bg-white/60 dark:bg-[#2b2d31] border-l-4 border-[#5865F2] text-slate-800 dark:text-[#f2f3f5] px-4 py-3 rounded shadow-lg flex items-center gap-3 animate-in slide-in-from-bottom-5">
+        <div className="fixed bottom-6 right-6 z-[100] bg-white/60 dark:bg-[#2b2d31] border-l-4 border-[#5865F2] text-slate-800 dark:text-[#f2f3f5] px-4 py-3 rounded shadow-sm flex items-center gap-3 animate-in slide-in-from-bottom-5">
           <div className="w-6 h-6 rounded-full bg-indigo-600/20 flex items-center justify-center">
             <Settings className="w-4 h-4 text-[#5865F2]" />
           </div>
@@ -981,7 +981,7 @@ export default function DiscordHub() {
       {/* Leave Server Modal */}
       {showLeaveModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[440px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[440px] rounded shadow-sm overflow-hidden animate-in zoom-in-95">
             <div className="p-4">
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-4">Leave '{activeServer?.name}'</h2>
               <p className="text-slate-700 dark:text-[#dbdee1] text-sm">Are you sure you want to leave <strong>{activeServer?.name}</strong>? You won't be able to rejoin this server unless you are re-invited.</p>
@@ -997,7 +997,7 @@ export default function DiscordHub() {
       {/* Delete Server Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[440px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[440px] rounded shadow-sm overflow-hidden animate-in zoom-in-95">
             <div className="p-4">
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-4">Delete '{activeServer?.name}'</h2>
               <p className="text-slate-700 dark:text-[#dbdee1] text-sm bg-[#eda145]/10 p-3 rounded border border-[#eda145]/30">Are you sure you want to delete <strong>{activeServer?.name}</strong>? This action cannot be undone.</p>
@@ -1028,7 +1028,7 @@ export default function DiscordHub() {
       {/* Boost Modal */}
       {showBoostModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[440px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[440px] rounded shadow-sm overflow-hidden animate-in zoom-in-95">
             <div className="p-6 text-center">
               <div className="w-16 h-16 mx-auto bg-gradient-to-tr from-pink-500 to-indigo-500 rounded-full flex items-center justify-center text-3xl mb-4">🚀</div>
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-2">Unlock Perks with Server Boost</h2>
@@ -1043,7 +1043,7 @@ export default function DiscordHub() {
       {/* Add Category Modal */}
       {showAddCategory && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[460px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[460px] rounded shadow-sm overflow-hidden animate-in zoom-in-95">
             <div className="p-4">
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-2">Create Category</h2>
               <p className="text-slate-500 dark:text-[#b5bac1] text-sm mb-4">Categories help you organize your channels.</p>
@@ -1067,7 +1067,7 @@ export default function DiscordHub() {
       {/* Event Modal */}
       {showEventModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[500px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[500px] rounded shadow-sm overflow-hidden animate-in zoom-in-95">
             <div className="p-4 border-b border-slate-200/50 dark:border-[#1e1f22]">
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5]">Create Event</h2>
             </div>
@@ -1115,9 +1115,9 @@ export default function DiscordHub() {
       {/* Download Modal */}
       {showDownloadModal && (
         <div className="fixed inset-0 z-[200] bg-slate-900/40 flex items-center justify-center animate-in fade-in">
-          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[460px] rounded shadow-xl overflow-hidden animate-in zoom-in-95">
+          <div className="bg-white dark:bg-[#313338] w-[90vw] max-w-[460px] rounded shadow-sm overflow-hidden animate-in zoom-in-95">
             <div className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto bg-indigo-600 dark:bg-[#5865F2] rounded-2xl flex items-center justify-center text-3xl mb-4 text-white"><Monitor className="w-8 h-8"/></div>
+              <div className="w-16 h-16 mx-auto bg-indigo-600 dark:bg-[#5865F2] rounded-md flex items-center justify-center text-3xl mb-4 text-white"><Monitor className="w-8 h-8"/></div>
               <h2 className="text-xl font-bold text-slate-800 dark:text-[#f2f3f5] mb-2">Get the Desktop App</h2>
               <p className="text-slate-500 dark:text-[#b5bac1] text-sm mb-6">Discord is best experienced on the desktop app. Get features like screen sharing, global push-to-talk, and hardware acceleration.</p>
               <button onClick={() => { showToast("Download started..."); setShowDownloadModal(false); }} className="w-full py-3 bg-indigo-600 dark:bg-[#5865F2] hover:bg-[#4752c4] text-white rounded font-bold transition-colors mb-3">Download for Windows</button>

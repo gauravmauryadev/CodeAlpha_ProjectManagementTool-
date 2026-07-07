@@ -4,7 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  User,
+  FolderKanban,
+  Calendar,
+  Users,
+  Settings,
   Bell,
   Shield,
   LogOut,
@@ -24,10 +27,10 @@ const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/discord", icon: DiscordIcon, label: "Discord" },
-  { href: "/profile", icon: User, label: "Profile" },
-  { href: "#", icon: Bell, label: "Notifications" },
+  { href: "/dashboard", icon: LayoutDashboard, label: "Summary" },
+  { href: "/discord", icon: FolderKanban, label: "Board" },
+  { href: "/calendar", icon: Calendar, label: "Calendar" },
+  { href: "/teams", icon: Users, label: "Teams" },
 ];
 
 interface AppSidebarProps {
@@ -52,18 +55,18 @@ export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          // Base styles - always a vertical left sidebar
-          "fixed left-0 top-0 h-screen bg-[#64748b] dark:bg-[#000000] border-r border-slate-500 dark:border-white/5 flex flex-col items-center justify-start py-5 shadow-2xl z-[60] transition-all duration-300",
-          // Desktop - always visible
-          "md:w-[72px] md:translate-x-0",
+          // Base styles
+          "fixed left-0 top-0 h-screen bg-[#FFFFFF] dark:bg-[#1e1e1e] border-r border-slate-200 dark:border-white/5 flex flex-col py-5 shadow-sm z-[60] transition-all duration-300",
+          // Desktop - always visible expanded
+          "md:w-[240px] md:translate-x-0",
           // Mobile - slide in/out
-          isOpen ? "w-[72px] translate-x-0" : "w-[72px] -translate-x-full md:translate-x-0"
+          isOpen ? "w-[240px] translate-x-0" : "w-[240px] -translate-x-full md:translate-x-0"
         )}
       >
         {/* Close button - mobile only */}
         <button
           onClick={onClose}
-          className="md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-all mb-2 cursor-pointer"
+          className="md:hidden w-10 h-10 rounded-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-all mb-2 cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -72,13 +75,17 @@ export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
         <Link
           href="/dashboard"
           onClick={onClose}
-          className="flex w-12 h-12 rounded-xl bg-white/5 items-center justify-center hover:scale-105 transition-transform mb-4"
+          className="flex items-center gap-3 px-6 mb-8 mt-2 transition-transform hover:scale-[1.02]"
+          title="OmniPlan"
         >
-          <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-md" />
+          <div className="flex w-10 h-10 rounded-md bg-gradient-to-br from-indigo-500 to-purple-600 items-center justify-center shadow-sm shrink-0">
+            <span className="text-white font-extrabold text-lg tracking-tighter">OP</span>
+          </div>
+          <span className="text-slate-800 dark:text-white font-bold text-xl tracking-tight hidden md:block">OmniPlan</span>
         </Link>
 
         {/* Nav Items */}
-        <nav className="flex-1 flex flex-col items-center justify-center gap-1.5 w-full">
+        <nav className="flex-1 flex flex-col gap-2 w-full px-4">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -87,17 +94,14 @@ export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "w-12 h-12 rounded-xl flex items-center justify-center transition-all group relative",
+                  "w-full h-12 rounded-md flex items-center gap-3 px-4 transition-all group",
                   isActive
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
-                    : "text-slate-300 dark:text-slate-400 hover:text-white hover:bg-indigo-500/20"
+                    ? "bg-indigo-50 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 font-semibold"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium"
                 )}
               >
-                <item.icon className="w-6 h-6" />
-                {/* Premium Tooltip */}
-                <span className="absolute left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
-                  {item.label}
-                </span>
+                <item.icon className="w-5 h-5 shrink-0" />
+                <span>{item.label}</span>
               </Link>
             );
           })}
@@ -108,27 +112,28 @@ export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
               href="/admin"
               onClick={onClose}
               className={cn(
-                "w-12 h-12 rounded-xl flex items-center justify-center transition-all group relative",
+                "w-full h-12 rounded-md flex items-center gap-3 px-4 transition-all group mt-2",
                 pathname === "/admin"
-                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
-                  : "text-slate-300 dark:text-slate-400 hover:text-white hover:bg-indigo-500/20"
+                  ? "bg-indigo-50 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 font-semibold"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium"
               )}
             >
-              <Shield className="w-6 h-6" />
-              <span className="absolute left-[56px] px-2.5 py-1.5 rounded-lg bg-white/95 dark:bg-[#14112c]/95 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl text-xs font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap opacity-0 scale-95 translate-x-[-8px] group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out shadow-md">
-                Admin Panel
-              </span>
+              <Shield className="w-5 h-5 shrink-0" />
+              <span>Admin Panel</span>
             </Link>
           )}
         </nav>
 
         {/* Logout at bottom */}
-        <button
-          onClick={() => { logout(); onClose(); }}
-          className="w-12 h-12 rounded-xl flex items-center justify-center text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 transition-all cursor-pointer mb-2"
-        >
-          <LogOut className="w-5 h-5" />
-        </button>
+        <div className="px-4 w-full mt-auto">
+          <button
+            onClick={() => { logout(); onClose(); }}
+            className="w-full h-12 rounded-md flex items-center gap-3 px-4 text-rose-300 hover:bg-rose-500/20 hover:text-rose-200 transition-all cursor-pointer mb-2 font-medium"
+          >
+            <LogOut className="w-5 h-5 shrink-0" />
+            <span>Logout</span>
+          </button>
+        </div>
       </aside>
     </>
   );

@@ -109,7 +109,7 @@ export default function WikiTab({ projectId, socket }: WikiTabProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#13112b]/40 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-xl">
+    <div className="flex-1 flex flex-col h-full bg-[#13112b]/40 backdrop-blur-xl border border-white/5 rounded-md overflow-hidden shadow-sm">
       {/* Editor Controls */}
       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-[#13112b]/60">
         <div className="flex items-center gap-2.5">
@@ -128,12 +128,12 @@ export default function WikiTab({ projectId, socket }: WikiTabProps) {
         </div>
 
         {/* Mode Toggles */}
-        <div className="flex bg-black/20 p-0.5 rounded-xl border border-white/5">
+        <div className="flex bg-black/20 p-0.5 rounded-md border border-white/5">
           <button
             onClick={() => setMode("preview")}
             className={cn(
               "px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer",
-              mode === "preview" ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30" : "text-slate-400 hover:text-slate-200"
+              mode === "preview" ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/30" : "text-slate-400 hover:text-slate-200"
             )}
           >
             <Eye className="w-3.5 h-3.5" /> Preview
@@ -142,7 +142,7 @@ export default function WikiTab({ projectId, socket }: WikiTabProps) {
             onClick={() => setMode("edit")}
             className={cn(
               "px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer",
-              mode === "edit" ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30" : "text-slate-400 hover:text-slate-200"
+              mode === "edit" ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/30" : "text-slate-400 hover:text-slate-200"
             )}
           >
             <Edit2 className="w-3.5 h-3.5" /> Edit Wiki
@@ -158,7 +158,7 @@ export default function WikiTab({ projectId, socket }: WikiTabProps) {
               value={wikiText}
               onChange={handleWikiChange}
               placeholder="# Project Documentation&#10;&#10;Write here using basic markdown syntax..."
-              className="w-full flex-1 h-full p-6 rounded-xl bg-[#0e0a22]/50 border border-white/10 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 resize-none font-mono text-sm leading-relaxed shadow-sm"
+              className="w-full flex-1 h-full p-6 rounded-md bg-[#0e0a22]/50 border border-white/10 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 resize-none font-mono text-sm leading-relaxed shadow-sm"
               autoFocus
             />
             <p className="text-[10px] text-slate-500 flex items-center gap-1 mt-1">

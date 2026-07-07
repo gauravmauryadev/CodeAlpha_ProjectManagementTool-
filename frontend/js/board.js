@@ -75,7 +75,7 @@ async function loadTasks() {
                 if (task.dueDate) {
                     const date = new Date(task.dueDate);
                     const isOverdue = date < new Date() && task.status !== 'done';
-                    dueDateHtml = `<span style="font-size: 0.7rem; background: ${isOverdue ? 'rgba(239, 68, 68, 0.2)' : 'var(--bg-color)'}; color: ${isOverdue ? '#ef4444' : 'var(--text-main)'}; padding: 2px 6px; border-radius: 4px; border: 1px solid ${isOverdue ? 'rgba(239, 68, 68, 0.5)' : 'var(--border)'};" title="Due Date">📅 ${date.toLocaleDateString()}</span>`;
+                    dueDateHtml = `<span style="font-size: 0.7rem; background: ${isOverdue ? 'rgba(239, 68, 68, 0.2)' : 'var(--bg-color)'}; color: ${isOverdue ? '#ef4444' : 'var(--text-main)'}; padding: 2px 6px; border-radius: 4px; border: 1px solid ${isOverdue ? 'rgba(239, 68, 68, 0.5)' : 'var(--border)'};" title="Due Date">📅 ${api.timeAgo(date)}</span>`;
                 }
 
                 // Format Label
@@ -113,6 +113,7 @@ async function loadTasks() {
                             ${task.assignee ? `<span style="font-size: 0.75rem; background: var(--bg-color); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);" title="Assigned to ${task.assignee.name}">👤 ${task.assignee.name}</span>` : ''}
                             ${dueDateHtml}
                             ${startTaskHtml}
+                            <span onclick="aiBreakdownTask(event, '${task._id}')" style="cursor: pointer; background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; transition: all 0.2s;" title="AI Smart Breakdown" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">🤖 AI</span>
                             <span onclick="openTaskModal(null, '${task._id}', 'edit')" style="cursor: pointer;" title="Edit Task">✏️</span>
                             <span onclick="openTaskModal(null, '${task._id}', 'comment')" style="cursor: pointer;" title="View Comments">💬</span>
                         </div>
@@ -219,7 +220,9 @@ function openTaskModal(status = 'todo', taskId = null, mode = 'edit') {
             document.getElementById('tDesc').value = task.description;
             document.getElementById('tPriority').value = task.priority;
             document.getElementById('tAssignee').value = task.assignee ? task.assignee._id : '';
+            document.getElementById('tStartDate').value = task.startDate ? task.startDate.split('T')[0] : '';
             document.getElementById('tDueDate').value = task.dueDate ? task.dueDate.split('T')[0] : '';
+            document.getElementById('tDependencies').value = task.dependencies || '';
             document.getElementById('tLabel').value = task.labels && task.labels.length > 0 ? task.labels[0] : '';
             
             if (task.imageUrl) {
@@ -231,7 +234,9 @@ function openTaskModal(status = 'todo', taskId = null, mode = 'edit') {
         } else {
             document.getElementById('taskForm').reset();
             document.getElementById('tAssignee').value = '';
+            document.getElementById('tStartDate').value = '';
             document.getElementById('tDueDate').value = '';
+            document.getElementById('tDependencies').value = '';
             document.getElementById('tLabel').value = '';
             document.getElementById('currentImagePreview').style.display = 'none';
         }
@@ -261,8 +266,14 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
     const assignee = document.getElementById('tAssignee').value;
     if (assignee) formData.append('assignee', assignee);
     
+    const startDate = document.getElementById('tStartDate').value;
+    if (startDate) formData.append('startDate', startDate);
+    
     const dueDate = document.getElementById('tDueDate').value;
     if (dueDate) formData.append('dueDate', dueDate);
+
+    const dependencies = document.getElementById('tDependencies').value;
+    formData.append('dependencies', dependencies || '');
     
     const label = document.getElementById('tLabel').value;
     if (label) formData.append('labels', JSON.stringify([label]));
@@ -396,8 +407,126 @@ window.filterTasks = function(query) {
     });
 };
 
+// ========================
+// AI TASK BREAKDOWN (Gemini)
+// ========================
+
+let aiBreakdownRunning = false;
+
+async function aiBreakdownTask(event, taskId) {
+    event.stopPropagation();
+    
+    if (aiBreakdownRunning) {
+        alert('AI is already processing a task. Please wait...');
+        return;
+    }
+
+    const task = currentTasks[taskId];
+    if (!task) return;
+
+    if (!confirm(`🤖 AI Smart Breakdown\n\nKya aap "${task.title}" ko 5 chhote sub-tasks mein todna chahte hain?\n\nAI automatically 5 actionable sub-tasks generate karega aur "To Do" mein add kar dega.`)) {
+        return;
+    }
+
+    aiBreakdownRunning = true;
+
+    // Show AI loading modal
+    showAiLoadingModal(task.title);
+
+    try {
+        const result = await api.aiBreakdown(taskId);
+        
+        // Show success result
+        showAiResultModal(task.title, result.subTasks || []);
+        
+        // Refresh the board
+        loadTasks();
+        
+    } catch (error) {
+        hideAiModal();
+        alert('❌ AI Error: ' + error.message);
+    } finally {
+        aiBreakdownRunning = false;
+    }
+}
+
+function showAiLoadingModal(taskTitle) {
+    // Remove existing modal if any
+    const existing = document.getElementById('aiBreakdownModal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'aiBreakdownModal';
+    modal.innerHTML = `
+        <div class="ai-modal-overlay" onclick="hideAiModal()">
+            <div class="ai-modal-content" onclick="event.stopPropagation()">
+                <div class="ai-loading-state">
+                    <div class="ai-brain-animation">
+                        <div class="ai-brain-circle"></div>
+                        <div class="ai-brain-pulse"></div>
+                        <span class="ai-brain-emoji">🤖</span>
+                    </div>
+                    <h3 class="ai-modal-title">AI is thinking...</h3>
+                    <p class="ai-modal-subtitle">Breaking down "<strong>${taskTitle}</strong>" into smart sub-tasks</p>
+                    <div class="ai-progress-bar">
+                        <div class="ai-progress-fill"></div>
+                    </div>
+                    <p class="ai-tip">⚡ Powered by Google Gemini AI</p>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function showAiResultModal(parentTitle, subTasks) {
+    const modal = document.getElementById('aiBreakdownModal');
+    if (!modal) return;
+
+    const priorityColors = { high: '#ef4444', medium: '#f59e0b', low: '#22c55e' };
+    const priorityIcons = { high: '🔴', medium: '🟡', low: '🟢' };
+
+    const content = modal.querySelector('.ai-modal-content');
+    content.innerHTML = `
+        <div class="ai-result-state">
+            <div class="ai-success-icon">✅</div>
+            <h3 class="ai-modal-title">AI Breakdown Complete!</h3>
+            <p class="ai-modal-subtitle">"<strong>${parentTitle}</strong>" → ${subTasks.length} sub-tasks created</p>
+            
+            <div class="ai-subtasks-list">
+                ${subTasks.map((st, i) => `
+                    <div class="ai-subtask-item" style="animation-delay: ${i * 0.1}s">
+                        <div class="ai-subtask-number">${i + 1}</div>
+                        <div class="ai-subtask-info">
+                            <div class="ai-subtask-title">${st.title}</div>
+                            <div class="ai-subtask-desc">${st.description || ''}</div>
+                        </div>
+                        <span class="ai-subtask-priority" style="background: ${priorityColors[st.priority]}20; color: ${priorityColors[st.priority]}; border: 1px solid ${priorityColors[st.priority]}40;">
+                            ${priorityIcons[st.priority]} ${st.priority}
+                        </span>
+                    </div>
+                `).join('')}
+            </div>
+
+            <button class="ai-done-btn" onclick="hideAiModal()">
+                🎉 Awesome, Done!
+            </button>
+            <p class="ai-tip" style="margin-top: 0.75rem;">All sub-tasks have been added to your "To Do" column</p>
+        </div>
+    `;
+}
+
+function hideAiModal() {
+    const modal = document.getElementById('aiBreakdownModal');
+    if (modal) {
+        modal.querySelector('.ai-modal-overlay').style.animation = 'aiFadeOut 0.2s ease-out forwards';
+        setTimeout(() => modal.remove(), 200);
+    }
+}
+
 // Start
 initBoard();
+
 
 // ---------- DISCORD-STYLE REAL-TIME CHAT ---------- //
 let chatOpen = false;
@@ -797,4 +926,116 @@ window.endCall = function() {
     document.getElementById('btnScreenShare').classList.remove('btn-active');
     
     updateGridLayout();
+}
+
+// ==========================================
+// GANTT CHART (TIMELINE) VIEW LOGIC
+// ==========================================
+let ganttChartInstance = null;
+
+function switchBoardView(view) {
+    const btnBoard = document.getElementById('btnViewBoard');
+    const btnGantt = document.getElementById('btnViewGantt');
+    const kanbanView = document.getElementById('kanbanView');
+    const ganttView = document.getElementById('ganttView');
+
+    if (view === 'gantt') {
+        btnGantt.classList.add('active');
+        btnGantt.style.background = 'var(--primary)';
+        btnGantt.style.color = 'white';
+        
+        btnBoard.classList.remove('active');
+        btnBoard.style.background = 'transparent';
+        btnBoard.style.color = 'var(--text-secondary)';
+        
+        kanbanView.style.display = 'none';
+        ganttView.style.display = 'block';
+        
+        renderGanttChart();
+    } else {
+        btnBoard.classList.add('active');
+        btnBoard.style.background = 'var(--primary)';
+        btnBoard.style.color = 'white';
+        
+        btnGantt.classList.remove('active');
+        btnGantt.style.background = 'transparent';
+        btnGantt.style.color = 'var(--text-secondary)';
+        
+        ganttView.style.display = 'none';
+        kanbanView.style.display = 'flex';
+    }
+}
+
+function renderGanttChart() {
+    const ganttChartContainer = document.getElementById('ganttChart');
+    const ganttEmptyState = document.getElementById('ganttEmptyState');
+    
+    // Filter tasks that have at least start and end dates (or fallback)
+    let ganttTasks = Object.values(currentTasks).map(t => {
+        // Fallback for tasks missing dates so they show up for a day
+        let sDate = t.startDate ? new Date(t.startDate) : new Date(t.createdAt);
+        let eDate = t.dueDate ? new Date(t.dueDate) : new Date(sDate.getTime() + (24 * 60 * 60 * 1000));
+        
+        if (eDate < sDate) {
+            eDate = new Date(sDate.getTime() + (24 * 60 * 60 * 1000));
+        }
+
+        return {
+            id: t._id,
+            name: t.title,
+            start: sDate.toISOString().split('T')[0],
+            end: eDate.toISOString().split('T')[0],
+            progress: t.status === 'done' ? 100 : (t.status === 'inprogress' ? 50 : 0),
+            dependencies: t.dependencies || '',
+            custom_class: `gantt-bar-${t.priority || 'medium'}`
+        };
+    });
+
+    if (ganttTasks.length === 0) {
+        ganttChartContainer.innerHTML = '';
+        ganttChartContainer.style.display = 'none';
+        ganttEmptyState.style.display = 'block';
+        return;
+    }
+
+    ganttEmptyState.style.display = 'none';
+    ganttChartContainer.style.display = 'block';
+    ganttChartContainer.innerHTML = '';
+
+    // Initialize Frappe Gantt
+    ganttChartInstance = new Gantt("#ganttChart", ganttTasks, {
+        header_height: 50,
+        column_width: 30,
+        step: 24,
+        view_modes: ['Quarter Day', 'Half Day', 'Day', 'Week', 'Month'],
+        bar_height: 25,
+        bar_corner_radius: 4,
+        arrow_curve: 5,
+        padding: 18,
+        view_mode: 'Day',
+        date_format: 'YYYY-MM-DD',
+        on_click: function (task) {
+            openTaskModal(currentTasks[task.id].status, task.id, 'edit');
+        },
+        on_date_change: async function(task, start, end) {
+            // Send updated dates to backend
+            const sDate = start.toISOString().split('T')[0];
+            const eDate = end.toISOString().split('T')[0];
+            
+            try {
+                // we use a FormData object or just simple update (API supports FormData for tasks)
+                const formData = new FormData();
+                formData.append('startDate', sDate);
+                formData.append('dueDate', eDate);
+                
+                await api.updateTask(task.id, formData);
+                console.log(`Task ${task.name} updated: ${sDate} to ${eDate}`);
+                // Background update, no need to fully reload unless requested
+            } catch (err) {
+                console.error("Failed to update task dates", err);
+                alert("Failed to update task timeline. Refresh to sync.");
+                loadTasks();
+            }
+        }
+    });
 }

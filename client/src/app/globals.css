@@ -6,18 +6,38 @@
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(150, 150, 150, 0.4);
+  background: rgba(150, 150, 150, 0.2);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(150, 150, 150, 0.6);
+  background: rgba(150, 150, 150, 0.4);
+}
+
+@utility scrollbar-thin {
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+@utility scrollbar-thumb-slate-700 {
+  &::-webkit-scrollbar-thumb {
+    background-color: #334155;
+    border-radius: 999px;
+  }
+}
+
+@utility scrollbar-track-transparent {
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 }
 
 /* Smooth transitions only on interactive elements (not global * which kills mobile perf) */
@@ -176,24 +196,6 @@ body {
 
 @utility animate-border-pulse {
   position: relative;
-  /* Soft, clean pulsing glow */
-  animation: tripdekho-glow 4s ease-in-out infinite;
-  border: 1.5px solid rgba(99, 102, 241, 0.15);
-
-  /* Subtle moving light beam on the border */
-  &::after {
-    content: "";
-    position: absolute;
-    inset: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(115deg, transparent 25%, rgba(99, 102, 241, 0.8) 45%, rgba(232, 28, 255, 0.7) 55%, rgba(99, 102, 241, 0.8) 65%, transparent 75%);
-    background-size: 200% 200%;
-    animation: tripdekho-shimmer 4s linear infinite;
-    pointer-events: none;
-    z-index: 10;
-    padding: 1.5px;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
+  /* Soft, clean border */
+  border: 1.5px solid rgba(99, 102, 241, 0.05);
 }

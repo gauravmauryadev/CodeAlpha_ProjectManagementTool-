@@ -36,7 +36,7 @@ export default function Tooltip({ content, children, position = "top" }: Tooltip
       {children}
       {active && (
         <div
-          className={`absolute ${positionClasses} z-[9999] px-2.5 py-1.5 text-xs font-semibold text-slate-700 bg-white/80 backdrop-blur-xl border border-white/80 rounded-lg shadow-md pointer-events-none transition-all duration-200 ease-out whitespace-nowrap`}
+          className={`absolute ${positionClasses} z-[9999] px-2.5 py-1.5 text-xs font-semibold text-slate-700 bg-white/80 backdrop-blur-xl border border-white/80 rounded-lg shadow-sm pointer-events-none transition-all duration-200 ease-out whitespace-nowrap`}
           style={{
             animation: "tooltip-fade 0.15s ease-out forwards",
           }}

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kanban Board - Project Planner</title>
+    <!-- Frappe Gantt CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/frappe-gantt/0.6.1/frappe-gantt.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -51,7 +53,16 @@
         </header>
 
         <main class="app-content" style="padding-top: 1rem;">
-            <div class="board-container">
+            <!-- View Switcher -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div class="view-toggle" style="background: var(--surface); padding: 4px; border-radius: 8px; border: 1px solid var(--border-light); display: inline-flex;">
+                    <button id="btnViewBoard" class="active" onclick="switchBoardView('board')" style="padding: 6px 12px; border: none; background: var(--primary); color: white; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s;">Kanban Board</button>
+                    <button id="btnViewGantt" onclick="switchBoardView('gantt')" style="padding: 6px 12px; border: none; background: transparent; color: var(--text-secondary); border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s;">Timeline (Gantt)</button>
+                </div>
+            </div>
+
+            <!-- KANBAN BOARD VIEW -->
+            <div id="kanbanView" class="board-container">
                 <!-- TO DO -->
                 <div class="board-column column-todo">
                     <div class="column-header">
@@ -78,6 +89,16 @@
                     </div>
                     <div class="task-list" id="list-done" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
                     <button class="add-task-btn" onclick="openTaskModal('done')">+ Add Task</button>
+                </div>
+            </div>
+
+            <!-- GANTT CHART VIEW -->
+            <div id="ganttView" style="display: none; background: var(--surface); border: 1px solid var(--border-light); border-radius: 12px; padding: 1.5rem; overflow-x: auto; box-shadow: var(--shadow-sm);">
+                <div id="ganttChart"></div>
+                <div id="ganttEmptyState" style="display: none; text-align: center; padding: 3rem; color: var(--text-muted);">
+                    <p style="font-size: 3rem; margin-bottom: 1rem;">📅</p>
+                    <p>No tasks with start and end dates found.</p>
+                    <p style="font-size: 0.85rem;">Edit a task to add dates and view them on the timeline.</p>
                 </div>
             </div>
         </main>
@@ -119,8 +140,18 @@
                 </div>
                 <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
                     <div class="input-group" style="flex: 1; margin-bottom: 0;">
+                        <label for="tStartDate">Start Date (Timeline)</label>
+                        <input type="date" id="tStartDate">
+                    </div>
+                    <div class="input-group" style="flex: 1; margin-bottom: 0;">
                         <label for="tDueDate">Due Date</label>
                         <input type="date" id="tDueDate">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+                    <div class="input-group" style="flex: 1; margin-bottom: 0;">
+                        <label for="tDependencies">Dependencies (Task IDs)</label>
+                        <input type="text" id="tDependencies" placeholder="Comma separated IDs" title="Tasks that must be completed before this one">
                     </div>
                     <div class="input-group" style="flex: 1; margin-bottom: 0;">
                         <label for="tLabel">Label / Tag</label>
@@ -278,8 +309,188 @@
         }
         .btn-active { background: var(--primary) !important; border-color: var(--primary) !important; }
         .btn-muted { background: #ef4444 !important; border-color: #ef4444 !important; }
+
+        /* ======= AI Breakdown Modal Styles ======= */
+        .ai-modal-overlay {
+            position: fixed; inset: 0; z-index: 3000;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            animation: aiFadeIn 0.3s ease-out;
+        }
+        @keyframes aiFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes aiFadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        .ai-modal-content {
+            background: var(--surface, #fff);
+            border: 1px solid var(--border, #e2e8f0);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 520px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2), 0 0 60px rgba(99, 102, 241, 0.15);
+            animation: aiSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+        }
+        @keyframes aiSlideUp {
+            from { transform: translateY(40px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        /* Brain Animation */
+        .ai-brain-animation {
+            position: relative; width: 80px; height: 80px;
+            margin: 0 auto 1.5rem;
+        }
+        .ai-brain-circle {
+            position: absolute; inset: 0;
+            border: 3px solid transparent;
+            border-top-color: #8b5cf6;
+            border-right-color: #6366f1;
+            border-radius: 50%;
+            animation: aiSpin 1s linear infinite;
+        }
+        .ai-brain-pulse {
+            position: absolute; inset: 5px;
+            border: 3px solid transparent;
+            border-bottom-color: #ec4899;
+            border-left-color: #f59e0b;
+            border-radius: 50%;
+            animation: aiSpin 1.5s linear infinite reverse;
+        }
+        .ai-brain-emoji {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            animation: aiBounce 1s ease-in-out infinite;
+        }
+        @keyframes aiSpin { to { transform: rotate(360deg); } }
+        @keyframes aiBounce {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -55%) scale(1.1); }
+        }
+
+        .ai-modal-title {
+            font-size: 1.3rem; font-weight: 800;
+            color: var(--text-main, #1e293b);
+            margin: 0 0 0.5rem;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .ai-modal-subtitle {
+            font-size: 0.85rem; color: var(--text-muted, #64748b);
+            margin: 0 0 1.5rem; line-height: 1.5;
+        }
+
+        /* Progress Bar */
+        .ai-progress-bar {
+            width: 100%; height: 6px;
+            background: var(--border, #e2e8f0);
+            border-radius: 3px; overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        .ai-progress-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #8b5cf6, #6366f1, #ec4899, #f59e0b);
+            background-size: 200% 100%;
+            border-radius: 3px;
+            animation: aiProgress 3s ease-in-out infinite, aiGradient 2s linear infinite;
+        }
+        @keyframes aiProgress {
+            0% { width: 5%; }
+            50% { width: 75%; }
+            100% { width: 95%; }
+        }
+        @keyframes aiGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .ai-tip {
+            font-size: 0.75rem; color: var(--text-muted, #94a3b8);
+            margin: 0; font-weight: 500;
+        }
+
+        /* Success State */
+        .ai-success-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: aiPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes aiPopIn {
+            from { transform: scale(0) rotate(-15deg); }
+            to { transform: scale(1) rotate(0); }
+        }
+
+        /* Sub-tasks List */
+        .ai-subtasks-list {
+            text-align: left;
+            margin: 1.5rem 0;
+            display: flex; flex-direction: column; gap: 0.6rem;
+        }
+        .ai-subtask-item {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg, #f8fafc);
+            border: 1px solid var(--border-light, #e2e8f0);
+            border-radius: 12px;
+            animation: aiSlideIn 0.4s ease-out both;
+            transition: all 0.2s;
+        }
+        .ai-subtask-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        @keyframes aiSlideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .ai-subtask-number {
+            width: 28px; height: 28px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white; font-weight: 700; font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .ai-subtask-info { flex: 1; min-width: 0; }
+        .ai-subtask-title {
+            font-size: 0.85rem; font-weight: 600;
+            color: var(--text-main, #1e293b);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .ai-subtask-desc {
+            font-size: 0.75rem; color: var(--text-muted, #64748b);
+            margin-top: 0.15rem;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .ai-subtask-priority {
+            font-size: 0.65rem; font-weight: 700;
+            padding: 0.2rem 0.5rem; border-radius: 20px;
+            text-transform: uppercase; letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .ai-done-btn {
+            width: 100%; padding: 0.9rem;
+            border: none; border-radius: 12px;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white; font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            font-family: inherit;
+        }
+        .ai-done-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
     </style>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/frappe-gantt/0.6.1/frappe-gantt.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/api.js"></script>
     <script src="js/board.js"></script>

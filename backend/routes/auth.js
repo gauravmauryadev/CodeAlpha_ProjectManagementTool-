@@ -219,7 +219,10 @@ router.get('/stats', auth, async (req, res) => {
       stats: {
         createdProjects,
         joinedProjects,
-        pendingTasks
+        pendingTasks,
+        productivityScore: req.user.productivityScore || 0,
+        streakDays: req.user.streakDays || 0,
+        badges: req.user.badges || []
       }
     });
   } catch (error) {

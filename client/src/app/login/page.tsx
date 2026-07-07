@@ -66,7 +66,7 @@ export default function LoginPage() {
         <div className="relative z-10 max-w-md flex flex-col items-center text-center">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-6 animate-fade-in-up">
-            <img src="/logo.png" alt="OmniPlan" className="w-11 h-11 object-contain drop-shadow-lg animate-float" />
+            <img src="/logo.png" alt="OmniPlan" className="w-11 h-11 object-contain drop-shadow-sm animate-float" />
             <span className="text-xl font-bold text-slate-800">
               Omni<span className="text-indigo-600">Plan</span>
             </span>
@@ -108,7 +108,7 @@ export default function LoginPage() {
             {["Kanban Boards", "Team Chat", "Video Calls", "Admin Panel"].map((item, i) => (
               <span
                 key={item}
-                className="px-3 py-1.5 rounded-full border border-indigo-200 bg-white/80 text-indigo-700 text-xs font-semibold shadow-sm hover:shadow-md hover:border-indigo-400 hover:-translate-y-0.5 transition-all duration-300 cursor-default"
+                className="px-3 py-1.5 rounded-full border border-indigo-200 bg-white/80 text-indigo-700 text-xs font-semibold shadow-sm hover:shadow-sm hover:border-indigo-400 hover:-translate-y-0.5 transition-all duration-300 cursor-default"
                 style={{ animationDelay: `${600 + i * 100}ms` }}
               >
                 {item}
@@ -127,10 +127,10 @@ export default function LoginPage() {
 
       {/* Right: Login Form */}
       <div className="flex-1 flex items-center justify-center p-6 bg-slate-50">
-        <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+        <div className="w-full max-w-md bg-white p-8 rounded-md shadow-sm border border-slate-200">
           {/* Mobile logo */}
           <div className="flex items-center gap-2.5 mb-8 lg:hidden">
-            <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-md" />
+            <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-sm" />
             <span className="text-lg font-bold text-slate-800">
               Omni<span className="text-indigo-600">Plan</span>
             </span>
@@ -144,7 +144,7 @@ export default function LoginPage() {
           </p>
 
           {error && (
-            <div className="mb-6 p-3.5 rounded-xl border border-red-200 bg-red-50 text-red-600 text-sm font-medium">
+            <div className="mb-6 p-3.5 rounded-md border border-red-200 bg-red-50 text-red-600 text-sm font-medium">
               {error}
             </div>
           )}
@@ -160,7 +160,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-colors"
+                className="w-full px-4 py-3 rounded-md bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-colors"
               />
             </div>
 
@@ -175,7 +175,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm pr-12 transition-colors"
+                  className="w-full px-4 py-3 rounded-md bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm pr-12 transition-colors"
                 />
                 <button
                   type="button"
@@ -194,7 +194,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-md shadow-indigo-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="w-full py-3 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-sm shadow-indigo-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

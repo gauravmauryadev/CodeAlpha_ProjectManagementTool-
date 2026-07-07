@@ -22,11 +22,11 @@ export default function Error({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-fuchsia-50 flex items-center justify-center p-6 text-slate-800">
-      <div className="w-full max-w-md bg-white/60 backdrop-blur-md p-10 rounded-[32px] shadow-2xl border border-white/80 text-center relative overflow-hidden">
+      <div className="w-full max-w-md bg-white/60 backdrop-blur-md p-10 rounded-[32px] shadow-sm border border-white/80 text-center relative overflow-hidden">
         {/* Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-red-500/20 blur-3xl rounded-full" />
         
-        <div className="w-20 h-20 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm relative z-10">
+        <div className="w-20 h-20 bg-red-50 border border-red-100 rounded-md flex items-center justify-center mx-auto mb-6 shadow-sm relative z-10">
           <AlertTriangle className="w-10 h-10 text-red-500" />
         </div>
         
@@ -39,14 +39,14 @@ export default function Error({
         <div className="flex flex-col gap-3 relative z-10">
           <button
             onClick={() => reset()}
-            className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-600/20 transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-bold shadow-sm shadow-indigo-600/20 transition-all flex items-center justify-center gap-2"
           >
             <RefreshCcw className="w-4 h-4" />
             Try Again
           </button>
           <Link
             href="/dashboard"
-            className="w-full py-3.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-md text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2"
           >
             <Home className="w-4 h-4" />
             Back to Dashboard

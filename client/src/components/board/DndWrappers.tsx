@@ -27,7 +27,7 @@ export function DraggableTask({ id, task, disabled, children, className }: { id:
   } : undefined;
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes} className={`${className || ''} ${isDragging ? 'shadow-2xl ring-2 ring-indigo-500 scale-105' : ''}`}>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes} className={`${className || ''} ${isDragging ? 'shadow-sm ring-2 ring-indigo-500 scale-105' : ''}`}>
       {children}
     </div>
   );
