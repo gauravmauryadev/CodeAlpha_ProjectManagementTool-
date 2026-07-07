@@ -87,7 +87,7 @@ export default function LandingPage() {
 
   return (
     <LazyMotion features={domAnimation}>
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-violet-50 to-purple-50 text-slate-800 relative overflow-hidden font-sans selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-violet-50 to-purple-50 dark:from-[#0e0e11] dark:via-[#14112c] dark:to-[#0e0e11] text-slate-800 dark:text-slate-100 relative overflow-hidden font-sans selection:bg-indigo-500/30">
       <FloatingIcons />
       
       {/* Background Aurora / Spotlight effect (Light Theme) */}
@@ -101,19 +101,19 @@ export default function LandingPage() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 left-0 right-0 z-50 border-b border-white/50 bg-white/40 backdrop-blur-xl shadow-sm"
+        className="fixed top-0 left-0 right-0 z-50 border-b border-white/50 dark:border-white/5 bg-white/40 dark:bg-[#0e0e11]/60 backdrop-blur-xl shadow-sm"
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group">
             <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300" />
-            <span className="text-lg font-bold tracking-tight text-slate-900">
+            <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
               Omni<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Plan</span>
             </span>
           </Link>
           <div className="flex items-center gap-4">
             <Link
               href="/login"
-              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors hidden sm:block"
+              className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors hidden sm:block"
             >
               Log in
             </Link>
@@ -136,13 +136,13 @@ export default function LandingPage() {
           className="max-w-5xl mx-auto"
         >
           <motion.div variants={itemVariants} className="flex justify-center mb-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-indigo-200 bg-white/60 backdrop-blur-md text-sm text-indigo-700 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-indigo-200 dark:border-indigo-500/30 bg-white/60 dark:bg-indigo-500/10 backdrop-blur-md text-sm text-indigo-700 dark:text-indigo-400 shadow-sm">
               <Sparkles className="w-4 h-4 text-indigo-500" />
               <span className="font-semibold">The Next Generation of Team Collaboration</span>
             </div>
           </motion.div>
 
-          <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] mb-6 md:mb-8 text-slate-900">
+          <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] mb-6 md:mb-8 text-slate-900 dark:text-white">
             Where Projects
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 animate-text-gradient bg-300%">
@@ -150,7 +150,7 @@ export default function LandingPage() {
             </span>
           </motion.h1>
 
-          <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed font-medium px-4 md:px-0">
+          <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed font-medium px-4 md:px-0">
             Combine Kanban boards, Discord-style chat, and HD video calls in one powerful, unified workspace. Stop switching tabs and start shipping faster.
           </motion.p>
 
@@ -164,13 +164,13 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/login"
-              className="inline-flex h-12 sm:h-14 items-center justify-center rounded-md border border-slate-300 bg-white/60 px-6 sm:px-8 font-semibold text-slate-700 backdrop-blur-md transition-all hover:bg-white/90 hover:scale-105 shadow-sm"
+              className="inline-flex h-12 sm:h-14 items-center justify-center rounded-md border border-slate-300 dark:border-white/10 bg-white/60 dark:bg-white/5 px-6 sm:px-8 font-semibold text-slate-700 dark:text-slate-200 backdrop-blur-md transition-all hover:bg-white/90 dark:hover:bg-white/10 hover:scale-105 shadow-sm"
             >
               View Dashboard
             </Link>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-8 gap-y-3 mt-12 md:mt-16 text-xs sm:text-sm text-slate-500 font-medium">
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-8 gap-y-3 mt-12 md:mt-16 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
             <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Free forever plan</span>
             <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> No credit card required</span>
             <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Unlimited Real-time Chat</span>
@@ -182,7 +182,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5, type: "spring", bounce: 0.3 }}
-          className="mt-24 w-full max-w-6xl mx-auto rounded-md border border-white/80 bg-white/40 p-2 backdrop-blur-xl shadow-sm shadow-indigo-500/15"
+          className="mt-24 w-full max-w-6xl mx-auto rounded-md border border-white/80 dark:border-white/10 bg-white/40 dark:bg-white/5 p-2 backdrop-blur-xl shadow-sm shadow-indigo-500/15"
         >
           <div className="rounded-md overflow-hidden bg-slate-50 aspect-[16/9] relative border border-slate-200 flex items-center justify-center shadow-inner">
             {/* Fake App UI Mockup via CSS (Light Mode) */}
@@ -246,14 +246,14 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-200 bg-indigo-50/60 text-indigo-600 text-xs font-bold mb-5 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-500/30 bg-indigo-50/60 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-5 shadow-sm">
               <Zap className="w-3.5 h-3.5 text-amber-500" />
               Powerful Features
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold mb-4 md:mb-6 text-slate-900 leading-tight">
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-4 md:mb-6 text-slate-900 dark:text-white leading-tight">
               Everything your team <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">needs</span>
             </h2>
-            <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               Replace multiple tools with one unified workspace designed for modern, remote teams.
             </p>
           </motion.div>
@@ -267,14 +267,14 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="group relative p-8 rounded-md bg-white/70 backdrop-blur-sm border border-slate-200 shadow-sm shadow-slate-200/50 hover:bg-white hover:shadow-sm hover:shadow-indigo-500/10 transition-all overflow-hidden"
+                className="group relative p-8 rounded-md bg-white/70 dark:bg-[#14112c]/45 backdrop-blur-sm border border-slate-200 dark:border-white/10 shadow-sm shadow-slate-200/50 dark:shadow-none hover:bg-white dark:hover:bg-[#14112c]/70 hover:shadow-sm hover:shadow-indigo-500/10 transition-all overflow-hidden"
               >
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 bg-gradient-to-br ${f.gradient} transition-opacity duration-500`} />
                 <div className={`w-14 h-14 rounded-md bg-gradient-to-br ${f.gradient} flex items-center justify-center mb-6 shadow-sm relative z-10`}>
                   <f.icon className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-slate-900 relative z-10">{f.title}</h3>
-                <p className="text-slate-600 leading-relaxed relative z-10 font-medium">{f.description}</p>
+                <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white relative z-10">{f.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed relative z-10 font-medium">{f.description}</p>
               </motion.div>
             ))}
           </div>
@@ -290,14 +290,14 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-purple-200 bg-purple-50/60 text-purple-700 text-xs font-bold mb-5 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-purple-200 dark:border-purple-500/30 bg-purple-50/60 dark:bg-purple-500/10 text-purple-700 dark:text-purple-400 text-xs font-bold mb-5 shadow-sm">
               <Layers className="w-3.5 h-3.5 text-purple-500" />
               Simple Process
             </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold mb-3 md:mb-4 text-slate-900">
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-3 md:mb-4 text-slate-900 dark:text-white">
               How it <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">works</span>
             </h2>
-            <p className="text-slate-600 text-base sm:text-lg max-w-xl mx-auto">
+            <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg max-w-xl mx-auto">
               Get your team up and running in 4 simple steps.
             </p>
           </motion.div>
@@ -315,15 +315,15 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group relative p-6 rounded-md bg-white/70 backdrop-blur-sm shadow-sm shadow-indigo-500/5 hover:bg-white hover:shadow-sm transition-all duration-300"
+                className="group relative p-6 rounded-md bg-white/70 dark:bg-[#14112c]/45 backdrop-blur-sm shadow-sm border border-slate-200/50 dark:border-white/10 hover:bg-white dark:hover:bg-[#14112c]/70 transition-all duration-300"
               >
                 <span className="text-4xl font-black mb-4 block tracking-tight bg-gradient-to-br from-indigo-500 to-purple-600 bg-clip-text text-transparent group-hover:scale-105 origin-left transition-transform duration-300">
                   {step.num}
                 </span>
-                <h4 className="text-sm font-extrabold uppercase tracking-wider mb-3 text-slate-800">
+                <h4 className="text-sm font-extrabold uppercase tracking-wider mb-3 text-slate-800 dark:text-slate-200">
                   {step.title}
                 </h4>
-                <p className="text-slate-600 text-xs leading-relaxed font-medium">
+                <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed font-medium">
                   {step.desc}
                 </p>
               </motion.div>
@@ -333,7 +333,7 @@ export default function LandingPage() {
       </section>
 
       {/* TECH STACK & INTEGRATIONS */}
-      <section className="py-24 px-6 relative z-10 border-y border-indigo-100/50 bg-white/30 backdrop-blur-sm">
+      <section className="py-24 px-6 relative z-10 border-y border-indigo-100/50 dark:border-white/5 bg-white/30 dark:bg-white/5 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -341,14 +341,14 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-teal-200 bg-teal-50/60 text-teal-700 text-xs font-bold mb-5 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-teal-200 dark:border-teal-500/30 bg-teal-50/60 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 text-xs font-bold mb-5 shadow-sm">
               <Shield className="w-3.5 h-3.5 text-teal-500" />
               Built for Scale
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-3 md:mb-4 text-slate-900">
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-3 md:mb-4 text-slate-900 dark:text-white">
               Powered by modern <span className="bg-gradient-to-r from-teal-500 to-emerald-600 bg-clip-text text-transparent">technology</span>
             </h2>
-            <p className="text-slate-600 text-base sm:text-lg max-w-xl mx-auto">
+            <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg max-w-xl mx-auto">
               Our platform uses industry-standard tools and APIs to ensure maximum performance, security, and reliability.
             </p>
           </motion.div>
@@ -367,13 +367,13 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="flex flex-col items-center justify-center p-6 rounded-md bg-white shadow-sm shadow-slate-200/50 border border-slate-100 hover:-translate-y-1 hover:shadow-sm transition-all"
+                className="flex flex-col items-center justify-center p-6 rounded-md bg-white dark:bg-[#14112c]/45 shadow-sm shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-white/10 hover:-translate-y-1 transition-all"
               >
                 <div className={`w-12 h-12 rounded-md ${tech.bg} flex items-center justify-center mb-4`}>
                   <tech.icon className={`w-6 h-6 ${tech.color}`} />
                 </div>
-                <h4 className="font-bold text-slate-800 mb-1">{tech.name}</h4>
-                <span className="text-xs text-slate-500 font-medium text-center">{tech.desc}</span>
+                <h4 className="font-bold text-slate-800 dark:text-slate-200 mb-1">{tech.name}</h4>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium text-center">{tech.desc}</span>
               </motion.div>
             ))}
           </div>
@@ -407,13 +407,13 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-slate-200 bg-white/50 md:backdrop-blur-md py-12 px-6 relative z-10 mt-10">
+      <footer className="border-t border-slate-200 dark:border-white/5 bg-white/50 dark:bg-white/5 md:backdrop-blur-md py-12 px-6 relative z-10 mt-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2.5">
             <img src="/logo.png" alt="OmniPlan" className="w-6 h-6 object-contain" />
-            <span className="font-bold text-slate-900">OmniPlan</span>
+            <span className="font-bold text-slate-900 dark:text-white">OmniPlan</span>
           </div>
-          <p className="text-slate-500 text-sm font-medium">
+          <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
             &copy; {new Date().getFullYear()} Developed by Gaurav Maurya.
           </p>
         </div>

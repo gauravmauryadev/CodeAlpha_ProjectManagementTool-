@@ -54,10 +54,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-50 relative overflow-hidden">
+    <div className="min-h-screen flex bg-slate-50 dark:bg-[#0e0e11] relative overflow-hidden">
       <FloatingIcons />
       {/* Left: Branding Panel — Premium Animated */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-blue-50 via-violet-50 to-purple-50 items-center justify-center p-12 overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-blue-50 via-violet-50 to-purple-50 dark:from-[#0e0e11] dark:via-[#14112c] dark:to-[#0e0e11] items-center justify-center p-12 overflow-hidden">
         {/* Animated Background Glow Orbs */}
         <div className="absolute top-[20%] left-[15%] w-[300px] h-[300px] bg-indigo-400/15 rounded-full blur-[100px] animate-float pointer-events-none" />
         <div className="absolute bottom-[10%] right-[10%] w-[250px] h-[250px] bg-purple-400/15 rounded-full blur-[90px] animate-float pointer-events-none" style={{ animationDelay: "2s" }} />
@@ -67,7 +67,7 @@ export default function LoginPage() {
           {/* Logo */}
           <div className="flex items-center gap-3 mb-6 animate-fade-in-up">
             <img src="/logo.png" alt="OmniPlan" className="w-11 h-11 object-contain drop-shadow-sm animate-float" />
-            <span className="text-xl font-bold text-slate-800">
+            <span className="text-xl font-bold text-slate-800 dark:text-white">
               Omni<span className="text-indigo-600">Plan</span>
             </span>
           </div>
@@ -90,7 +90,7 @@ export default function LoginPage() {
           </div>
 
           {/* Headline */}
-          <h2 className="text-3xl font-extrabold leading-tight mb-3 text-slate-900 animate-fade-in-up" style={{ animationDelay: "300ms" }}>
+          <h2 className="text-3xl font-extrabold leading-tight mb-3 text-slate-900 dark:text-white animate-fade-in-up" style={{ animationDelay: "300ms" }}>
             Manage projects.
             <br />
             <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Chat with your team.</span>
@@ -98,7 +98,7 @@ export default function LoginPage() {
             Ship faster.
           </h2>
 
-          <p className="text-slate-500 leading-relaxed text-sm mb-8 animate-fade-in-up" style={{ animationDelay: "400ms" }}>
+          <p className="text-slate-500 dark:text-slate-400 leading-relaxed text-sm mb-8 animate-fade-in-up" style={{ animationDelay: "400ms" }}>
             Kanban boards, real-time messaging, and video calls — all in one
             beautiful workspace designed for modern teams.
           </p>
@@ -108,7 +108,7 @@ export default function LoginPage() {
             {["Kanban Boards", "Team Chat", "Video Calls", "Admin Panel"].map((item, i) => (
               <span
                 key={item}
-                className="px-3 py-1.5 rounded-full border border-indigo-200 bg-white/80 text-indigo-700 text-xs font-semibold shadow-sm hover:shadow-sm hover:border-indigo-400 hover:-translate-y-0.5 transition-all duration-300 cursor-default"
+                className="px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-500/30 bg-white/80 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 text-xs font-semibold shadow-sm hover:shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500/50 hover:-translate-y-0.5 transition-all duration-300 cursor-default"
                 style={{ animationDelay: `${600 + i * 100}ms` }}
               >
                 {item}
@@ -126,12 +126,12 @@ export default function LoginPage() {
       </div>
 
       {/* Right: Login Form */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-slate-50">
-        <div className="w-full max-w-md bg-white p-8 rounded-md shadow-sm border border-slate-200">
+      <div className="flex-1 flex items-center justify-center p-6 bg-slate-50 dark:bg-[#0e0e11]">
+        <div className="w-full max-w-md bg-white dark:bg-[#14112c]/45 p-8 rounded-md shadow-sm border border-slate-200 dark:border-white/10">
           {/* Mobile logo */}
           <div className="flex items-center gap-2.5 mb-8 lg:hidden">
             <img src="/logo.png" alt="OmniPlan" className="w-8 h-8 object-contain drop-shadow-sm" />
-            <span className="text-lg font-bold text-slate-800">
+            <span className="text-lg font-bold text-slate-800 dark:text-white">
               Omni<span className="text-indigo-600">Plan</span>
             </span>
           </div>
@@ -139,7 +139,7 @@ export default function LoginPage() {
           <h1 className="text-2xl font-black mb-1.5">
             <span className="bg-gradient-to-r from-red-600 via-rose-500 to-orange-500 bg-clip-text text-transparent animate-text-gradient">Welcome back</span>
           </h1>
-          <p className="text-slate-500 text-sm mb-8">
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">
             Enter your credentials to access your workspace.
           </p>
 
@@ -151,7 +151,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
                 Email
               </label>
               <input
@@ -160,12 +160,12 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-4 py-3 rounded-md bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-colors"
+                className="w-full px-4 py-3 rounded-md bg-slate-50 dark:bg-[#0e0e11] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -175,7 +175,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full px-4 py-3 rounded-md bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm pr-12 transition-colors"
+                  className="w-full px-4 py-3 rounded-md bg-slate-50 dark:bg-[#0e0e11] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm pr-12 transition-colors"
                 />
                 <button
                   type="button"
@@ -207,9 +207,9 @@ export default function LoginPage() {
             </button>
             
             <div className="relative flex py-2 items-center">
-              <div className="flex-grow border-t border-slate-200"></div>
+              <div className="flex-grow border-t border-slate-200 dark:border-white/10"></div>
               <span className="flex-shrink-0 mx-4 text-slate-400 text-xs font-medium uppercase tracking-wider">Or continue with</span>
-              <div className="flex-grow border-t border-slate-200"></div>
+              <div className="flex-grow border-t border-slate-200 dark:border-white/10"></div>
             </div>
 
             <div className="flex justify-center">
@@ -224,7 +224,7 @@ export default function LoginPage() {
             </div>
           </form>
 
-          <p className="mt-8 text-center text-sm text-slate-600">
+          <p className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
