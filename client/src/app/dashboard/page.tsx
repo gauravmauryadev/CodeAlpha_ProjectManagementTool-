@@ -28,6 +28,7 @@ import { Bell, Circle, Clock } from "lucide-react";
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
+  const router = useRouter();
   const { projects, fetchProjects, createProject, isLoading } = useProjectStore();
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
