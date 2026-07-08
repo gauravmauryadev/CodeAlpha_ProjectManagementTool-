@@ -203,10 +203,15 @@ export default function BoardPage() {
       }));
     });
 
+    s.on("projectUpdated", (updatedProject) => {
+      useProjectStore.getState().updateProjectInStore(updatedProject);
+    });
+
     return () => {
       s.off("taskCreated");
       s.off("taskUpdated");
       s.off("taskDeleted");
+      s.off("projectUpdated");
     };
   }, [projectId, user]);
 

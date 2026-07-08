@@ -17,6 +17,7 @@ interface ProjectState {
   createTask: (data: Record<string, unknown>) => Promise<void>;
   updateTask: (id: string, data: Record<string, unknown>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
+  updateProjectInStore: (project: Project) => void;
 }
 
 export const useProjectStore = create<ProjectState>()((set) => ({
@@ -104,5 +105,12 @@ export const useProjectStore = create<ProjectState>()((set) => ({
   deleteTask: async (id) => {
     await taskApi.delete(id);
     set((state) => ({ tasks: state.tasks.filter((t) => t._id !== id) }));
+  },
+
+  updateProjectInStore: (updatedProject) => {
+    set((state) => ({
+      currentProject: state.currentProject?._id === updatedProject._id ? updatedProject : state.currentProject,
+      projects: state.projects.map((p) => (p._id === updatedProject._id ? { ...p, ...updatedProject } : p)),
+    }));
   },
 }));

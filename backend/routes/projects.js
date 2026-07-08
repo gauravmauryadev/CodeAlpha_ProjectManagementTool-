@@ -137,6 +137,11 @@ router.put('/:id', uploadCloud.single('image'), async (req, res) => {
     await project.populate('owner', 'name email avatar');
     await project.populate('members', 'name email avatar');
 
+    const io = req.app.get('io');
+    if (io) {
+      io.to(project._id.toString()).emit('projectUpdated', project);
+    }
+
     res.json({ message: 'Project updated', project });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
