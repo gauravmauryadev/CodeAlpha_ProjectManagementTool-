@@ -5,13 +5,17 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   FolderKanban,
+  ListChecks,
   Calendar,
+  BarChart,
   Users,
+  MessageSquare,
   Settings,
   Bell,
   Shield,
   LogOut,
   X,
+  Plus,
 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { cn } from "@/lib/utils";
@@ -27,10 +31,14 @@ const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Summary" },
-  { href: "/discord", icon: FolderKanban, label: "Board" },
+  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/projects", icon: FolderKanban, label: "Projects" },
+  { href: "/tasks", icon: ListChecks, label: "Tasks" },
   { href: "/calendar", icon: Calendar, label: "Calendar" },
-  { href: "/teams", icon: Users, label: "Teams" },
+  { href: "/analytics", icon: BarChart, label: "Analytics" },
+  { href: "/teams", icon: Users, label: "Team" },
+  { href: "/discord", icon: MessageSquare, label: "Messages" },
+  { href: "/settings", icon: Settings, label: "Settings" },
 ];
 
 interface AppSidebarProps {
@@ -56,11 +64,11 @@ export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
       <aside
         className={cn(
           // Base styles
-          "fixed left-0 top-0 h-screen bg-[#FFFFFF] dark:bg-[#1e1e1e] border-r border-slate-200 dark:border-white/5 flex flex-col py-5 shadow-sm z-[60] transition-all duration-300",
+          "fixed left-0 top-0 h-screen bg-[#0A0D14] border-r border-white/5 flex flex-col py-5 shadow-sm z-[60] transition-all duration-300",
           // Desktop - always visible expanded
-          "md:w-[240px] md:translate-x-0",
+          "md:w-[260px] md:translate-x-0",
           // Mobile - slide in/out
-          isOpen ? "w-[240px] translate-x-0" : "w-[240px] -translate-x-full md:translate-x-0"
+          isOpen ? "w-[260px] translate-x-0" : "w-[260px] -translate-x-full md:translate-x-0"
         )}
       >
         {/* Close button - mobile only */}
@@ -78,10 +86,13 @@ export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
           className="flex items-center gap-3 px-6 mb-8 mt-2 transition-transform hover:scale-[1.02]"
           title="OmniPlan"
         >
-          <div className="flex w-10 h-10 rounded-md bg-gradient-to-br from-indigo-500 to-purple-600 items-center justify-center shadow-sm shrink-0">
+          <div className="flex w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 items-center justify-center shadow-lg shadow-purple-500/20 shrink-0">
             <span className="text-white font-extrabold text-lg tracking-tighter">OP</span>
           </div>
-          <span className="text-slate-800 dark:text-white font-bold text-xl tracking-tight hidden md:block">OmniPlan</span>
+          <div className="hidden md:flex flex-col">
+            <span className="text-white font-bold text-xl tracking-tight leading-none">OmniPlan</span>
+            <span className="text-[9px] font-bold tracking-widest text-slate-500 uppercase mt-1">Enterprise Plan</span>
+          </div>
         </Link>
 
         {/* Nav Items */}
@@ -94,14 +105,14 @@ export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "w-full h-12 rounded-md flex items-center gap-3 px-4 transition-all group",
+                  "w-full h-11 rounded-xl flex items-center gap-3 px-4 transition-all group",
                   isActive
-                    ? "bg-indigo-50 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 font-semibold"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium"
+                    ? "bg-white/5 border border-white/5 text-white font-semibold"
+                    : "text-slate-500 hover:text-slate-200 hover:bg-white/5 font-medium"
                 )}
               >
-                <item.icon className="w-5 h-5 shrink-0" />
-                <span>{item.label}</span>
+                <item.icon className={cn("w-5 h-5 shrink-0", isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300")} />
+                <span className="text-sm">{item.label}</span>
               </Link>
             );
           })}
@@ -112,26 +123,33 @@ export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
               href="/admin"
               onClick={onClose}
               className={cn(
-                "w-full h-12 rounded-md flex items-center gap-3 px-4 transition-all group mt-2",
+                "w-full h-11 rounded-xl flex items-center gap-3 px-4 transition-all group mt-2",
                 pathname === "/admin"
-                  ? "bg-indigo-50 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 font-semibold"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium"
+                  ? "bg-white/5 border border-white/5 text-white font-semibold"
+                  : "text-slate-500 hover:text-slate-200 hover:bg-white/5 font-medium"
               )}
             >
               <Shield className="w-5 h-5 shrink-0" />
-              <span>Admin Panel</span>
+              <span className="text-sm">Admin Panel</span>
             </Link>
           )}
         </nav>
 
-        {/* Logout at bottom */}
-        <div className="px-4 w-full mt-auto">
+        {/* Bottom Section */}
+        <div className="px-6 w-full mt-auto flex flex-col gap-3">
+          <button
+            className="w-full h-12 rounded-xl flex items-center justify-center gap-2 bg-[#6E56CF] hover:bg-[#5C46B6] text-white font-semibold shadow-[0_0_15px_rgba(110,86,207,0.3)] transition-all cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="text-sm">New Project</span>
+          </button>
+
           <button
             onClick={() => { logout(); onClose(); }}
-            className="w-full h-12 rounded-md flex items-center gap-3 px-4 text-rose-300 hover:bg-rose-500/20 hover:text-rose-200 transition-all cursor-pointer mb-2 font-medium"
+            className="w-full h-11 rounded-xl flex items-center gap-3 px-4 text-slate-500 hover:bg-rose-500/10 hover:text-rose-400 transition-all cursor-pointer font-medium"
           >
             <LogOut className="w-5 h-5 shrink-0" />
-            <span>Logout</span>
+            <span className="text-sm">Logout</span>
           </button>
         </div>
       </aside>

@@ -23,7 +23,7 @@ import { cn, getInitials, getAvatarColor, timeAgo } from "@/lib/utils";
 import type { Project } from "@/types";
 import Tooltip from "@/components/ui/Tooltip";
 import { inviteApi, projectApi, taskApi } from "@/lib/api";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend, LineChart, Line } from "recharts";
 import { Bell, Circle, Clock } from "lucide-react";
 
 export default function DashboardPage() {
@@ -180,196 +180,217 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-6 md:py-8 relative">
-        <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-8 relative w-full">
+        <div className="flex flex-col gap-8 w-full">
           
-          {/* Main Content Column */}
-          <div className="flex-1 min-w-0">
-            {/* Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 md:mb-8 pr-0 md:pr-[130px] gap-3 md:gap-0">
-          <div>
-            <h1 className="text-xl md:text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
-              Welcome back, {user?.name?.split(" ")[0]}
-            </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm mt-1">
-              Here&apos;s your workspace overview.
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Tooltip content="Smart-Schedule with AI" position="left">
-              <button
-                onClick={() => setShowAiModal(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-md bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 hover:-translate-y-0.5 active:scale-95 text-white text-sm font-semibold shadow-sm shadow-purple-600/20 hover:shadow-purple-600/30 transition-all duration-200 cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span className="hidden sm:inline">AI Generate</span>
-              </button>
-            </Tooltip>
-            <Tooltip content="Create new project board" position="left">
-              <button
-                onClick={() => setShowModal(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-md bg-slate-800 dark:bg-white/10 hover:bg-slate-700 dark:hover:bg-white/20 hover:-translate-y-0.5 active:scale-95 text-white text-sm font-semibold shadow-sm transition-all duration-200 cursor-pointer"
-              >
-                <Plus className="w-4 h-4" />
-                <span className="hidden sm:inline">New Project</span>
-              </button>
-            </Tooltip>
-          </div>
-        </div>
-
-        {/* Invites Section */}
-        {invites.length > 0 && (
-          <div className="mb-8 p-5 rounded-md border-2 border-transparent bg-indigo-500/5 animate-fade-in-up animate-border-pulse">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
-              <Bell className="w-5 h-5 text-indigo-400" /> Pending Invitations
-            </h2>
-            <div className="space-y-3">
-              {invites.map((invite) => (
-                <div key={invite._id} className="flex items-center justify-between p-4 rounded-md bg-white dark:bg-[#14112c]/60 border-2 border-transparent shadow-sm hover-lift transition-all animate-border-pulse">
-                  <div>
-                    <h4 className="text-base font-semibold text-slate-700 dark:text-slate-200">
-                      {invite.project?.name || "Unknown Project"}
-                    </h4>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Invited by {invite.invitedBy?.name || "Someone"}
-                    </p>
+          {/* Header Row */}
+          <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 w-full animate-fade-in-up">
+            <div className="flex flex-col">
+              <h1 className="text-[40px] md:text-[48px] font-extrabold text-white tracking-tight leading-[1.1] mb-3">
+                Good Morning,<br/>{user?.name?.split(" ")[0] || "Alex"}.
+              </h1>
+              <p className="text-slate-400 text-sm md:text-base max-w-md font-medium">
+                You have <span className="text-indigo-400 font-bold">{allTasks.filter(t => t.status !== 'done').length} tasks</span> to complete today across <span className="text-indigo-400 font-bold">{projects.length} active projects</span>.
+              </p>
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="flex flex-wrap gap-4 w-full xl:w-auto">
+              <div className="flex-1 min-w-[140px] flex flex-col justify-center p-5 bg-[#12141D] border border-white/5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="p-1.5 rounded-lg bg-white/5 text-slate-300">
+                    <FolderKanban className="w-4 h-4"/>
                   </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => handleRejectInvite(invite._id)} className="px-4 py-1.5 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-rose-500/10 text-slate-600 dark:text-slate-300 hover:text-rose-400 text-sm font-medium transition-all cursor-pointer">Decline</button>
-                    <button onClick={() => setAcceptingInvite(invite)} className="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-550 text-white text-sm font-semibold transition-all shadow-sm shadow-indigo-600/20 cursor-pointer">Accept</button>
-                  </div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Projects</span>
                 </div>
-              ))}
+                <span className="text-3xl font-bold text-white ml-10 tracking-tight">{projects.length}</span>
+              </div>
+              
+              <div className="flex-1 min-w-[140px] flex flex-col justify-center p-5 bg-[#12141D] border border-white/5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
+                    <CheckCircle2 className="w-4 h-4"/>
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Tasks</span>
+                </div>
+                <span className="text-3xl font-bold text-white ml-10 tracking-tight">{allTasks.filter(t => t.status !== 'done').length}</span>
+              </div>
+              
+              <div className="flex-1 min-w-[140px] flex flex-col justify-center p-5 bg-[#12141D] border border-white/5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
+                    <Sparkles className="w-4 h-4"/>
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Team Velocity</span>
+                </div>
+                <span className="text-3xl font-bold text-white ml-10 tracking-tight">94%</span>
+              </div>
             </div>
           </div>
-        )}
 
-        {/* Stats Section */}
-        {(() => {
-          const created = allTasks.length;
-          const completed = allTasks.filter(t => t.status === "done").length;
-          const updated = Math.min(created, Math.floor(created * 0.8)); // Mock updated if no updated field
-          const dueSoon = allTasks.filter(t => t.dueDate && new Date(t.dueDate).getTime() - Date.now() < 3*24*60*60*1000 && new Date(t.dueDate).getTime() > Date.now()).length;
-          
-          const todoCount = allTasks.filter(t => t.status === "todo").length;
-          const inprogressCount = allTasks.filter(t => t.status === "inprogress").length;
-          const pieData = [
-            { name: 'To Do', value: todoCount, color: '#94a3b8' },
-            { name: 'In Progress', value: inprogressCount, color: '#f59e0b' },
-            { name: 'Done', value: completed, color: '#10b981' }
-          ].filter(d => d.value > 0);
-          if (pieData.length === 0) pieData.push({ name: 'No Tasks', value: 1, color: '#e2e8f0' });
-
-          return (
-            <>
-              {/* Quick Stats Row */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 mb-6 md:mb-8 animate-fade-in-up">
-                <div className="p-4 bg-white dark:bg-[#14112c]/45 border border-slate-200 dark:border-white/10 rounded-md shadow-sm text-center">
-                   <div className="text-2xl font-bold text-slate-800 dark:text-slate-100">{completed}</div>
-                   <div className="text-xs text-slate-500 dark:text-slate-400">completed (in last 7 days)</div>
+          {/* Middle Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            {/* Chart */}
+            <div className="lg:col-span-2 bg-[#12141D] border border-white/5 rounded-[24px] p-6 flex flex-col relative overflow-hidden">
+              {/* Subtle top gradient */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+              
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h3 className="text-base font-bold text-white mb-1">Productivity Overview</h3>
+                  <p className="text-xs font-medium text-slate-500">Cumulative output across all engineering sprints</p>
                 </div>
-                <div className="p-4 bg-white dark:bg-[#14112c]/45 border border-slate-200 dark:border-white/10 rounded-md shadow-sm text-center">
-                   <div className="text-2xl font-bold text-slate-800 dark:text-slate-100">{updated}</div>
-                   <div className="text-xs text-slate-500 dark:text-slate-400">updated</div>
-                </div>
-                <div className="p-4 bg-white dark:bg-[#14112c]/45 border border-slate-200 dark:border-white/10 rounded-md shadow-sm text-center">
-                   <div className="text-2xl font-bold text-slate-800 dark:text-slate-100">{created}</div>
-                   <div className="text-xs text-slate-500 dark:text-slate-400">created</div>
-                </div>
-                <div className="p-4 bg-white dark:bg-[#14112c]/45 border border-slate-200 dark:border-white/10 rounded-md shadow-sm text-center">
-                   <div className="text-2xl font-bold text-slate-800 dark:text-slate-100">{dueSoon}</div>
-                   <div className="text-xs text-slate-500 dark:text-slate-400">due soon</div>
+                <div className="px-3 py-1.5 rounded-lg bg-[#1A1C23] border border-white/5 text-xs text-slate-300 font-bold cursor-pointer hover:bg-white/5 transition-colors flex items-center gap-2">
+                  Last 30 Days <span className="text-[9px]">▼</span>
                 </div>
               </div>
+              <div className="flex-1 min-h-[220px] w-full flex items-center justify-center">
+                 <ResponsiveContainer width="100%" height={220}>
+                  <LineChart data={[{name:'1', val:10}, {name:'2', val:30}, {name:'3', val:20}, {name:'4', val:50}, {name:'5', val:35}, {name:'6', val:70}, {name:'7', val:50}]}>
+                    <Line 
+                      type="monotone" 
+                      dataKey="val" 
+                      stroke="#818cf8" 
+                      strokeWidth={3} 
+                      dot={{r:5, fill:"#12141D", strokeWidth:3, stroke:"#818cf8"}} 
+                      activeDot={{r:7, fill:"#818cf8", stroke:"#fff", strokeWidth:2}} 
+                    />
+                  </LineChart>
+                 </ResponsiveContainer>
+              </div>
+            </div>
 
-              {/* Status Overview & Activity */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                {/* Status Overview */}
-                <div className="p-5 md:p-6 bg-white dark:bg-[#14112c]/45 border border-slate-200 dark:border-white/10 rounded-md shadow-sm flex flex-col">
-                  <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-6">Status Overview</h3>
-                  <div className="flex-1 min-h-[250px] w-full">
-                    <ResponsiveContainer width="100%" height={250}>
-                      <PieChart>
-                        <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
-                          {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <RechartsTooltip />
-                        <Legend />
-                      </PieChart>
-                    </ResponsiveContainer>
+            {/* Today's Tasks */}
+            <div className="bg-[#12141D] border border-white/5 rounded-[24px] p-6 flex flex-col relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+              
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-sm font-bold text-white">Today's Tasks</h3>
+                <span className="px-2.5 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold">
+                  {allTasks.filter(t => t.status !== 'done').length} Left
+                </span>
+              </div>
+              <div className="flex-1 flex flex-col gap-3">
+                {allTasks.filter(t => t.status !== 'done').slice(0, 4).map((task, i) => {
+                   const pillColors = ["bg-rose-500/10 text-rose-400", "bg-purple-500/10 text-purple-400", "bg-blue-500/10 text-blue-400", "bg-orange-500/10 text-orange-400"];
+                   const pColor = pillColors[i % pillColors.length];
+                   return (
+                    <div key={i} className="flex items-center justify-between p-3.5 rounded-xl bg-[#161925] border border-transparent hover:border-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 rounded-[4px] border-2 border-slate-600 group-hover:border-indigo-400 transition-colors"></div>
+                        <span className="text-[13px] text-slate-200 font-semibold truncate max-w-[150px]">{task.title}</span>
+                      </div>
+                      <span className={`text-[9px] font-bold px-2 py-1 rounded ${pColor} uppercase tracking-wider`}>
+                        {task.priority || "High"}
+                      </span>
+                    </div>
+                  );
+                })}
+                {allTasks.filter(t => t.status !== 'done').length === 0 && (
+                  <div className="flex-1 flex items-center justify-center text-slate-500 text-xs font-medium">No tasks left! 🎉</div>
+                )}
+              </div>
+              <button className="w-full py-3 mt-4 rounded-xl bg-[#1A1C23] border border-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition-colors cursor-pointer">
+                Show More
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            {/* Active Projects */}
+            <div className="lg:col-span-2 flex flex-col">
+              <div className="flex justify-between items-center mb-4 px-2">
+                <h3 className="text-sm font-bold text-white">Active Projects</h3>
+                <span className="text-xs font-bold text-indigo-400 hover:text-indigo-300 cursor-pointer transition-colors flex items-center gap-1">
+                  View All <ArrowRight className="w-3 h-3" />
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {projects.slice(0, 2).map((p, i) => (
+                  <div key={i} onClick={() => router.push(`/board/${p._id}`)} className="bg-[#12141D] border border-white/5 rounded-[24px] p-6 flex flex-col cursor-pointer hover:border-white/10 hover:bg-[#161925] transition-all relative overflow-hidden group">
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent group-hover:via-white/10 transition-colors"></div>
+                    
+                    <div className="flex justify-between items-start mb-5">
+                      <div className="w-10 h-10 rounded-xl bg-[#1A1C23] border border-white/5 flex items-center justify-center text-slate-300 shadow-sm">
+                        {i === 0 ? <Bot className="w-5 h-5 text-indigo-400"/> : <FolderKanban className="w-5 h-5 text-purple-400"/>}
+                      </div>
+                      <span className="px-2 py-1 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[9px] font-bold uppercase tracking-wider">
+                        {i === 0 ? "Phase 02" : "In Review"}
+                      </span>
+                    </div>
+                    
+                    <h4 className="text-[15px] font-bold text-white mb-2">{p.name}</h4>
+                    <p className="text-xs font-medium text-slate-500 mb-6 truncate">{p.description || "Infrastructure update for core processing."}</p>
+                    
+                    <div className="flex flex-col gap-2 mt-auto">
+                      <div className="flex justify-between text-[10px] font-bold text-slate-400">
+                        <span>Progress</span>
+                        <span>{i === 0 ? '76%' : '42%'}</span>
+                      </div>
+                      <div className="w-full h-[6px] rounded-full bg-[#1A1C23] overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style={{width: i === 0 ? '76%' : '42%'}}></div>
+                      </div>
+                      <div className="flex items-center gap-1 mt-4">
+                        {p.members?.slice(0, 3).map((m: any, j: number) => (
+                          <div key={j} className="w-6 h-6 rounded-full bg-slate-800 border-2 border-[#12141D] group-hover:border-[#161925] -ml-2 first:ml-0 flex items-center justify-center text-[8px] font-bold text-white overflow-hidden transition-colors">
+                            {m.user?.avatar ? <img src={m.user.avatar} className="w-full h-full object-cover" /> : getInitials(m.user?.name || "U")}
+                          </div>
+                        ))}
+                        {(p.members?.length || 0) > 3 && (
+                          <div className="w-6 h-6 rounded-full bg-[#1A1C23] border-2 border-[#12141D] group-hover:border-[#161925] -ml-2 flex items-center justify-center text-[8px] font-bold text-white transition-colors">
+                            +{(p.members?.length || 0) - 3}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
+                {projects.length === 0 && (
+                  <div className="col-span-2 p-10 flex flex-col items-center justify-center bg-[#12141D] border border-white/5 rounded-[24px]">
+                    <span className="text-sm font-medium text-slate-400 mb-4">No active projects yet</span>
+                    <button onClick={() => setShowModal(true)} className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors cursor-pointer">
+                      Create your first project
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
 
-                {/* Recent Activity Feed */}
-                <div className="p-5 md:p-6 bg-white dark:bg-[#14112c]/45 border border-slate-200 dark:border-white/10 rounded-md shadow-sm flex flex-col max-h-[350px]">
-                   <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-5 flex items-center gap-2">
-                     <Clock className="w-4 h-4 text-slate-400" /> Recent Activity
-                   </h3>
-                   <div className="relative border-l border-slate-200 dark:border-white/10 ml-2.5 space-y-6 overflow-y-auto pr-2 pb-2">
-                     {allTasks.slice(0, 10).map((act, i) => (
-                       <div key={act._id || i} className="relative pl-5">
-                         <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full ring-4 ring-white dark:ring-[#14112c] bg-indigo-500" />
-                         <p className="text-sm text-slate-700 dark:text-slate-300">
-                           <span className="font-semibold text-slate-900 dark:text-white">{act.assignee?.name || act.createdBy?.name || "A user"}</span> {act.status === "done" ? "completed task" : "created task"} <span className="italic">"{act.title}"</span>
-                         </p>
-                         <p className="text-xs text-slate-400 mt-0.5">{timeAgo(act.createdAt)}</p>
-                       </div>
-                     ))}
-                     {allTasks.length === 0 && (
-                       <p className="text-sm text-slate-500 pl-5">No recent activity found.</p>
-                     )}
-                   </div>
+            {/* Team Activity */}
+            <div className="flex flex-col">
+               <div className="flex justify-between items-center mb-4 px-2">
+                <h3 className="text-sm font-bold text-white">Team Activity</h3>
+              </div>
+              <div className="bg-[#12141D] border border-white/5 rounded-[24px] p-6 flex-1 flex flex-col relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                
+                <div className="flex-1 flex flex-col gap-6 relative mt-2">
+                  <div className="absolute left-[11px] top-2 bottom-2 w-px bg-white/5"></div>
+                  
+                  {allTasks.slice(0, 4).map((act, i) => (
+                    <div key={i} className="flex gap-4 relative z-10">
+                      <div className="w-6 h-6 rounded-full bg-slate-800 border-4 border-[#12141D] shrink-0 flex items-center justify-center text-[10px] font-bold text-white overflow-hidden shadow-sm">
+                        {getInitials(act.assignee?.name || act.createdBy?.name || "U")}
+                      </div>
+                      <div className="flex flex-col pt-0.5">
+                        <p className="text-[13px] text-white font-medium leading-snug">
+                          <span className="font-bold">{act.assignee?.name || act.createdBy?.name || "Alex"}</span> {act.status === "done" ? "completed" : "created"} <span className="font-semibold text-slate-300">"{act.title}"</span>
+                        </p>
+                        <p className="text-[10px] font-medium text-slate-500 mt-1">{timeAgo(act.createdAt)}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {allTasks.length === 0 && (
+                    <div className="flex items-center justify-center h-full text-xs font-medium text-slate-500">
+                      No recent activity
+                    </div>
+                  )}
                 </div>
               </div>
-            </>
-          );
-        })()}
-
-        {/* Search */}
-        <div className="relative mb-6">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search projects..."
-            className="w-full pl-11 pr-4 py-3 rounded-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-sm transition-all hover:shadow-sm"
-          />
-        </div>
-
-        {/* Projects Grid */}
-        {isLoading ? (
-          <div className="flex justify-center py-20">
-            <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-          </div>
-        ) : filtered.length === 0 ? (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-20"
-          >
-            <FolderKanban className="w-12 h-12 text-slate-500 dark:text-slate-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-300 mb-2">
-              No projects yet
-            </h3>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
-              Create your first project to get started.
-            </p>
-            <button
-              onClick={() => setShowModal(true)}
-              className="px-5 py-2.5 rounded-md bg-indigo-600 hover:bg-indigo-550 hover:-translate-y-0.5 active:scale-95 text-white text-sm font-semibold shadow-sm shadow-indigo-600/20 transition-all duration-200 cursor-pointer"
-            >
-              Create Project
-            </button>
-          </motion.div>
-        ) : (
-          <ProjectGrid projects={filtered} />
-        )}
+            </div>
           </div>
         </div>
-      </div>
 
       {/* AI Smart-Scheduling Modal */}
       <AnimatePresence>

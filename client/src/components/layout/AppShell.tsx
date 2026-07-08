@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import AppSidebar from "./AppSidebar";
 import FloatingIcons from "./FloatingIcons";
-import { User, LogOut, Sun, Moon, Menu, ArrowLeft } from "lucide-react";
+import { User, LogOut, Sun, Moon, Menu, ArrowLeft, Search, Bell } from "lucide-react";
 import Link from "next/link";
 import { cn, getInitials, getAvatarColor } from "@/lib/utils";
 
@@ -65,13 +65,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFBFC] dark:bg-[#0e0e11] text-slate-900 dark:text-slate-100 flex relative overflow-hidden">
+    <div className="min-h-screen bg-[#06080F] text-slate-100 flex relative overflow-hidden font-sans">
       <div className="relative z-10 flex flex-row w-full h-[100dvh]">
         <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         
-        <main className="flex-1 md:ml-[240px] overflow-y-auto h-[100dvh] relative animate-fade-in-up">
-
-          {/* Mobile Top Bar with Hamburger + Branding + Controls */}
+        <main className="flex-1 md:ml-[260px] flex flex-col h-[100dvh] relative animate-fade-in-up">
+          {/* Mobile Top Bar */}
           <div className="flex md:hidden items-center justify-between px-3 sm:px-4 py-3 sticky top-0 z-[50] bg-white/70 dark:bg-[#0E0A22]/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5">
             {/* Left: Hamburger + Back + Logo */}
             <div className="flex items-center gap-2 sm:gap-3">
@@ -128,56 +127,54 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          {/* Desktop Top Left Back Button */}
-          {pathname !== "/dashboard" && pathname !== "/" && !pathname.startsWith("/board") && (
-            <div className="hidden md:flex absolute top-5 left-8 z-[100] items-center">
-              <button
-                onClick={() => router.back()}
-                className="px-4 h-10 rounded-full flex items-center justify-center gap-2 bg-white/40 dark:bg-[#14112c]/40 border border-slate-200/50 dark:border-white/10 backdrop-blur-xl shadow-sm hover:scale-105 transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white cursor-pointer font-bold text-sm"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back
-              </button>
-            </div>
-          )}
-
-          {/* Desktop Top Right Header Controls */}
-          <div className="hidden md:flex absolute top-5 right-6 z-[100] items-center gap-4">
-            <button
-              onClick={toggleTheme}
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-white/40 dark:bg-[#14112c]/40 border border-slate-200/50 dark:border-white/10 backdrop-blur-xl shadow-sm hover:scale-105 transition-all text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white cursor-pointer"
-            >
-              {isDark ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
-            </button>
-            
-            {user && (
-              <div className="group perspective-1000 relative">
-                <Link href="/profile" className={cn("w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white ring-2 ring-white/10 hover-lift shadow-sm animate-glow-pulse overflow-hidden", !user.avatar && getAvatarColor(user.name || "U"))}>
-                  {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                  ) : (
-                    getInitials(user.name || "U")
-                  )}
-                </Link>
-                
-                {/* Hover Popup */}
-                <div className="absolute top-full right-0 mt-3 w-64 bg-white/95 dark:bg-[#14112c]/95 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-md p-2 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] translate-y-[-20px] scale-90 origin-top-right group-hover:translate-y-0 group-hover:scale-100">
-                  <div className="px-3 py-3 border-b border-slate-200/50 dark:border-white/5 mb-2">
-                    <p className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">{user.name}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email}</p>
-                  </div>
-                  <Link href="/profile" className="flex items-center gap-2 px-3 py-2.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/5 hover:translate-x-1 text-sm font-medium text-slate-700 dark:text-slate-200 transition-all duration-200 cursor-pointer">
-                    <User className="w-4 h-4 text-indigo-400" /> My Profile
-                  </Link>
-                  <button onClick={() => useAuthStore.getState().logout()} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-md hover:bg-rose-500/10 hover:translate-x-1 text-sm font-medium text-rose-400 transition-all duration-200 mt-1 cursor-pointer">
-                    <LogOut className="w-4 h-4 text-rose-400" /> Logout
-                  </button>
-                </div>
+          {/* Desktop Top Navbar */}
+          <div className="hidden md:flex items-center justify-between px-8 py-5 border-b border-white/5 bg-[#0A0D14]/80 backdrop-blur-md sticky top-0 z-[100]">
+            {/* Search Bar */}
+            <div className="relative w-96">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-4 w-4 text-slate-500" />
               </div>
-            )}
+              <input
+                type="text"
+                placeholder="Search resources, projects..."
+                className="w-full pl-10 pr-4 py-2 bg-[#121620] border border-white/5 rounded-full text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+              />
+            </div>
+            
+            {/* Right Controls */}
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-1 cursor-pointer group">
+                <span className="text-sm font-semibold text-slate-300 group-hover:text-white transition-colors">Workspace</span>
+                <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </div>
+              <button className="text-slate-400 hover:text-white transition-colors cursor-pointer">
+                <Bell className="w-5 h-5" />
+              </button>
+              <button onClick={toggleTheme} className="text-slate-400 hover:text-white transition-colors cursor-pointer">
+                {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+              
+              {user && (
+                <Link href="/profile" className="flex items-center gap-3 ml-2 group cursor-pointer">
+                  <div className="text-right hidden lg:block">
+                    <p className="text-sm font-bold text-white leading-tight">{user.name}</p>
+                    <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{user.role || "Member"}</p>
+                  </div>
+                  <div className={cn("w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm overflow-hidden", !user.avatar && getAvatarColor(user.name || "U"))}>
+                    {user.avatar ? (
+                      <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      getInitials(user.name || "U")
+                    )}
+                  </div>
+                </Link>
+              )}
+            </div>
           </div>
 
-          {children}
+          <div className="flex-1 overflow-y-auto">
+            {children}
+          </div>
         </main>
       </div>
     </div>
