@@ -69,7 +69,10 @@ router.post('/', async (req, res) => {
     await comment.populate('author', 'name email avatar');
 
     const io = req.app.get('io');
-    if (io) io.to(taskDoc.project.toString()).emit('taskUpdated', taskDoc);
+    if (io) {
+      io.to(taskDoc.project.toString()).emit('taskUpdated', taskDoc);
+      io.to(taskDoc.project.toString()).emit('commentAdded', comment);
+    }
 
     res.status(201).json({ message: 'Comment added', comment });
   } catch (error) {
@@ -96,7 +99,10 @@ router.delete('/:id', async (req, res) => {
     const taskDoc = await Task.findById(comment.task);
     if (taskDoc) {
       const io = req.app.get('io');
-      if (io) io.to(taskDoc.project.toString()).emit('taskUpdated', taskDoc);
+      if (io) {
+        io.to(taskDoc.project.toString()).emit('taskUpdated', taskDoc);
+        io.to(taskDoc.project.toString()).emit('commentDeleted', { commentId: req.params.id, taskId: taskDoc._id });
+      }
     }
 
     res.json({ message: 'Comment deleted' });

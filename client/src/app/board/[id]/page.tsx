@@ -207,13 +207,38 @@ export default function BoardPage() {
       useProjectStore.getState().updateProjectInStore(updatedProject);
     });
 
+    s.on("commentAdded", (newComment) => {
+      setComments((prev) => {
+        if (prev.some((c) => c._id === newComment._id)) return prev;
+        return [newComment, ...prev];
+      });
+    });
+
+    s.on("commentDeleted", ({ commentId }) => {
+      setComments((prev) => prev.filter((c) => c._id !== commentId));
+    });
+
     return () => {
       s.off("taskCreated");
       s.off("taskUpdated");
       s.off("taskDeleted");
       s.off("projectUpdated");
+      s.off("commentAdded");
+      s.off("commentDeleted");
     };
-  }, [projectId, user]);
+  }, [projectId, user, setComments]);
+
+  // Keep selectedTask in sync with tasks updates from socket
+  useEffect(() => {
+    if (selectedTask) {
+      const updated = tasks.find((t) => t._id === selectedTask._id);
+      if (updated && JSON.stringify(updated) !== JSON.stringify(selectedTask)) {
+        setSelectedTask(updated);
+      } else if (!updated) {
+        setSelectedTask(null); // It was deleted
+      }
+    }
+  }, [tasks, selectedTask]);
 
   const loadGithubSettings = async () => {
     setIsGithubLoading(true);
@@ -961,13 +986,13 @@ export default function BoardPage() {
               <div className="space-y-3">
                 {comments.map((c) => (
                   <div key={c._id} className="flex gap-3">
-                    <div className={cn("w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0", getAvatarColor(c.user?.name || "U"))}>
-                      {getInitials(c.user?.name || "U")}
+                    <div className={cn("w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0", getAvatarColor(c.author?.name || "U"))}>
+                      {getInitials(c.author?.name || "U")}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-slate-250">{c.user?.name}</span>
-                        <span className="text-[10px] text-slate-450">{formatDate(c.createdAt)}</span>
+                        <span className="text-xs font-semibold text-slate-200">{c.author?.name || "Unknown"}</span>
+                        <span className="text-[10px] text-slate-400">{formatDate(c.createdAt)}</span>
                       </div>
                       <p className="text-xs text-slate-300 mt-0.5">{c.text}</p>
                     </div>

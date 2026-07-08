@@ -94,17 +94,35 @@ export const useProjectStore = create<ProjectState>()((set) => ({
   },
 
   updateTask: async (id, data) => {
-    const res = await taskApi.update(id, data);
+    // Optimistic Update
     set((state) => ({
-      tasks: state.tasks.map((t) =>
-        t._id === id ? res.data.task || { ...t, ...data } : t
-      ),
+      tasks: state.tasks.map((t) => (t._id === id ? { ...t, ...data } : t)),
     }));
+    try {
+      const res = await taskApi.update(id, data);
+      // Ensure we have latest data from DB
+      set((state) => ({
+        tasks: state.tasks.map((t) =>
+          t._id === id ? res.data.task || { ...t, ...data } : t
+        ),
+      }));
+    } catch (err) {
+      // If fails, we probably should refetch or revert, but let's just fetch tasks again
+      const currentProject = get().currentProject;
+      if (currentProject) get().fetchTasks(currentProject._id);
+    }
   },
 
   deleteTask: async (id) => {
-    await taskApi.delete(id);
+    // Optimistic Update
     set((state) => ({ tasks: state.tasks.filter((t) => t._id !== id) }));
+    try {
+      await taskApi.delete(id);
+    } catch (err) {
+      // Revert if failed
+      const currentProject = get().currentProject;
+      if (currentProject) get().fetchTasks(currentProject._id);
+    }
   },
 
   updateProjectInStore: (updatedProject) => {
