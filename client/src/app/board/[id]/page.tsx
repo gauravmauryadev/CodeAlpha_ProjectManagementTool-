@@ -525,12 +525,9 @@ export default function BoardPage() {
             <div className="px-4 md:px-8 pt-4 border-b border-slate-200 dark:border-white/5 bg-[#FAFBFC] dark:bg-[#14112c] flex items-center justify-between gap-2 flex-shrink-0 flex-wrap">
               <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
                 {[
-                  { id: "summary", label: "Summary", icon: LayoutDashboard },
-                  { id: "list", label: "List", icon: List },
-                  { id: "board", label: "Board", icon: FolderKanban },
-                  { id: "calendar", label: "Calendar", icon: Calendar },
-                  { id: "timeline", label: "Timeline", icon: GanttChart },
-                  { id: "docs", label: "Docs", icon: FileText },
+                  { id: "board", label: "Kanban Board", icon: FolderKanban },
+                  { id: "wiki", label: "Documentation", icon: FileText },
+                  { id: "activity", label: "GitHub Activity", icon: GithubIcon },
                 ].map((tab) => (
                   <button
                     key={tab.id}
