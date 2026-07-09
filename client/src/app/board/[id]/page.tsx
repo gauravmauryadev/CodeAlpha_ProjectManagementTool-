@@ -28,7 +28,8 @@ import {
   List,
   Calendar,
   GanttChart,
-  Sparkles
+  Sparkles,
+  MoreHorizontal
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import { useProjectStore } from "@/store/useProjectStore";
@@ -45,9 +46,9 @@ import { DndContext, closestCorners, TouchSensor, MouseSensor, useSensor, useSen
 import { DroppableColumn, DraggableTask } from "@/components/board/DndWrappers";
 
 const columns = [
-  { id: "todo", label: "To Do", color: "border-slate-200 dark:border-white/5", bg: "bg-white dark:bg-white/5", icon: "📋" },
-  { id: "inprogress", label: "In Progress", color: "border-amber-500/20 dark:border-amber-500/10", bg: "bg-amber-50 dark:bg-amber-500/5", icon: "⚡" },
-  { id: "done", label: "Done", color: "border-emerald-500/20 dark:border-emerald-500/10", bg: "bg-emerald-50 dark:bg-emerald-500/5", icon: "✅" },
+  { id: "todo", label: "TODO", color: "border-transparent", bg: "bg-transparent", dot: "bg-slate-400" },
+  { id: "inprogress", label: "IN PROGRESS", color: "border-transparent", bg: "bg-transparent", dot: "bg-blue-500" },
+  { id: "done", label: "REVIEW", color: "border-transparent", bg: "bg-transparent", dot: "bg-purple-500" },
 ];
 
 // Custom GitHub icon (lucide-react doesn't include brand icons)
@@ -475,28 +476,35 @@ export default function BoardPage() {
               </button>
             </Tooltip>
             <div>
-              <h1 className="text-2xl font-black bg-gradient-to-r from-red-600 via-rose-500 to-orange-500 bg-clip-text text-transparent animate-text-gradient tracking-tight">
-                {project?.name || "Loading..."}
+              <h1 className="text-[26px] font-extrabold text-white tracking-tight">
+                {project?.name || "Product Roadmap"}
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400">{project?.description || "Kanban Board"}</p>
+              <p className="text-[13px] text-slate-400 font-medium mt-1">{project?.description || "Manage and track your engineering velocity."}</p>
             </div>
           </div>
-          <div className="flex items-center justify-end gap-3 md:gap-5 flex-wrap md:flex-nowrap ml-auto w-full md:w-auto">
+          <div className="flex items-center justify-end gap-3 md:gap-4 flex-wrap md:flex-nowrap ml-auto w-full md:w-auto">
             {/* Members avatars */}
-            <div className="flex items-center gap-3 mr-2">
+            <div className="flex items-center gap-3 mr-2 cursor-pointer" onClick={() => setShowMembers(true)}>
               <div className="flex -space-x-2">
                 {project?.members?.slice(0, 4).map((m) => (
-                  <div key={typeof m === "object" ? m._id : m} className={cn("w-8 h-8 rounded-full ring-2 ring-white dark:ring-[#0E0A22] flex items-center justify-center text-[10px] font-bold text-white z-10 hover:z-20 transition-transform hover:scale-110 cursor-pointer", getAvatarColor(typeof m === "object" ? m.name : "U"))}>
+                  <div key={typeof m === "object" ? m._id : m} className={cn("w-7 h-7 rounded-full ring-2 ring-[#0E0A22] flex items-center justify-center text-[10px] font-bold text-white z-10 hover:z-20 transition-transform hover:scale-110", getAvatarColor(typeof m === "object" ? m.name : "U"))}>
                     {getInitials(typeof m === "object" ? m.name : "U")}
                   </div>
                 ))}
                 {(project?.members?.length || 0) > 4 && (
-                  <div className="w-8 h-8 rounded-full ring-2 ring-white dark:ring-[#0E0A22] bg-slate-100 dark:bg-white/10 flex items-center justify-center text-[10px] font-bold text-slate-700 dark:text-slate-300 z-10">
+                  <div className="w-7 h-7 rounded-full ring-2 ring-[#0E0A22] bg-[#1A1C23] flex items-center justify-center text-[9px] font-bold text-slate-400 z-10 border border-white/5">
                     +{(project?.members?.length || 0) - 4}
                   </div>
                 )}
               </div>
             </div>
+            
+            <button className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors">
+              <Filter className="w-3.5 h-3.5" /> Filter
+            </button>
+            <button className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors">
+              <List className="w-3.5 h-3.5" /> Sort
+            </button>
             
             <div className="h-6 w-[1px] bg-slate-200 dark:bg-white/10 hidden md:block mx-1"></div>
             
@@ -547,7 +555,7 @@ export default function BoardPage() {
           {/* Main workspace */}
           <div className="flex-1 flex flex-col overflow-hidden min-w-0">
             {/* Workspace Tab Selectors */}
-            <div className="px-4 md:px-8 pt-4 border-b border-slate-200 dark:border-white/5 bg-[#FAFBFC] dark:bg-[#14112c] flex items-center justify-between gap-2 flex-shrink-0 flex-wrap">
+            <div className="px-4 md:px-8 pt-4 border-b border-white/5 bg-transparent flex items-center justify-between gap-2 flex-shrink-0 flex-wrap">
               <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
                 {[
                   { id: "board", label: "Kanban Board", icon: FolderKanban },
@@ -558,10 +566,10 @@ export default function BoardPage() {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
                     className={cn(
-                      "pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap",
+                      "pb-3 text-xs font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap",
                       activeTab === tab.id
-                        ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
-                        : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600"
+                        ? "border-indigo-500 text-indigo-400"
+                        : "border-transparent text-slate-500 hover:text-slate-300 hover:border-slate-600"
                     )}
                   >
                     <tab.icon className="w-4 h-4" />
@@ -569,35 +577,6 @@ export default function BoardPage() {
                   </button>
                 ))}
               </div>
-
-
-              {activeTab === "board" && (
-                <div className="flex items-center gap-2 ml-auto w-full md:w-auto mt-2 md:mt-0">
-                  <div className="relative flex-1 md:flex-none">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input 
-                      type="text" 
-                      placeholder="Search tasks..." 
-                      value={searchTask}
-                      onChange={(e) => setSearchTask(e.target.value)}
-                      className="w-full md:w-[180px] pl-9 pr-3 py-1.5 rounded-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500 shadow-sm transition-all"
-                    />
-                  </div>
-                  <div className="relative">
-                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                    <select
-                      value={filterDue}
-                      onChange={(e) => setFilterDue(e.target.value)}
-                      className="pl-9 pr-8 py-1.5 rounded-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500 shadow-sm appearance-none cursor-pointer font-medium"
-                    >
-                      <option value="all">All Tasks</option>
-                      <option value="this_week">Due This Week</option>
-                      <option value="overdue">Overdue</option>
-                    </select>
-                  </div>
-                </div>
-              )}
-            </div>
 
             {/* Active Tab Panel */}
             {activeTab === "board" ? (
@@ -622,18 +601,18 @@ export default function BoardPage() {
                           className="w-[85vw] max-w-[320px] md:w-[340px] md:max-w-none flex flex-col snap-center shrink-0"
                         >
                         {/* Column Header */}
-                        <div className={cn("flex items-center justify-between px-4 py-3 rounded-md mb-3 border shadow-sm", col.color, col.bg)}>
+                        <div className="flex items-center justify-between py-3 mb-3">
                           <div className="flex items-center gap-2">
-                            <span>{col.icon}</span>
-                            <span className="font-semibold text-sm text-slate-700 dark:text-slate-250">{col.label}</span>
-                            <span className="ml-1.5 text-xs text-slate-500 dark:text-slate-400 bg-black/5 dark:bg-white/5 px-1.5 py-0.5 rounded-md border border-black/5 dark:border-white/5">{colTasks.length}</span>
+                            <span className={cn("w-1.5 h-1.5 rounded-full", col.dot)}></span>
+                            <span className="font-bold text-[11px] text-white tracking-[0.1em]">{col.label}</span>
+                            <span className="ml-1 text-[10px] text-slate-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/10 font-medium">{colTasks.length}</span>
                           </div>
                           <Tooltip content={`Add task to ${col.label}`} position="bottom">
                             <button
                               onClick={() => setShowAddTask(col.id)}
-                              className="w-6 h-6 rounded-md hover:bg-black/5 dark:hover:bg-white/10 active:scale-90 flex items-center justify-center transition-all cursor-pointer"
+                              className="w-6 h-6 rounded-md hover:bg-white/10 active:scale-90 flex items-center justify-center transition-all cursor-pointer"
                             >
-                              <Plus className="w-3.5 h-3.5 text-slate-500 dark:text-slate-300" />
+                              <Plus className="w-3.5 h-3.5 text-slate-400" />
                             </button>
                           </Tooltip>
                         </div>
@@ -641,64 +620,69 @@ export default function BoardPage() {
                         {/* Tasks */}
                         <div className="flex-1 space-y-2.5 overflow-y-auto pr-1">
 
-                          {colTasks.map((task) => (
+                          {colTasks.map((task) => {
+                            const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
+                            const pStyles: Record<string, string> = {
+                              high: "bg-red-500/10 text-red-400 border-red-500/20",
+                              medium: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+                              low: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+                            };
+                            return (
                             <DraggableTask
                               key={task._id}
                               id={task._id}
                               task={task}
                               disabled={!getCanEditTask(task)}
-                              className="group p-4 rounded-md border-2 border-transparent bg-white dark:bg-[#14112c]/45 hover:bg-slate-50 dark:hover:bg-[#1a163a]/60 hover:border-indigo-500/40 cursor-pointer transition-all shadow-sm"
+                              className="group p-5 rounded-[20px] border border-white/5 bg-[#12141D] hover:bg-white/5 hover:border-white/10 cursor-pointer transition-all shadow-xl"
                             >
                               <div onClick={(e) => { e.stopPropagation(); setSelectedTask(task); loadComments(task._id); }}>
-                                <div className="flex items-start justify-between gap-2 mb-2">
-                                  <div className="flex-1 min-w-0 flex items-start gap-1">
-                                    {getCanEditTask(task) && <GripVertical className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 mt-0.5 opacity-0 group-hover:opacity-100 cursor-grab flex-shrink-0" />}
-                                    <h4 className="text-sm font-medium text-slate-700 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-white leading-tight">{task.title}</h4>
+                                
+                                <div className="flex items-start justify-between mb-4">
+                                  <div className="flex gap-2">
+                                    <span className={cn("text-[9px] font-black px-2 py-1 rounded-md uppercase tracking-wider border", task.labels?.[0] === 'bug' ? pStyles['high'] : task.labels?.[0] === 'design' ? pStyles['low'] : pStyles[task.priority] || pStyles['medium'])}>
+                                      {task.labels?.[0] || (task.priority === 'high' ? 'CRITICAL' : task.priority === 'low' ? 'DESIGN' : 'FEATURE')}
+                                    </span>
                                   </div>
-                                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                                    {task.assignee && (
-                                      <Tooltip content={`Assigned to ${typeof task.assignee === 'object' ? task.assignee.name : 'Unknown'}`} position="top">
-                                        <div className={cn("w-5 h-5 rounded-full ring-1 ring-[#14112c] flex items-center justify-center text-[8px] font-bold text-white shadow-sm", getAvatarColor(typeof task.assignee === 'object' ? task.assignee.name : "U"))}>
-                                          {getInitials(typeof task.assignee === 'object' ? task.assignee.name : "U")}
-                                        </div>
-                                      </Tooltip>
+                                  <button className="text-slate-500 hover:text-white transition-colors">
+                                    <MoreHorizontal className="w-4 h-4" />
+                                  </button>
+                                </div>
+                                
+                                <h4 className="text-[15px] font-bold text-slate-200 mb-5 leading-snug group-hover:text-white">{task.title}</h4>
+                                
+                                {col.id !== 'todo' && (
+                                  <div className="w-full h-1 bg-white/5 rounded-full mb-5 overflow-hidden">
+                                    <div className={cn("h-full rounded-full", col.id === 'inprogress' ? "w-1/2 bg-[#5e77ad]" : "w-full bg-[#9b7cdb]")} />
+                                  </div>
+                                )}
+                                
+                                <div className="flex items-center justify-between text-[11px] font-bold text-slate-500">
+                                  <div className="flex items-center gap-3">
+                                    <div className="flex -space-x-1">
+                                      <div className={cn("w-5 h-5 rounded-full ring-2 ring-[#12141D] flex items-center justify-center text-[8px] text-white shadow-sm", getAvatarColor(typeof task.assignee === 'object' ? task.assignee.name : "U"))}>
+                                        {getInitials(typeof task.assignee === 'object' ? task.assignee.name : "U")}
+                                      </div>
+                                    </div>
+                                    {task.dueDate && (
+                                      <span className={cn("flex items-center gap-1.5", isOverdue ? "text-red-400" : "")}>
+                                        {isOverdue ? <span className="text-red-500 font-extrabold">!</span> : <Clock className="w-3 h-3" />}
+                                        {isOverdue ? "Today" : formatDate(task.dueDate)}
+                                      </span>
                                     )}
-                                    {getCanEditTask(task) && (
-                                      <Tooltip content="Delete task" position="top">
-                                        <button
-                                          onClick={(e) => { e.stopPropagation(); handleDeleteTask(task._id); }}
-                                          className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-400 active:scale-90 transition-all cursor-pointer"
-                                        >
-                                          <Trash2 className="w-3.5 h-3.5" />
-                                        </button>
-                                      </Tooltip>
-                                    )}
+                                  </div>
+                                  
+                                  <div className="flex items-center gap-2">
+                                    {githubPulls.filter(pr => pr.linkedTaskIds?.includes(task._id)).map(pr => (
+                                      <GithubIcon key={pr.id} className={cn("w-3.5 h-3.5", pr.merged ? "text-purple-400" : pr.state === "open" ? "text-emerald-400" : "text-red-400")} />
+                                    ))}
+                                    <div className="flex items-center gap-1 hover:text-white transition-colors">
+                                      <MessageSquare className="w-3.5 h-3.5" /> {comments.filter(c => c.task === task._id).length || 0}
+                                    </div>
                                   </div>
                                 </div>
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-md border", priorityStyles[task.priority])}>{task.priority}</span>
-                                
-                                {task.labels && task.labels.length > 0 && task.labels.map(label => (
-                                  <span key={label} className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-500/20 capitalize">{label}</span>
-                                ))}
-
-                                {task.dueDate && (
-                                  <span className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1"><Clock className="w-3 h-3" />{formatDate(task.dueDate)}</span>
-                                )}
-
-                                {/* PR Badges */}
-                                {githubPulls.filter(pr => pr.linkedTaskIds?.includes(task._id)).map(pr => (
-                                  <Tooltip key={pr.id} content={`PR #${pr.number}: ${pr.title}`} position="top">
-                                    <a href={pr.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className={cn("flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-semibold border", pr.merged ? "bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-500/10 dark:border-purple-500/20" : pr.state === "open" ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/20" : "bg-red-50 text-red-600 border-red-200 dark:bg-red-500/10 dark:border-red-500/20")}>
-                                      <GithubIcon className="w-2.5 h-2.5" />
-                                      {pr.merged ? "Merged" : pr.state === "open" ? "Review" : "Closed"}
-                                    </a>
-                                  </Tooltip>
-                                ))}
-                              </div>
                               </div>
                             </DraggableTask>
-                          ))}
+                          )})}
                         </div>
                       </DroppableColumn>
                     );

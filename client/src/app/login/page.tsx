@@ -62,7 +62,7 @@ export default function LoginPage() {
         </div>
         <div className="flex items-center gap-6">
           <button className="text-sm text-slate-300 hover:text-white font-medium transition-colors hidden sm:block cursor-pointer">Support</button>
-          <Link href="/register" className="text-sm bg-purple-200/10 hover:bg-purple-200/20 text-purple-200 px-4 py-2 rounded-full font-medium transition-colors border border-purple-500/20">
+          <Link href="/register" className="text-sm bg-[#D2A8FF] hover:bg-[#c490ff] text-[#1e1e1e] px-5 py-2.5 rounded-full font-bold transition-colors">
             Request Access
           </Link>
         </div>
@@ -72,20 +72,15 @@ export default function LoginPage() {
       <div className="flex-1 flex flex-col lg:flex-row items-center justify-center lg:px-10 pb-10 gap-8 lg:gap-16 z-10 w-full max-w-7xl mx-auto">
         
         {/* Left Side: 3D Illustration / Graphic */}
-        <div className="hidden lg:flex flex-col flex-1 w-full relative h-[600px] bg-gradient-to-b from-[#151928] to-[#0d101b] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
-          {/* Decorative floating elements simulating the image */}
-          <div className="absolute top-10 left-1/4 w-40 h-40 bg-purple-500/20 rounded-full blur-[60px] animate-pulse"></div>
-          <div className="absolute bottom-10 right-1/4 w-48 h-48 bg-blue-500/15 rounded-full blur-[80px]"></div>
-          
-          {/* Floating glass blocks */}
-          <div className="absolute top-20 right-20 w-28 h-28 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl rotate-12 animate-float shadow-xl"></div>
-          <div className="absolute bottom-32 left-16 w-36 h-36 bg-white/5 backdrop-blur-md border border-white/10 rounded-full animate-float shadow-2xl" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 right-10 w-20 h-20 bg-purple-500/10 backdrop-blur-lg border border-purple-500/20 rounded-lg -rotate-12 animate-float shadow-lg" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute bottom-20 right-40 w-16 h-16 bg-blue-500/10 backdrop-blur-md border border-blue-500/20 rounded-sm rotate-45 animate-float" style={{ animationDelay: '1.5s' }}></div>
+        <div 
+          className="hidden lg:flex flex-col flex-1 w-full relative h-[650px] bg-[#0d101b] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl bg-cover bg-center"
+          style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop")' }}
+        >
+          {/* Overlay to darken the background image slightly */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F19]/60 via-[#0B0F19]/40 to-[#0B0F19]/80 z-0"></div>
 
           <div className="relative z-10 flex flex-col items-center justify-center h-full p-12 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold tracking-widest text-slate-300 uppercase mb-8 shadow-sm backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-[11px] font-bold tracking-[0.2em] text-white uppercase mb-8 shadow-sm backdrop-blur-md">
               Enterprise Ready
             </div>
             
@@ -103,11 +98,8 @@ export default function LoginPage() {
 
         {/* Right Side: Login Form */}
         <div className="w-full max-w-[440px] flex-shrink-0 px-6 lg:px-0">
-          <div className="bg-[#12141D] rounded-[28px] p-8 sm:p-10 border border-white/5 shadow-2xl relative overflow-hidden">
-            {/* Subtle highlight top border */}
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-
-            <h2 className="text-[28px] font-bold text-white mb-2 tracking-tight">Welcome back</h2>
+          <div className="bg-[#12141D] rounded-[24px] p-8 sm:p-10 border border-white/5 shadow-2xl relative overflow-hidden">
+            <h2 className="text-[32px] font-extrabold text-white mb-2 tracking-tight">Welcome back</h2>
             <p className="text-slate-400 text-sm mb-8 font-medium">Enter your details to access your workspace.</p>
 
             {error && (
@@ -116,7 +108,7 @@ export default function LoginPage() {
               </div>
             )}
 
-            <div className="w-full mb-6 flex justify-center bg-[#1A1C23] border border-white/5 rounded-xl overflow-hidden hover:bg-white/5 transition-colors">
+            <div className="w-full mb-6 flex justify-center bg-[#1A1C23] border border-white/5 rounded-xl overflow-hidden hover:bg-white/10 transition-colors">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => setError("Google login failed")}
@@ -124,6 +116,7 @@ export default function LoginPage() {
                 shape="rectangular"
                 text="continue_with"
                 size="large"
+                width="100%"
               />
             </div>
 
