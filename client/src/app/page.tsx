@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { m as motion, LazyMotion, domAnimation } from "framer-motion";
 import { Play, LayoutDashboard, TrendingUp, Bot } from "lucide-react";

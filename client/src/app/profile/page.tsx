@@ -123,7 +123,7 @@ function ProfileContent() {
           {/* Avatar Section */}
           <div className="relative shrink-0">
             {user?.avatar || avatar ? (
-              <img src={user.avatar || avatar} alt={user?.name || "Avatar"} className="w-32 h-32 md:w-40 md:h-40 rounded-[24px] object-cover border border-white/10 shadow-2xl" />
+              <img src={user?.avatar || avatar} alt={user?.name || "Avatar"} className="w-32 h-32 md:w-40 md:h-40 rounded-[24px] object-cover border border-white/10 shadow-2xl" />
             ) : (
               <div className={cn("w-32 h-32 md:w-40 md:h-40 rounded-[24px] flex items-center justify-center text-4xl font-bold text-white border border-white/10 shadow-2xl", getAvatarColor(user?.name || "U"))}>
                 {getInitials(user?.name || "User")}

@@ -970,12 +970,12 @@ export default function BoardPage() {
               <div className="space-y-3">
                 {comments.map((c) => (
                   <div key={c._id} className="flex gap-3">
-                    <div className={cn("w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0", getAvatarColor(c.author?.name || "U"))}>
-                      {getInitials(c.author?.name || "U")}
+                    <div className={cn("w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0", getAvatarColor((c as any).author?.name || "U"))}>
+                      {getInitials((c as any).author?.name || "U")}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-slate-200">{c.author?.name || "Unknown"}</span>
+                        <span className="text-xs font-semibold text-slate-200">{(c as any).author?.name || "Unknown"}</span>
                         <span className="text-[10px] text-slate-400">{formatDate(c.createdAt)}</span>
                       </div>
                       <p className="text-xs text-slate-300 mt-0.5">{c.text}</p>
@@ -1278,6 +1278,7 @@ export default function BoardPage() {
           </div>
         </div>
       )}
+      </div>
     </AppShell>
   );
 }

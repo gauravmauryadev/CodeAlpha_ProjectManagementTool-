@@ -20,7 +20,7 @@ interface ProjectState {
   updateProjectInStore: (project: Project) => void;
 }
 
-export const useProjectStore = create<ProjectState>()((set) => ({
+export const useProjectStore = create<ProjectState>()((set, get) => ({
   projects: [],
   currentProject: null,
   tasks: [],
