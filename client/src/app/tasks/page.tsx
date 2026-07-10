@@ -43,8 +43,8 @@ export default function TasksPage() {
   }> = [];
 
   projects.forEach((project) => {
-    if (project.tasks && Array.isArray(project.tasks)) {
-      project.tasks.forEach((task: any) => {
+    if ((project as any).tasks && Array.isArray((project as any).tasks)) {
+      (project as any).tasks.forEach((task: any) => {
         allTasks.push({
           task,
           projectName: project.name,
