@@ -547,8 +547,6 @@ export default function DashboardPage() {
         )}
       </AnimatePresence>
 
-      </AnimatePresence>
-
       {/* Accept Invite Modal */}
       {acceptingInvite && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm">
