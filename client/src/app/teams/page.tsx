@@ -140,7 +140,7 @@ export default function TeamsPage() {
                   +12
                 </div>
               </div>
-              <button className="h-11 px-5 rounded-xl bg-[#6c61f8] hover:bg-[#5b52f6] text-white text-[13px] font-bold flex items-center gap-2 transition-all shadow-lg shadow-indigo-500/25">
+              <button onClick={() => window.location.href = '/projects'} className="h-11 px-5 rounded-xl bg-[#6c61f8] hover:bg-[#5b52f6] text-white text-[13px] font-bold flex items-center gap-2 transition-all shadow-lg shadow-indigo-500/25">
                 <UserPlus className="w-4 h-4" /> Invite Member
               </button>
             </div>
@@ -289,14 +289,14 @@ export default function TeamsPage() {
                         {/* Footer Actions */}
                         <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/5">
                           <div className="flex gap-2">
-                            <button className="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                            <button onClick={() => window.location.href = '/discord'} className="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
                               <MessageSquare className="w-4 h-4" />
                             </button>
-                            <button className="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                            <button onClick={() => window.location.href = '/discord'} className="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
                               <Video className="w-4 h-4" />
                             </button>
                           </div>
-                          <button className="text-[12px] font-bold text-slate-300 hover:text-indigo-300 flex items-center gap-1.5 transition-colors">
+                          <button onClick={() => window.location.href = '/profile'} className="text-[12px] font-bold text-slate-300 hover:text-indigo-300 flex items-center gap-1.5 transition-colors">
                             View Profile <ArrowRight className="w-3.5 h-3.5" />
                           </button>
                         </div>
@@ -305,7 +305,7 @@ export default function TeamsPage() {
                   })}
                   
                   {/* Add Member Card */}
-                  <button className="group flex flex-col items-center justify-center bg-transparent border-2 border-dashed border-white/10 rounded-[20px] p-6 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all min-h-[300px]">
+                  <button onClick={() => window.location.href = '/projects'} className="group flex flex-col items-center justify-center bg-transparent border-2 border-dashed border-white/10 rounded-[20px] p-6 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all min-h-[300px]">
                     <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <Plus className="w-6 h-6 text-slate-400 group-hover:text-indigo-400" />
                     </div>
@@ -321,7 +321,7 @@ export default function TeamsPage() {
               <div className="bg-[#12141D] border border-white/5 rounded-[24px] p-6 shadow-xl sticky top-6">
                 <div className="flex items-center justify-between mb-8">
                   <h3 className="text-[15px] font-bold text-white">Activity Feed</h3>
-                  <button className="text-[12px] font-bold text-slate-300 hover:text-indigo-400 transition-colors">
+                  <button onClick={() => window.location.href = '/dashboard'} className="text-[12px] font-bold text-slate-300 hover:text-indigo-400 transition-colors">
                     View All
                   </button>
                 </div>

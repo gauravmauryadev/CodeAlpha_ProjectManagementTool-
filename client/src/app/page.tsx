@@ -96,7 +96,7 @@ export default function LandingPage() {
                 <Link href="#" className="h-12 px-6 rounded-xl bg-[#1A1C23] border border-white/5 hover:bg-white/10 text-white text-[14px] font-bold flex items-center justify-center gap-2 transition-all active:scale-95">
                   <Play className="w-4 h-4 text-slate-400" /> Book Demo
                 </Link>
-                <button className="w-12 h-12 rounded-xl bg-[#1A1C23] border border-white/5 hover:bg-white/10 flex items-center justify-center transition-all">
+                <button onClick={() => window.location.href = '/dashboard'} className="w-12 h-12 rounded-xl bg-[#1A1C23] border border-white/5 hover:bg-white/10 flex items-center justify-center transition-all">
                   <LayoutDashboard className="w-4 h-4 text-slate-400" />
                 </button>
               </div>

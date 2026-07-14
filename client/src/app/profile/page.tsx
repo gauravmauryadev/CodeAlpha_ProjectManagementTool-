@@ -152,7 +152,7 @@ function ProfileContent() {
                 >
                   Edit Profile
                 </button>
-                <button className="px-5 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white text-[13px] font-bold transition-all">
+                <button onClick={() => window.navigator.clipboard.share ? window.navigator.share({ title: 'OmniPlan Profile', url: window.location.href }) : alert('Copied to clipboard!')} className="px-5 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white text-[13px] font-bold transition-all">
                   Share
                 </button>
               </div>
@@ -213,7 +213,7 @@ function ProfileContent() {
                   <span className="text-[10px] font-bold text-slate-500 text-center">Hot Streak</span>
                 </div>
               </div>
-              <button className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-[12px] font-bold text-white transition-colors">
+              <button onClick={() => window.location.href = '/dashboard'} className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-[12px] font-bold text-white transition-colors">
                 View All 15 Badges
               </button>
             </div>

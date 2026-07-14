@@ -7,8 +7,10 @@ interface ProjectState {
   currentProject: Project | null;
   tasks: Task[];
   isLoading: boolean;
+  isCreateModalOpen: boolean;
 
   // Actions
+  setCreateModalOpen: (val: boolean) => void;
   fetchProjects: () => Promise<void>;
   fetchProject: (id: string) => Promise<void>;
   createProject: (data: Record<string, unknown>) => Promise<void>;
@@ -25,6 +27,9 @@ export const useProjectStore = create<ProjectState>()((set, get) => ({
   currentProject: null,
   tasks: [],
   isLoading: false,
+  isCreateModalOpen: false,
+
+  setCreateModalOpen: (val) => set({ isCreateModalOpen: val }),
 
   fetchProjects: async () => {
     set({ isLoading: true });

@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import AppSidebar from "./AppSidebar";
 import FloatingIcons from "./FloatingIcons";
+import CreateProjectModal from "../project/CreateProjectModal";
 import { User, LogOut, Sun, Moon, Menu, ArrowLeft, Search, Bell } from "lucide-react";
 import Link from "next/link";
 import { cn, getInitials, getAvatarColor } from "@/lib/utils";
@@ -138,16 +139,21 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 type="text"
                 placeholder="Search resources, projects..."
                 className="w-full pl-10 pr-4 py-2 bg-[#121620] border border-white/5 rounded-full text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && e.currentTarget.value) {
+                    router.push('/projects?search=' + encodeURIComponent(e.currentTarget.value));
+                  }
+                }}
               />
             </div>
             
             {/* Right Controls */}
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-1 cursor-pointer group">
+              <div onClick={() => router.push('/projects')} className="flex items-center gap-1 cursor-pointer group">
                 <span className="text-sm font-semibold text-slate-300 group-hover:text-white transition-colors">Workspace</span>
                 <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </div>
-              <button className="text-slate-400 hover:text-white transition-colors cursor-pointer">
+              <button onClick={() => alert("No new notifications")} className="text-slate-400 hover:text-white transition-colors cursor-pointer">
                 <Bell className="w-5 h-5" />
               </button>
               <button onClick={toggleTheme} className="text-slate-400 hover:text-white transition-colors cursor-pointer">
@@ -177,6 +183,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </main>
       </div>
+      <CreateProjectModal />
     </div>
   );
 }

@@ -31,14 +31,11 @@ export default function DashboardPage() {
   const router = useRouter();
   const { projects, fetchProjects, createProject, isLoading } = useProjectStore();
   const [search, setSearch] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const { setCreateModalOpen } = useProjectStore();
   const [showAiModal, setShowAiModal] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [aiProgressText, setAiProgressText] = useState("");
-  const [newName, setNewName] = useState("");
-  const [newDesc, setNewDesc] = useState("");
-  const [newImage, setNewImage] = useState("");
   const [invites, setInvites] = useState<any[]>([]);
   const [acceptingInvite, setAcceptingInvite] = useState<any>(null);
   const [onboardForm, setOnboardForm] = useState({ role: "", reason: "" });
@@ -88,25 +85,6 @@ export default function DashboardPage() {
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       (p.description && p.description.toLowerCase().includes(search.toLowerCase()))
   );
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) return alert("Image size should be less than 2MB");
-    const reader = new FileReader();
-    reader.onloadend = () => setNewImage(reader.result as string);
-    reader.readAsDataURL(file);
-  };
-
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newName.trim()) return;
-    await createProject({ name: newName, description: newDesc, image: newImage });
-    setNewName("");
-    setNewDesc("");
-    setNewImage("");
-    setShowModal(false);
-  };
 
   const handleAcceptInvite = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -196,7 +174,7 @@ export default function DashboardPage() {
             
             {/* Quick Stats */}
             <div className="flex flex-wrap gap-4 w-full xl:w-auto">
-              <div className="flex-1 min-w-[140px] flex flex-col justify-center p-5 bg-[#12141D] border border-white/5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+              <div onClick={() => router.push('/projects')} className="flex-1 min-w-[140px] flex flex-col justify-center p-5 bg-[#12141D] border border-white/5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="p-1.5 rounded-lg bg-white/5 text-slate-300">
                     <FolderKanban className="w-4 h-4"/>
@@ -206,7 +184,7 @@ export default function DashboardPage() {
                 <span className="text-3xl font-bold text-white ml-10 tracking-tight">{projects.length}</span>
               </div>
               
-              <div className="flex-1 min-w-[140px] flex flex-col justify-center p-5 bg-[#12141D] border border-white/5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+              <div onClick={() => router.push('/tasks')} className="flex-1 min-w-[140px] flex flex-col justify-center p-5 bg-[#12141D] border border-white/5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
                     <CheckCircle2 className="w-4 h-4"/>
@@ -216,7 +194,7 @@ export default function DashboardPage() {
                 <span className="text-3xl font-bold text-white ml-10 tracking-tight">{allTasks.filter(t => t.status !== 'done').length}</span>
               </div>
               
-              <div className="flex-1 min-w-[140px] flex flex-col justify-center p-5 bg-[#12141D] border border-white/5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
+              <div onClick={() => router.push('/analytics')} className="flex-1 min-w-[140px] flex flex-col justify-center p-5 bg-[#12141D] border border-white/5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
                     <Sparkles className="w-4 h-4"/>
@@ -242,7 +220,7 @@ export default function DashboardPage() {
                   <h3 className="text-base font-bold text-white mb-1">Productivity Overview</h3>
                   <p className="text-xs font-medium text-slate-500">Cumulative output across all engineering sprints</p>
                 </div>
-                <div className="px-3 py-1.5 rounded-lg bg-[#1A1C23] border border-white/5 text-xs text-slate-300 font-bold cursor-pointer hover:bg-white/5 transition-colors flex items-center gap-2">
+                <div onClick={() => alert('Filter options coming soon!')} className="px-3 py-1.5 rounded-lg bg-[#1A1C23] border border-white/5 text-xs text-slate-300 font-bold cursor-pointer hover:bg-white/5 transition-colors flex items-center gap-2">
                   Last 30 Days <span className="text-[9px]">▼</span>
                 </div>
               </div>
@@ -277,9 +255,20 @@ export default function DashboardPage() {
                    const pillColors = ["bg-rose-500/10 text-rose-400", "bg-purple-500/10 text-purple-400", "bg-blue-500/10 text-blue-400", "bg-orange-500/10 text-orange-400"];
                    const pColor = pillColors[i % pillColors.length];
                    return (
-                    <div key={i} className="flex items-center justify-between p-3.5 rounded-xl bg-[#161925] border border-transparent hover:border-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
+                    <div key={i} onClick={() => router.push(`/board/${task.project._id || task.project}`)} className="flex items-center justify-between p-3.5 rounded-xl bg-[#161925] border border-transparent hover:border-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
                       <div className="flex items-center gap-3">
-                        <div className="w-4 h-4 rounded-[4px] border-2 border-slate-600 group-hover:border-indigo-400 transition-colors"></div>
+                        <div 
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            try {
+                              await taskApi.update(task._id, { status: "done" });
+                              setAllTasks(prev => prev.map(t => t._id === task._id ? { ...t, status: "done" } : t));
+                            } catch (error) {
+                              console.error("Failed to complete task:", error);
+                            }
+                          }}
+                          className="w-4 h-4 rounded-[4px] border-2 border-slate-600 hover:bg-indigo-500/20 group-hover:border-indigo-400 transition-colors flex items-center justify-center"
+                        ></div>
                         <span className="text-[13px] text-slate-200 font-semibold truncate max-w-[150px]">{task.title}</span>
                       </div>
                       <span className={`text-[9px] font-bold px-2 py-1 rounded ${pColor} uppercase tracking-wider`}>
@@ -356,7 +345,7 @@ export default function DashboardPage() {
                 {projects.length === 0 && (
                   <div className="col-span-2 p-10 flex flex-col items-center justify-center bg-[#12141D] border border-white/5 rounded-[24px]">
                     <span className="text-sm font-medium text-slate-400 mb-4">No active projects yet</span>
-                    <button onClick={() => setShowModal(true)} className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors cursor-pointer">
+                    <button onClick={() => setCreateModalOpen(true)} className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-colors cursor-pointer">
                       Create your first project
                     </button>
                   </div>
@@ -408,7 +397,7 @@ export default function DashboardPage() {
               <div className="bg-[#12141D] border border-white/5 rounded-[24px] p-6 flex flex-col lg:flex-row gap-4 relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
                 
-                <div className="flex-1 flex items-center gap-4 p-4 rounded-xl bg-[#161925] border border-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
+                <div onClick={() => alert('Opening Q3_Architecture_Specs.pdf...')} className="flex-1 flex items-center gap-4 p-4 rounded-xl bg-[#161925] border border-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
                   <div className="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -420,7 +409,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                <div className="flex-1 flex items-center gap-4 p-4 rounded-xl bg-[#161925] border border-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
+                <div onClick={() => alert('Opening API_Endpoints_v4.xlsx...')} className="flex-1 flex items-center gap-4 p-4 rounded-xl bg-[#161925] border border-white/5 hover:bg-white/5 transition-colors cursor-pointer group">
                   <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -558,78 +547,7 @@ export default function DashboardPage() {
         )}
       </AnimatePresence>
 
-      {/* Create Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-white/95 dark:bg-[#14112c]/95 backdrop-blur-2xl border-2 border-transparent rounded-md p-6 shadow-sm text-slate-700 dark:text-slate-200 animate-in fade-in zoom-in-95 duration-200 animate-border-pulse">
-            <h3 className="text-lg font-bold mb-5 text-slate-800 dark:text-slate-100">Create New Project</h3>
-            <form onSubmit={handleCreate} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">
-                  Project Icon / DP
-                </label>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 rounded-md border-2 border-dashed border-indigo-500/30 flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-white/5 relative group cursor-pointer">
-                    {newImage ? (
-                      <img src={newImage} alt="Project DP" className="w-full h-full object-cover" />
-                    ) : (
-                      <FolderKanban className="w-6 h-6 text-slate-400" />
-                    )}
-                    <label className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                      <Camera className="w-5 h-5 text-white" />
-                      <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-                    </label>
-                  </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
-                    <p>Upload a project picture</p>
-                    <p>Max size: 2MB</p>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">
-                  Project Name
-                </label>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="E.g., Mobile App Redesign"
-                  required
-                  className="w-full px-4 py-2.5 rounded-md bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1.5">
-                  Description (optional)
-                </label>
-                <textarea
-                  value={newDesc}
-                  onChange={(e) => setNewDesc(e.target.value)}
-                  rows={3}
-                  placeholder="Brief description..."
-                  className="w-full px-4 py-2.5 rounded-md bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 resize-none"
-                />
-              </div>
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="flex-1 py-2.5 rounded-md border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5 hover:-translate-y-0.5 active:scale-97 text-sm font-medium text-slate-600 dark:text-slate-300 transition-all duration-200 cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 py-2.5 rounded-md bg-indigo-600 hover:bg-indigo-550 hover:-translate-y-0.5 active:scale-97 text-white text-sm font-semibold shadow-sm shadow-indigo-600/15 transition-all duration-200 cursor-pointer"
-                >
-                  Create
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      </AnimatePresence>
 
       {/* Accept Invite Modal */}
       {acceptingInvite && (

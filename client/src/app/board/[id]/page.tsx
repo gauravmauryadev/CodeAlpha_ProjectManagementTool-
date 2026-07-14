@@ -499,10 +499,10 @@ export default function BoardPage() {
               </div>
             </div>
             
-            <button className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors">
+            <button onClick={() => alert('Filter options coming soon!')} className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors">
               <Filter className="w-3.5 h-3.5" /> Filter
             </button>
-            <button className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors">
+            <button onClick={() => alert('Sort options coming soon!')} className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors">
               <List className="w-3.5 h-3.5" /> Sort
             </button>
             
@@ -643,7 +643,7 @@ export default function BoardPage() {
                                       {task.labels?.[0] || (task.priority === 'high' ? 'CRITICAL' : task.priority === 'low' ? 'DESIGN' : 'FEATURE')}
                                     </span>
                                   </div>
-                                  <button className="text-slate-500 hover:text-white transition-colors">
+                                  <button onClick={(e) => { e.stopPropagation(); alert('Task options coming soon!') }} className="text-slate-500 hover:text-white transition-colors">
                                     <MoreHorizontal className="w-4 h-4" />
                                   </button>
                                 </div>

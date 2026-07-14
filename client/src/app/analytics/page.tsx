@@ -18,10 +18,10 @@ export default function AnalyticsPage() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <button className="h-11 px-4 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-slate-300 text-[13px] font-bold flex items-center gap-2 transition-all shadow-xl">
+            <button onClick={() => alert('Filter by last 30 days applied!')} className="h-11 px-4 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-slate-300 text-[13px] font-bold flex items-center gap-2 transition-all shadow-xl">
               <Calendar className="w-4 h-4 text-slate-400" /> Last 30 Days
             </button>
-            <button className="h-11 px-5 rounded-xl bg-[#6c61f8] hover:bg-[#5b52f6] text-white text-[13px] font-bold flex items-center gap-2 transition-all shadow-lg shadow-indigo-500/25">
+            <button onClick={() => alert('Exporting report...')} className="h-11 px-5 rounded-xl bg-[#6c61f8] hover:bg-[#5b52f6] text-white text-[13px] font-bold flex items-center gap-2 transition-all shadow-lg shadow-indigo-500/25">
               <DownloadCloud className="w-4 h-4" /> Export Report
             </button>
           </div>
@@ -133,8 +133,8 @@ export default function AnalyticsPage() {
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-[18px] font-bold text-white">Weekly Productivity</h3>
               <div className="flex items-center gap-2">
-                <button className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"><ChevronLeft className="w-4 h-4 text-slate-400" /></button>
-                <button className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"><ChevronRight className="w-4 h-4 text-slate-400" /></button>
+                <button onClick={() => alert('Navigated to previous week')} className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"><ChevronLeft className="w-4 h-4 text-slate-400" /></button>
+                <button onClick={() => alert('Navigated to next week')} className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"><ChevronRight className="w-4 h-4 text-slate-400" /></button>
               </div>
             </div>
             

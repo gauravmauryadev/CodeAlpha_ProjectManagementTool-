@@ -18,6 +18,7 @@ import {
   Plus,
 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useProjectStore } from "@/store/useProjectStore";
 import { cn } from "@/lib/utils";
 
 const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -138,6 +139,7 @@ export default function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
         {/* Bottom Section */}
         <div className="px-6 w-full mt-auto flex flex-col gap-3">
           <button
+            onClick={() => { useProjectStore.getState().setCreateModalOpen(true); onClose(); }}
             className="w-full h-12 rounded-xl flex items-center justify-center gap-2 bg-[#6E56CF] hover:bg-[#5C46B6] text-white font-semibold shadow-[0_0_15px_rgba(110,86,207,0.3)] transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />

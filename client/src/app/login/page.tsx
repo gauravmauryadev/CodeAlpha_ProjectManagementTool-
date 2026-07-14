@@ -61,7 +61,7 @@ export default function LoginPage() {
           <span className="text-xl font-bold text-white tracking-tight">OmniPlan</span>
         </div>
         <div className="flex items-center gap-6">
-          <button className="text-sm text-slate-300 hover:text-white font-medium transition-colors hidden sm:block cursor-pointer">Support</button>
+          <button onClick={() => alert('Contact support at support@omniplan.com')} className="text-sm text-slate-300 hover:text-white font-medium transition-colors hidden sm:block cursor-pointer">Support</button>
           <Link href="/register" className="text-sm bg-[#D2A8FF] hover:bg-[#c490ff] text-[#1e1e1e] px-5 py-2.5 rounded-full font-bold transition-colors">
             Request Access
           </Link>
