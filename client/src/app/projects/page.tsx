@@ -7,7 +7,7 @@ import {
   Search,
   Plus,
   Loader2,
-  MoreVertical,
+  Trash2,
   Calendar,
   Users,
   BarChart,
@@ -21,7 +21,7 @@ import { cn, getInitials, getAvatarColor, formatDate } from "@/lib/utils";
 export default function ProjectsPage() {
   const router = useRouter();
   const { user } = useAuthStore();
-  const { projects, fetchProjects } = useProjectStore();
+  const { projects, fetchProjects, deleteProject } = useProjectStore();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
@@ -104,6 +104,10 @@ export default function ProjectsPage() {
                     ? Math.round((completedTasks / totalTasks) * 100)
                     : 0;
 
+                const userIdStr = user ? String((user as any).id || (user as any)._id) : "";
+                const ownerIdStr = project.owner ? String(typeof project.owner === "object" ? (project.owner as any)._id : project.owner) : "";
+                const isOwner = Boolean(userIdStr && ownerIdStr && userIdStr === ownerIdStr) || (user as any)?.role === 'admin';
+
                 return (
                   <div
                     key={project._id}
@@ -115,15 +119,23 @@ export default function ProjectsPage() {
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
                         <FolderKanban className="w-6 h-6 text-indigo-400" />
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          // Handle menu
-                        }}
-                        className="w-8 h-8 rounded-lg hover:bg-white/5 flex items-center justify-center text-slate-400 transition-colors"
-                      >
-                        <MoreVertical className="w-4 h-4" />
-                      </button>
+                      {isOwner && (
+                        <button
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            if (window.confirm("Are you sure you want to delete this project?")) {
+                              try {
+                                await deleteProject(project._id);
+                              } catch (error: any) {
+                                alert("Failed to delete project");
+                              }
+                            }
+                          }}
+                          className="w-8 h-8 rounded-lg hover:bg-red-500/10 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
 
                     {/* Title & Desc */}
