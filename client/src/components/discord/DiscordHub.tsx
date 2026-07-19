@@ -421,7 +421,7 @@ export default function DiscordHub() {
   }, [activeServer]);
 
   return (
-    <div className="mt-8 mb-8 flex h-[650px] rounded-md bg-slate-50/80 dark:bg-[#1e1f22] overflow-hidden shadow-sm border border-slate-200/50 dark:border-[#1e1f22]">
+    <div className="flex flex-1 h-full w-full bg-slate-50/80 dark:bg-[#1e1f22] overflow-hidden shadow-sm border-t border-slate-200/50 dark:border-[#1e1f22]">
       
       {/* 1. Extreme Left Sidebar (Servers List) */}
       <div className="w-[72px] bg-slate-50/80 dark:bg-[#1e1f22] border-r border-slate-200/50 dark:border-[#1e1f22] flex flex-col items-center py-3 flex-shrink-0 gap-2 overflow-y-auto hide-scrollbar">
