@@ -465,14 +465,14 @@ export default function BoardPage() {
     <AppShell>
       <div className="h-full flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="px-4 md:px-8 py-4 md:py-5 border-b border-slate-200 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 flex-shrink-0 bg-white/40 dark:bg-[#0E0A22]/40 backdrop-blur-xl">
+        <div className="px-4 md:px-8 py-4 md:py-5 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 flex-shrink-0 bg-transparent">
           <div className="flex items-center gap-3 md:gap-4 mt-2 md:mt-0">
             <Tooltip content="Back to dashboard" position="right">
               <button
                 onClick={() => router.push("/dashboard")}
-                className="w-9 h-9 rounded-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:scale-105 active:scale-95 flex items-center justify-center transition-all duration-200 shadow-sm cursor-pointer hover:border-slate-300 dark:hover:border-white/20"
+                className="w-9 h-9 rounded-md bg-[#12141D] border border-white/5 hover:bg-white/5 hover:scale-105 active:scale-95 flex items-center justify-center transition-all duration-200 cursor-pointer hover:border-white/10"
               >
-                <ArrowLeft className="w-4 h-4 text-slate-500 dark:text-slate-200" />
+                <ArrowLeft className="w-4 h-4 text-slate-300" />
               </button>
             </Tooltip>
             <div>
@@ -487,31 +487,31 @@ export default function BoardPage() {
             <div className="flex items-center gap-3 mr-2 cursor-pointer" onClick={() => setShowMembers(true)}>
               <div className="flex -space-x-2">
                 {project?.members?.slice(0, 4).map((m) => (
-                  <div key={typeof m === "object" ? m._id : m} className={cn("w-7 h-7 rounded-full ring-2 ring-[#0E0A22] flex items-center justify-center text-[10px] font-bold text-white z-10 hover:z-20 transition-transform hover:scale-110", getAvatarColor(typeof m === "object" ? m.name : "U"))}>
+                  <div key={typeof m === "object" ? m._id : m} className={cn("w-7 h-7 rounded-full ring-2 ring-[#06080F] flex items-center justify-center text-[10px] font-bold text-white z-10 hover:z-20 transition-transform hover:scale-110", getAvatarColor(typeof m === "object" ? m.name : "U"))}>
                     {getInitials(typeof m === "object" ? m.name : "U")}
                   </div>
                 ))}
                 {(project?.members?.length || 0) > 4 && (
-                  <div className="w-7 h-7 rounded-full ring-2 ring-[#0E0A22] bg-[#1A1C23] flex items-center justify-center text-[9px] font-bold text-slate-400 z-10 border border-white/5">
+                  <div className="w-7 h-7 rounded-full ring-2 ring-[#06080F] bg-[#12141D] flex items-center justify-center text-[9px] font-bold text-slate-400 z-10 border border-white/5">
                     +{(project?.members?.length || 0) - 4}
                   </div>
                 )}
               </div>
             </div>
             
-            <button onClick={() => alert('Filter options coming soon!')} className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors">
+            <button onClick={() => alert('Filter options coming soon!')} className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors cursor-pointer">
               <Filter className="w-3.5 h-3.5" /> Filter
             </button>
-            <button onClick={() => alert('Sort options coming soon!')} className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors">
+            <button onClick={() => alert('Sort options coming soon!')} className="px-4 py-2 rounded-xl bg-[#12141D] border border-white/5 hover:bg-white/5 text-[13px] font-bold text-slate-300 flex items-center gap-2 transition-colors cursor-pointer">
               <List className="w-3.5 h-3.5" /> Sort
             </button>
             
-            <div className="h-6 w-[1px] bg-slate-200 dark:bg-white/10 hidden md:block mx-1"></div>
+            <div className="h-6 w-[1px] bg-white/10 hidden md:block mx-1"></div>
             
             <Tooltip content="Manage members" position="bottom">
               <button
                 onClick={() => setShowMembers(true)}
-                className="px-3 md:px-4 py-2 rounded-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:-translate-y-0.5 active:scale-97 text-xs md:text-sm font-medium text-slate-600 dark:text-slate-200 flex items-center gap-1 md:gap-2 transition-all duration-200 shadow-sm cursor-pointer hover:border-slate-300 dark:hover:border-white/20"
+                className="px-3 md:px-4 py-2 rounded-md bg-[#12141D] border border-white/5 hover:bg-white/5 hover:-translate-y-0.5 active:scale-97 text-xs md:text-sm font-medium text-slate-300 flex items-center gap-1 md:gap-2 transition-all duration-200 cursor-pointer hover:border-white/10"
               >
                 <Users className="w-4 h-4" /> <span className="hidden sm:inline">Members</span>
               </button>
@@ -523,9 +523,9 @@ export default function BoardPage() {
                   setShowSettings(true);
                   loadGithubSettings();
                 }}
-                className="w-10 h-10 rounded-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:rotate-45 active:scale-95 flex items-center justify-center transition-all duration-200 shadow-sm cursor-pointer hover:border-slate-300 dark:hover:border-white/20"
+                className="w-10 h-10 rounded-md bg-[#12141D] border border-white/5 hover:bg-white/5 hover:rotate-45 active:scale-95 flex items-center justify-center transition-all duration-200 cursor-pointer hover:border-white/10"
               >
-                <Settings className="w-4.5 h-4.5 text-slate-500 dark:text-slate-200" />
+                <Settings className="w-4.5 h-4.5 text-slate-300" />
               </button>
             </Tooltip>
 
@@ -533,16 +533,16 @@ export default function BoardPage() {
               <button
                 onClick={() => setShowChat(!showChat)}
                 className={cn(
-                  "px-4 md:px-5 py-2 rounded-md border text-xs md:text-sm font-bold flex items-center gap-2 transition-all duration-300 shadow-sm cursor-pointer group",
+                  "px-4 md:px-5 py-2 rounded-md border text-xs md:text-sm font-bold flex items-center gap-2 transition-all duration-300 cursor-pointer group",
                   showChat 
                     ? "bg-gradient-to-r from-indigo-600 to-purple-600 border-transparent text-white hover:shadow-sm hover:shadow-indigo-500/30 hover:-translate-y-0.5" 
-                    : "bg-white dark:bg-[#14112c]/80 border-indigo-500/30 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:-translate-y-0.5 active:scale-97"
+                    : "bg-[#12141D] border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/10 hover:-translate-y-0.5 active:scale-97"
                 )}
               >
                 <div className="relative">
                   <MessageSquare className="w-4.5 h-4.5" />
-                  {!showChat && <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 border border-white dark:border-slate-900 animate-ping" />}
-                  {!showChat && <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 border border-white dark:border-slate-900" />}
+                  {!showChat && <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 border border-[#06080F] animate-ping" />}
+                  {!showChat && <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500 border border-[#06080F]" />}
                 </div>
                 <span className="hidden sm:inline">Team Chat</span>
               </button>
@@ -577,6 +577,7 @@ export default function BoardPage() {
                   </button>
                 ))}
               </div>
+            </div>
 
             {/* Active Tab Panel */}
             {activeTab === "board" ? (
