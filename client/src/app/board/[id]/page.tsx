@@ -482,7 +482,7 @@ export default function BoardPage() {
               <p className="text-[13px] text-slate-400 font-medium mt-1">{project?.description || "Manage and track your engineering velocity."}</p>
             </div>
           </div>
-          <div className="flex items-center justify-end gap-3 md:gap-4 flex-wrap md:flex-nowrap ml-auto w-full md:w-auto">
+          <div className="flex items-center justify-start md:justify-end gap-3 md:gap-4 flex-wrap md:flex-nowrap w-full md:w-auto mt-2 md:mt-0">
             {/* Members avatars */}
             <div className="flex items-center gap-3 mr-2 cursor-pointer" onClick={() => setShowMembers(true)}>
               <div className="flex -space-x-2">

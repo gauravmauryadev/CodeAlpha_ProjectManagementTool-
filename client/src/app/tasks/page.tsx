@@ -153,7 +153,7 @@ export default function TasksPage() {
               className="w-full pl-11 pr-4 py-3 rounded-xl bg-[#12141D] border border-white/5 text-[14px] text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
             />
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2 md:gap-3">
             {(["all", "low", "medium", "high"] as const).map((p) => (
               <button
                 key={p}
