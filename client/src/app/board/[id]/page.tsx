@@ -482,9 +482,10 @@ export default function BoardPage() {
               <p className="text-[13px] text-slate-400 font-medium mt-1">{project?.description || "Manage and track your engineering velocity."}</p>
             </div>
           </div>
-          <div className="flex items-center justify-start md:justify-end gap-3 md:gap-4 flex-wrap md:flex-nowrap w-full md:w-auto mt-2 md:mt-0">
-            {/* Members avatars */}
-            <div className="flex items-center gap-3 mr-2 cursor-pointer" onClick={() => setShowMembers(true)}>
+          <div className="flex items-center justify-start md:justify-end gap-3 md:gap-4 w-full md:w-auto mt-3 md:mt-0 overflow-x-auto no-scrollbar pb-1 md:pb-0">
+            <div className="flex items-center gap-3 md:gap-4 w-max">
+              {/* Members avatars */}
+              <div className="flex items-center gap-3 mr-2 cursor-pointer" onClick={() => setShowMembers(true)}>
               <div className="flex -space-x-2">
                 {project?.members?.slice(0, 4).map((m) => (
                   <div key={typeof m === "object" ? m._id : m} className={cn("w-7 h-7 rounded-full ring-2 ring-[#06080F] flex items-center justify-center text-[10px] font-bold text-white z-10 hover:z-20 transition-transform hover:scale-110", getAvatarColor(typeof m === "object" ? m.name : "U"))}>
@@ -547,6 +548,7 @@ export default function BoardPage() {
                 <span className="hidden sm:inline">Team Chat</span>
               </button>
             </Tooltip>
+            </div>
           </div>
         </div>
 
@@ -555,8 +557,8 @@ export default function BoardPage() {
           {/* Main workspace */}
           <div className="flex-1 flex flex-col overflow-hidden min-w-0">
             {/* Workspace Tab Selectors */}
-            <div className="px-4 md:px-8 pt-4 border-b border-white/5 bg-transparent flex items-center justify-between gap-2 flex-shrink-0 flex-wrap">
-              <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
+            <div className="px-4 md:px-8 pt-4 border-b border-white/5 bg-transparent overflow-x-auto no-scrollbar">
+              <div className="flex items-center gap-6 w-max pb-3">
                 {[
                   { id: "board", label: "Kanban Board", icon: FolderKanban },
                   { id: "wiki", label: "Documentation", icon: FileText },
@@ -566,10 +568,10 @@ export default function BoardPage() {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
                     className={cn(
-                      "pb-3 text-xs font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap",
+                      "text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap",
                       activeTab === tab.id
-                        ? "border-indigo-500 text-indigo-400"
-                        : "border-transparent text-slate-500 hover:text-slate-300 hover:border-slate-600"
+                        ? "text-indigo-400 border-b-2 border-indigo-500 pb-[10px] -mb-[12px]"
+                        : "text-slate-500 hover:text-slate-300 pb-[12px] -mb-[12px]"
                     )}
                   >
                     <tab.icon className="w-4 h-4" />

@@ -54,7 +54,7 @@ export default function ProjectsPage() {
             </p>
           </div>
           <button
-            onClick={() => router.push("/dashboard?create=true")}
+            onClick={() => useProjectStore.getState().setCreateModalOpen(true)}
             className="flex items-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition-all shrink-0"
           >
             <Plus className="w-5 h-5" />
