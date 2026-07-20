@@ -19,6 +19,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line
     setMounted(true);
     setIsDark(document.documentElement.classList.contains("dark"));
   }, []);

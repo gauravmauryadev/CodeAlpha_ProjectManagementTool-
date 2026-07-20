@@ -433,8 +433,24 @@ export default function BoardPage() {
   const handleSaveEdit = async () => {
     if (!selectedTask || !editTaskData.title?.trim()) return;
     await updateTask(selectedTask._id, editTaskData);
-    setSelectedTask({ ...selectedTask, ...editTaskData } as Task);
+    
+    let updatedAssignee = selectedTask.assignee;
+    if (editTaskData.assignee !== undefined) {
+      if (!editTaskData.assignee) {
+        updatedAssignee = null;
+      } else {
+        const memberObj = project?.members?.find(m => (typeof m === 'object' ? m._id : m) === editTaskData.assignee);
+        if (memberObj && typeof memberObj === 'object') {
+          updatedAssignee = memberObj;
+        } else if (typeof editTaskData.assignee === 'string') {
+          updatedAssignee = { _id: editTaskData.assignee, name: "Loading...", email: "" } as any;
+        }
+      }
+    }
+    
+    setSelectedTask({ ...selectedTask, ...editTaskData, assignee: updatedAssignee } as Task);
     setIsEditingTask(false);
+    fetchTasks(projectId); // Also fetch tasks to ensure fresh data
   };
 
   useEffect(() => {

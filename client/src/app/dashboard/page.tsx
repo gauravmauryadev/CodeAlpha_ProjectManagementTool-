@@ -61,7 +61,7 @@ export default function DashboardPage() {
         const promises = projects.map(p => taskApi.getByProject(p._id).catch(() => null));
         const results = await Promise.all(promises);
         
-        let combined: any[] = [];
+        const combined: any[] = [];
         results.forEach(res => {
           if (!res || !res.data || !res.data.tasks) return;
           let tasks = res.data.tasks;

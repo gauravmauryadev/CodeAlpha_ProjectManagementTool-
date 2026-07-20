@@ -102,7 +102,7 @@ export default function CalendarPage() {
         const results = await Promise.all(
           projects.map((p) => taskApi.getByProject(p._id).catch(() => null))
         );
-        let combined: TaskItem[] = [];
+        const combined: TaskItem[] = [];
         results.forEach((res, idx) => {
           if (!res?.data?.tasks) return;
           let tasks = res.data.tasks;
