@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-const isProd = typeof window !== "undefined" && window.location.hostname.includes("onrender.com");
+const isProd = typeof window !== "undefined" && (window.location.hostname.includes("onrender.com") || window.location.hostname.includes("vercel.app"));
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 
   (isProd ? "https://codealpha-projectmanagementtool-0rio.onrender.com" : "http://localhost:5000");
 
@@ -28,4 +28,5 @@ export function disconnectSocket() {
   if (socket?.connected) {
     socket.disconnect();
   }
+  socket = null;
 }

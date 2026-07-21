@@ -207,7 +207,7 @@ export default function LoginPage() {
 
       {/* Footer */}
       <div className="w-full flex flex-col sm:flex-row items-center justify-between p-6 lg:px-10 text-[11px] font-semibold text-slate-500 z-50">
-        <p>© 2024 OmniPlan Systems Inc. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} OmniPlan Systems Inc. All rights reserved.</p>
         <div className="flex items-center gap-6 mt-4 sm:mt-0">
           <Link href="#" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
           <Link href="#" className="hover:text-slate-400 transition-colors">Terms of Service</Link>

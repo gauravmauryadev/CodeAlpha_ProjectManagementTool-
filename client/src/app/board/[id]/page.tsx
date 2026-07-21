@@ -226,6 +226,7 @@ export default function BoardPage() {
       s.off("projectUpdated");
       s.off("commentAdded");
       s.off("commentDeleted");
+      s.disconnect();
     };
   }, [projectId, user, setComments]);
 
@@ -399,9 +400,15 @@ export default function BoardPage() {
   };
 
   const handleDeleteTask = async (id: string) => {
-    await deleteTask(id);
-    fetchTasks(projectId);
-    setSelectedTask(null);
+    try {
+      await deleteTask(id);
+      fetchTasks(projectId);
+      setSelectedTask(null);
+      setComments([]);
+    } catch (err) {
+      console.error("Failed to delete task:", err);
+      alert("Failed to delete task. Please try again.");
+    }
   };
 
   const handleAddMember = async () => {

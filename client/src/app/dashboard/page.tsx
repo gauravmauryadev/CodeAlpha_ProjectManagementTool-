@@ -165,7 +165,7 @@ export default function DashboardPage() {
           <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 w-full animate-fade-in-up">
             <div className="flex flex-col">
               <h1 className="text-[40px] md:text-[48px] font-extrabold text-white tracking-tight leading-[1.1] mb-3">
-                Good Morning,<br/>{user?.name?.split(" ")[0] || "Alex"}.
+                {(() => { const h = new Date().getHours(); return h < 12 ? 'Good Morning' : h < 17 ? 'Good Afternoon' : 'Good Evening'; })()},<br/>{user?.name?.split(" ")[0] || "Alex"}.
               </h1>
               <p className="text-slate-400 text-sm md:text-base max-w-md font-medium">
                 You have <span className="text-indigo-400 font-bold">{allTasks.filter(t => t.status !== 'done').length} tasks</span> to complete today across <span className="text-indigo-400 font-bold">{projects.length} active projects</span>.

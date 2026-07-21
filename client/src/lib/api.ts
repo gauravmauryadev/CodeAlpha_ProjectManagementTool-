@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 
-const isProd = typeof window !== "undefined" && window.location.hostname.includes("onrender.com");
+const isProd = typeof window !== "undefined" && (window.location.hostname.includes("onrender.com") || window.location.hostname.includes("vercel.app"));
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 
   (isProd ? "https://codealpha-projectmanagementtool-0rio.onrender.com/api" : "http://localhost:5000/api");
 
@@ -129,7 +129,7 @@ export const githubApi = {
   // Returns the URL to redirect the user to for OAuth
   getLoginUrl: () => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : "";
-    const isProd = typeof window !== "undefined" && window.location.hostname.includes("onrender.com");
+    const isProd = typeof window !== "undefined" && (window.location.hostname.includes("onrender.com") || window.location.hostname.includes("vercel.app"));
     const baseUrl = process.env.NEXT_PUBLIC_API_URL ||
       (isProd ? "https://codealpha-projectmanagementtool-0rio.onrender.com/api" : "http://localhost:5000/api");
     return `${baseUrl}/github/login?token=${token}`;
